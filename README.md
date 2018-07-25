@@ -4,9 +4,9 @@
 This repo contains the CometD .NET Core implementation for Salesforce Platform events.
 1. `CometD.NetCore2.Salesforce`
      - Salesforce Platform Events as Event Bus [eShopOnContainers](https://github.com/dotnet-architecture/eShopOnContainers)
-2. AuthApp 
+2. `AuthApp`
    - utility to retrieve `Access Token` and `Refresh Token` to be used by `TestApp`.
-3. TestApp 
+3. `TestApp` 
    - sample application to test the code.
 
 ## Nuget Packages
