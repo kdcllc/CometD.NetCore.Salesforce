@@ -26,7 +26,7 @@ namespace CometD.NetCore.Salesforce
         private readonly ILogger<StreamingClient> _logger;
         private readonly IAuthenticationClientProxy _authenticationClient;
         private readonly SalesforceConfiguration _options;
-        
+
         // long polling duration
         private const int ReadTimeOut = 120 * 1000;
 
@@ -80,16 +80,18 @@ namespace CometD.NetCore.Salesforce
         {
             #region ArgumentNullExeption
             if (null == topicName || (topicName = topicName.Trim()).Length == 0)
+            {
                 throw new ArgumentNullException(nameof(topicName));
+            }
+
             if (null == listener)
+            {
                 throw new ArgumentNullException(nameof(listener));
+            }
             #endregion
 
             var channel = _bayeuxClient.GetChannel(topicName,replayId);
-            if (null != channel)
-            {
-                channel.Subscribe(listener);
-            }
+            channel?.Subscribe(listener);
         }
 
         ///<inheritdoc/>
@@ -219,17 +221,15 @@ namespace CometD.NetCore.Salesforce
         /// <param name="message"></param>
         private void ErrorExtension_ConnectionError(object sender, string message)
         {
-
             // authentication failure
             if (message.ToLower() == "403::Handshake denied" ||
                 message.ToLower() == "403:denied_by_security_policy:create_denied" ||
                 message.ToLower() == "403::unknown client"
                 )
             {
-
                 _logger.LogError($"Handled CometD Exception: {message}");
                 _logger.LogDebug($"Re-authenticating BayeuxClient...");
-                // 1. Disconnect 
+                // 1. Disconnect
                 Disconnect();
                 _logger.LogDebug($"Disconnecting {nameof(BayeuxClient)}...");
                 // 2. try (x) times to re-authenticate
@@ -252,12 +252,19 @@ namespace CometD.NetCore.Salesforce
         private bool _isDisposed = false;
         private ReplayExtension _replayIdExtension;
 
+        /// <summary>
+        /// Disposing of the resources
+        /// </summary>
         public void Dispose()
         {
             Dispose(true);
             GC.SuppressFinalize(this);
         }
 
+        /// <summary>
+        /// Disposing of the resources
+        /// </summary>
+        /// <param name="disposing"></param>
         protected virtual void Dispose(bool disposing)
         {
             if (disposing && !_isDisposed)
@@ -267,6 +274,9 @@ namespace CometD.NetCore.Salesforce
             }
         }
 
+        /// <summary>
+        /// Destructor
+        /// </summary>
         ~StreamingClient()
         {
             Dispose(false);

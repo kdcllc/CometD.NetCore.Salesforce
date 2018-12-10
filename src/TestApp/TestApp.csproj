@@ -8,7 +8,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="CometD.NetCore2" Version="1.0.2" />
+		<PackageReference Include="CometD.NetCore2" Version="1.0.3" />
 		<PackageReference Include="KDCLLC.BuildingBlocks.SalesforceEventBus" Version="1.0.2" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="2.1.1" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.CommandLine" Version="2.1.1" />

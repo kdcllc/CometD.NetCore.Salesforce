@@ -3,7 +3,6 @@
 	<PropertyGroup>
 		<TargetFramework>netstandard2.0</TargetFramework>
 		<RootNamespace>CometD.NetCore2.Salesforce</RootNamespace>
-
 		<Description>Event Bus for Salesforce Platform events.</Description>
 		<PackageLicenseUrl>https://github.com/kdcllc/CometD.NetCore.Salesforce/blob/master/LICENSE</PackageLicenseUrl>
 		<PackageProjectUrl>https://github.com/kdcllc/CometD.NetCore.Salesforce</PackageProjectUrl>
@@ -13,7 +12,6 @@
 		<PackageTags>salesforce, cometd, bayeux</PackageTags>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
-
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -28,12 +26,12 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="CometD.NetCore2" Version="1.0.2" />
+		<PackageReference Include="CometD.NetCore2" Version="1.0.3" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="2.1.1" />
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.1.1" />
 		<PackageReference Include="Microsoft.Extensions.Options" Version="2.1.1" />
-		<PackageReference Include="NetCoreForce.Client" Version="2.2.0" />
-		<PackageReference Include="Polly" Version="6.1.0" />
+		<PackageReference Include="NetCoreForce.Client" Version="2.5.0" />
+		<PackageReference Include="Polly" Version="6.1.2" />
 	</ItemGroup>
 
 </Project>

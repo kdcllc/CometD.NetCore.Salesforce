@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace CometD.NetCore.Salesforce
+﻿namespace CometD.NetCore.Salesforce
 {
     /// <summary>
     /// Represents the config settings in appsettings.json
@@ -19,7 +17,7 @@ namespace CometD.NetCore.Salesforce
 
         /// <summary>
         /// Url to login to Salesforce
-        ///  https://test.salesforce.com/services/oauth2/authorize or https://login.salesforce.com/services/oauth2/authorize 
+        ///  https://test.salesforce.com/services/oauth2/authorize or https://login.salesforce.com/services/oauth2/authorize
         /// </summary>
         public string LoginUrl { get; set; }
 
@@ -43,8 +41,10 @@ namespace CometD.NetCore.Salesforce
         /// </summary>
         public string CometDUri { get; set; }
 
+        /// <summary>
+        /// Topic or Event Uri
+        /// </summary>
         public string EventOrTopicUri { get; set; }
-
 
         /// <summary>
         /// Salesforce uri for oauth authentication.
@@ -61,6 +61,9 @@ namespace CometD.NetCore.Salesforce
         /// </summary>
         public string CustomEvent { get; set; }
 
+        /// <summary>
+        /// Salesforce ReplayId for specific message.
+        /// </summary>
         public int ReplayId { get; set; }
     }
 }
