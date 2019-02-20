@@ -51,7 +51,6 @@ namespace AuthApp.Host
 
                     responseOutput.Close();
 
-
                     if (context.Request.QueryString.Get("error") != null)
                     {
                         Console.WriteLine(string.Format("OAuth authorization error: {0}.", context.Request.QueryString.Get("error")));
@@ -72,7 +71,6 @@ namespace AuthApp.Host
                        code,
                        $"{_config.LoginUrl}/services/oauth2/token");
                      
-
 
                     Console.WriteLine($"Your access_token is {auth.AccessInfo.AccessToken}");
                     Console.WriteLine($"Your refresh_token is {auth.AccessInfo.RefreshToken}");

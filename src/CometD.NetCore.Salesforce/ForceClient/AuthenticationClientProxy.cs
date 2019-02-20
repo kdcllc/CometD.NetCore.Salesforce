@@ -16,7 +16,6 @@ namespace CometD.NetCore.Salesforce.ForceClient
         private readonly IAsyncPolicy _policy;
         private readonly AuthenticationClient _auth;
 
-
         /// <summary>
         /// Constructor <see cref="AuthenticationClientProxy"/> create instance of the class and authenticates the session.
         /// </summary>

@@ -10,7 +10,6 @@ namespace TestApp
     {
         public static async Task Main(string[] args)
         {
-
             var host = new HostBuilder()
                  .ConfigureHostConfiguration(configHost =>
                  {
@@ -34,7 +33,6 @@ namespace TestApp
                      // print out the environment
                      var config = configBuilder.Build();
                      config.DebugConfigurations();
-
                  })
                  .ConfigureHost()
                  .ConfigureLogging((hostContext, configLogging) =>
@@ -50,7 +48,5 @@ namespace TestApp
 
             await host.RunAsync();
         }
-
-
     }
 }

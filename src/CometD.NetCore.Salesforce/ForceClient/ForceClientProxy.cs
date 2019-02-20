@@ -131,6 +131,5 @@ namespace CometD.NetCore.Salesforce.ForceClient
         {
             return await _policy.ExecuteAsync(ctx => _forceClient.CreateRecord(sObjectTypeName, instance, headers), token);
         }
-       
     }
 }

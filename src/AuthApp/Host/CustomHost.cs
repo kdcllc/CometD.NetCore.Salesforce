@@ -27,7 +27,6 @@ namespace AuthApp.Host
                     config.AddJsonFile(
                         $"appsettings.{hostContext.HostingEnvironment.EnvironmentName}.json",
                         optional: true);
-
                 })
                 .ConfigureServices((hostContext, services) =>
                 {

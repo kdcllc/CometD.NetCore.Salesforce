@@ -10,7 +10,6 @@ namespace AuthApp
     {
         public static async Task Main(string[] args)
         {
-         
             var host = new CustomHost();
             
             Console.WriteLine("Starting!");
@@ -21,12 +20,7 @@ namespace AuthApp
             Console.WriteLine("Stopping!");
             await host.StopAsync();
             Console.WriteLine("Stopped!");
-
-
         }
 
-
-
     }
-    
 }

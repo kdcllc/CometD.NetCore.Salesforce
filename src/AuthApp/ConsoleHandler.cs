@@ -6,7 +6,6 @@ namespace AuthApp
 {
     public class ConsoleHandler
     {
-
         public static void ShowConsole()
         {
             var console = GetConsoleWindow();
@@ -28,7 +27,6 @@ namespace AuthApp
         static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
 
 #pragma warning restore IDE0040 // Add accessibility modifiers
-
 
         public static Process OpenBrowser(string url)
         {

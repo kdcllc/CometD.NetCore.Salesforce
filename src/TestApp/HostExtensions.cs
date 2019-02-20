@@ -11,7 +11,6 @@ namespace TestApp
     {
         public static IHostBuilder ConfigureHost(this IHostBuilder builder)
         {
-
             return builder.ConfigureServices((bulderContext, services) =>
             {
                 services.AddLogging();
@@ -27,7 +26,6 @@ namespace TestApp
 
                 // no need to create instance = services.AddStreamingClient();
                 services.AddSalesforceEventBus();
-
             });
         }
     }
