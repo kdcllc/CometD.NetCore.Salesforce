@@ -1,9 +1,12 @@
 <Project>
-  <PropertyGroup>
+
+  <Import Project="build\settings.props" />
+  <Import Project="build\sources.props" />
+
+  <PropertyGroup Label="Ownership Settings">
     <Company>King David Consulting LLC</Company>
     <Authors>kdcllc</Authors>
-    <LangVersion>latest</LangVersion>
-    <VersionPrefix>1.0.0</VersionPrefix>
     <Copyright>King David Consulting LLC</Copyright>
   </PropertyGroup>
+  
 </Project>

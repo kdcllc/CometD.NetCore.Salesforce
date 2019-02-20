@@ -46,8 +46,8 @@ namespace CometD.NetCore.Salesforce
             _options = options ?? throw new ArgumentNullException(nameof(options));
 
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            _authenticationClient =
-                authenticationClient ?? throw new ArgumentNullException(nameof(authenticationClient));
+
+            _authenticationClient = authenticationClient ?? throw new ArgumentNullException(nameof(authenticationClient));
 
             InitBayeuxClient();
         }
@@ -103,9 +103,9 @@ namespace CometD.NetCore.Salesforce
             }
 
             var channel = _bayeuxClient.GetChannel(topicName, replayId);
-            if (null != channel)
+            if (channel != null)
             {
-                if (null != listener)
+                if (listener != null)
                 {
                     channel.Unsubscribe(listener);
                 }

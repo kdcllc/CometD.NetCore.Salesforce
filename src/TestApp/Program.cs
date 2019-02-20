@@ -10,7 +10,7 @@ namespace TestApp
     {
         public static async Task Main(string[] args)
         {
-            
+
             var host = new HostBuilder()
                  .ConfigureHostConfiguration(configHost =>
                  {
@@ -19,14 +19,22 @@ namespace TestApp
                      configHost.AddEnvironmentVariables(prefix: "PREFIX_");
                      configHost.AddCommandLine(args);
                  })
-                 .ConfigureAppConfiguration((hostContext, configApp) =>
+                 .ConfigureAppConfiguration((hostContext, configBuilder) =>
                  {
-                     configApp.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
-                     configApp.AddJsonFile(
+                     configBuilder.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                     configBuilder.AddJsonFile(
                          $"appsettings.{hostContext.HostingEnvironment.EnvironmentName}.json",
                          optional: true);
-                     configApp.AddEnvironmentVariables(prefix: "PREFIX_");
-                     configApp.AddCommandLine(args);
+
+                     configBuilder.AddAzureKeyVault(hostingEnviromentName:hostContext.HostingEnvironment.EnvironmentName);
+
+                     configBuilder.AddEnvironmentVariables(prefix: "PREFIX_");
+                     configBuilder.AddCommandLine(args);
+
+                     // print out the environment
+                     var config = configBuilder.Build();
+                     config.DebugConfigurations();
+
                  })
                  .ConfigureHost()
                  .ConfigureLogging((hostContext, configLogging) =>
