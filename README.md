@@ -11,15 +11,21 @@ These events can be subscribed to and listened to by your custom `Event Listener
    - This dotnet cli tool allows for retrieval of `Access Token` and `Refresh Token` to be used by any other application. Please refer to [How Are Apps Authenticated with the Web Server OAuth Authentication Flow](https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/intro_understanding_web_server_oauth_flow.htm)
 
 
-## Nuget Packages
-``` 
+## Installation
 
- PM> Install-Package CometD.NetCore2.Salesforce
+- To include this library inside of your project run nuget package installation
+> Install-Package CometD.NetCore2.Salesforce
+Or
+> dotnet add package CometD.NetCore.Salesforce
+- To Inatall Salesforce Cli tool globally
 
-```
+> dotnet tool install salesforce -g
 
+Then to see if it was installed correctly:
 
-## Saleforce
+> dotnet tool list -g
+
+## Saleforce Setup
 [Video](https://www.youtube.com/watch?v=L6OWyCfQD6U)
 1. Sing up for development sandbox with Saleforce: [https://developer.salesforce.com/signup](https://developer.salesforce.com/signup).
 2. Create Connected App in Salesforce.

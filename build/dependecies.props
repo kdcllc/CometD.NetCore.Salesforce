@@ -17,6 +17,10 @@
   </PropertyGroup>
 
   <ItemGroup Label="NetCore">
+    <PackageReference Update="Microsoft.Extensions.Logging.Abstractions" Version="$(NetCoreCommonVersion)" />
+    <PackageReference Update="Microsoft.Extensions.Logging" Version="$(NetCoreCommonVersion)" />
+    <PackageReference Update="Microsoft.Extensions.Logging.Configuration" Version="$(NetCoreCommonVersion)" />
+
     <PackageReference Update="Microsoft.Extensions.Logging.Console" Version="$(NetCoreCommonVersion)" />
     <PackageReference Update="Microsoft.Extensions.Logging.Debug" Version="$(NetCoreCommonVersion)" />
 
@@ -24,7 +28,7 @@
     <PackageReference Update="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="$(NetCoreCommonVersion)" />
     <PackageReference Update="Microsoft.Extensions.Configuration.CommandLine" Version="$(NetCoreCommonVersion)" />
     <PackageReference Update="Microsoft.Extensions.Configuration.Json" Version="$(NetCoreCommonVersion)" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="$(NetCoreCommonVersion)" />
+    <PackageReference Update="Microsoft.Extensions.Configuration.UserSecrets" Version="$(NetCoreCommonVersion)" />
 
     <PackageReference Update="Microsoft.Extensions.Hosting" Version="$(NetCoreCommonVersion)" />
     <PackageReference Update="Microsoft.Extensions.Hosting.Abstractions" Version="$(NetCoreCommonVersion)" />
@@ -33,6 +37,11 @@
     <PackageReference Update="Microsoft.Extensions.Options" Version="$(NetCoreCommonVersion)" />
     <PackageReference Update="Microsoft.AspNetCore.Hosting.Server.Abstractions" Version="$(NetCoreCommonVersion)" />
     <PackageReference Update="Microsoft.AspNetCore.Http" Version="$(NetCoreCommonVersion)" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.0'">
+    <PackageReference Update="Microsoft.AspNetCore.Hosting.Server.Abstractions" Version="3.0.0-preview-18571-0006" />
+    <PackageReference Update="Microsoft.AspNetCore.Http" Version="3.0.0-preview-18571-0006" />
   </ItemGroup>
 
   <ItemGroup Label="Shared Libraries">
