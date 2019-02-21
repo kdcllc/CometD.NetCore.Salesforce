@@ -15,7 +15,7 @@ namespace TestApp
                  {
                      configHost.SetBasePath(Directory.GetCurrentDirectory());
                      configHost.AddJsonFile("hostsettings.json", optional: true);
-                     configHost.AddEnvironmentVariables(prefix: "PREFIX_");
+                     configHost.AddEnvironmentVariables(prefix: "TESTAPP_");
                      configHost.AddCommandLine(args);
                  })
                  .ConfigureAppConfiguration((hostContext, configBuilder) =>
@@ -27,7 +27,7 @@ namespace TestApp
 
                      configBuilder.AddAzureKeyVault(hostingEnviromentName:hostContext.HostingEnvironment.EnvironmentName);
 
-                     configBuilder.AddEnvironmentVariables(prefix: "PREFIX_");
+                     configBuilder.AddEnvironmentVariables(prefix: "TESTAPP_");
                      configBuilder.AddCommandLine(args);
 
                      // print out the environment

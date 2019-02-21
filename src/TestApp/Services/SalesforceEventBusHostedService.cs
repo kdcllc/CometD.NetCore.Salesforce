@@ -1,7 +1,7 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using CometD.NetCore.Salesforce;
-using KDCLLC.BuildingBlocks.Abstractions;
+using Bet.BuildingBlocks.Abstractions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using TestApp.EventBus.Messages;

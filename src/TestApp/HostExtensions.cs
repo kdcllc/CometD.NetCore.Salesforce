@@ -13,7 +13,6 @@ namespace TestApp
         {
             return builder.ConfigureServices((bulderContext, services) =>
             {
-                services.AddLogging();
                 services.AddHostedService<SalesforceEventBusHostedService>();
 
                 services.AddTransient<IMessageListener,CustomMessageListener>();

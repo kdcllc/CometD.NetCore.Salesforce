@@ -2,35 +2,28 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFrameworks>netcoreapp2.1;netcoreapp2.2</TargetFrameworks>
-    <IsPackable>false</IsPackable>
-	</PropertyGroup>
+    <TargetFrameworks>netcoreapp2.2;netcoreapp3.0</TargetFrameworks>
+    <ToolCommandName>salesforce</ToolCommandName>
+    <PackageId>salesforce</PackageId>
+    <Description>A command-line tool that enables Salesforce Refresh Token Generation.</Description>
+    <PackAsTool>True</PackAsTool>
+  </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Hosting.Server.Abstractions"/>
-    <PackageReference Include="Microsoft.AspNetCore.Http"/>
-    <PackageReference Include="Microsoft.Extensions.Configuration.CommandLine"/>
-    <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables"/>
-    <PackageReference Include="Microsoft.Extensions.Configuration.Json"/>
-    <PackageReference Include="Microsoft.Extensions.Hosting"/>
-		<PackageReference Include="NetCoreForce.Client"/>
+    <PackageReference Include="Bet.AspNetCore" />
+    <PackageReference Include="Colorful.Console" />
+    <PackageReference Include="McMaster.Extensions.CommandLineUtils" />
+    <PackageReference Include="Microsoft.AspNetCore.Hosting.Server.Abstractions" />
+    <PackageReference Include="Microsoft.AspNetCore.Http" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.CommandLine" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" />
+		<PackageReference Include="NetCoreForce.Client" />
 	</ItemGroup>
 	<ItemGroup>
 		<Content Include="appsettings*.json" CopyToOutputDirectory="PreserveNewest" />
 		<Content Include="hostsettings*.json" CopyToOutputDirectory="PreserveNewest" />
-	</ItemGroup>
-	<ItemGroup>
-	  <None Remove="appsettings.Development.json" />
-	  <None Remove="hostsettings.json" />
-	</ItemGroup>
-	<ItemGroup>
-	  <Content Include="hostsettings.json">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </Content>
-	</ItemGroup>
-	<ItemGroup>
-	  <Content Update="appsettings.Development.json">
-	    <DependentUpon>appsettings.json</DependentUpon>
-	  </Content>
 	</ItemGroup>
 </Project>

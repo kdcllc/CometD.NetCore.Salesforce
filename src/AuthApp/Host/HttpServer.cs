@@ -34,19 +34,21 @@ namespace AuthApp.Host
 
             var authUrl = GetAuthorizationUrl(redirectURI);
             Console.WriteLine($"Opening a browser window with Url: {authUrl}");
-            ConsoleHandler.HideConsole();
 
             var process = ConsoleHandler.OpenBrowser(authUrl);
             var context = await http.GetContextAsync();
 
             while (!stoppingToken.IsCancellationRequested || isCompleted )
             {
+                if (isCompleted)
+                {
+                    return;
+                }
+
                 Console.WriteLine($"{nameof(HttpServer)} is running");
 
                 if (context != null)
                 {
-                    ConsoleHandler.ShowConsole();
-
                     var responseOutput = await ShowBrowserMessage(context);
 
                     responseOutput.Close();
@@ -70,7 +72,7 @@ namespace AuthApp.Host
                        redirectURI,
                        code,
                        $"{_config.LoginUrl}/services/oauth2/token");
-                     
+
 
                     Console.WriteLine($"Your access_token is {auth.AccessInfo.AccessToken}");
                     Console.WriteLine($"Your refresh_token is {auth.AccessInfo.RefreshToken}");

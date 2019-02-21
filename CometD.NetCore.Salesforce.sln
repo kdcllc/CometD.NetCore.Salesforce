@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27703.2042
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28606.126
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CometD.NetCore.Salesforce", "src\CometD.NetCore.Salesforce\CometD.NetCore.Salesforce.csproj", "{CDF94744-1E4D-41D4-A3AC-C0D1AFA6FD40}"
 EndProject
@@ -26,6 +26,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{DF67E08B
 		build\sources.props = build\sources.props
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{F0246231-B425-4C7A-BD19-EF4177AF48C0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -47,6 +49,11 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{CDF94744-1E4D-41D4-A3AC-C0D1AFA6FD40} = {F0246231-B425-4C7A-BD19-EF4177AF48C0}
+		{6FACF1B8-5D3D-48BF-B2A9-FA06E195D1B6} = {F0246231-B425-4C7A-BD19-EF4177AF48C0}
+		{0AC0A8E4-AF3E-4078-A472-0D2DC1392C00} = {F0246231-B425-4C7A-BD19-EF4177AF48C0}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {800A565D-7D93-4523-AD7A-EFA4067997DC}

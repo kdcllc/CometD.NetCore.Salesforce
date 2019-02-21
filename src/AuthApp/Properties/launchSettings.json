@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "AuthApp": {
+      "commandName": "Project",
+      "commandLineArgs": "refresh-token --azure https://kdcllc.vault.azure.net/ --config ..\\..\\TestApp\\appsettings.json"
+    }
+  }
+}

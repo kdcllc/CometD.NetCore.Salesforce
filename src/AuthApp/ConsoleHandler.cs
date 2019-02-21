@@ -1,34 +1,14 @@
 ﻿using System;
 using System.Diagnostics;
+using System.IO;
 using System.Runtime.InteropServices;
+using System.Xml.Linq;
 
 namespace AuthApp
 {
-    public class ConsoleHandler
+    internal static class ConsoleHandler
     {
-        public static void ShowConsole()
-        {
-            var console = GetConsoleWindow();
-            ShowWindow(console, 5);
-        }
-
-        public static void HideConsole()
-        {
-            var console = GetConsoleWindow();
-            ShowWindow(console, 0);
-        }
-
-#pragma warning disable IDE0040 // Add accessibility modifiers
-
-        [DllImport("kernel32.dll")]
-        static extern IntPtr GetConsoleWindow();
-
-        [DllImport("user32.dll")]
-        static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
-
-#pragma warning restore IDE0040 // Add accessibility modifiers
-
-        public static Process OpenBrowser(string url)
+        internal static Process OpenBrowser(string url)
         {
             try
             {
@@ -55,6 +35,28 @@ namespace AuthApp
                     throw;
                 }
             }
+        }
+
+        internal static string GetUserSecretsId()
+        {
+            var files = Directory.GetFiles("./", "*.csproj");
+            if (files.Length == 0)
+            {
+                throw new Exception("This command must be run in a project directory");
+            }
+
+            var file = XElement.Load(files[0]);
+            var groups = file.Elements(XName.Get("PropertyGroup"));
+            foreach (var group in groups)
+            {
+                var secret = group.Element("UserSecretsId");
+                if (secret != null)
+                {
+                    return secret.Value;
+                }
+            }
+
+            throw new Exception("The UserSecretsId element was not found in your csproj. Please ensure it has been configured.");
         }
     }
 }

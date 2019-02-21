@@ -2,14 +2,14 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFrameworks>netcoreapp2.2;netcoreapp2.2</TargetFrameworks>
+    <TargetFrameworks>netcoreapp2.2;netcoreapp3.0</TargetFrameworks>
     <IsPackable>false</IsPackable>
 	</PropertyGroup>
 
 	<ItemGroup>
 		<PackageReference Include="Bet.AspNetCore"/>
 		<PackageReference Include="CometD.NetCore2"/>
-		<PackageReference Include="KDCLLC.BuildingBlocks.SalesforceEventBus"/>
+		<PackageReference Include="Bet.BuildingBlocks.SalesforceEventBus"/>
 		<PackageReference Include="Microsoft.Extensions.Configuration.Binder"/>
 		<PackageReference Include="Microsoft.Extensions.Configuration.CommandLine"/>
 		<PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables"/>
