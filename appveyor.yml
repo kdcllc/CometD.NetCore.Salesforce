@@ -19,7 +19,7 @@ nuget:
 
 build_script:
   - ps: dotnet restore CometD.NetCore.Salesforce.sln -v quiet
-  - ps: dotnet build src/CometD.NetCore.Salesforce/ /p:configuration=Release /p:Version=$($env:appveyor_build_version)
+  - ps: dotnet build CometD.NetCore.Salesforce.sln /p:configuration=Release /p:Version=$($env:appveyor_build_version)
 
 test: off
 # test_script:
