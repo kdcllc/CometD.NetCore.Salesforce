@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFrameworks>netcoreapp2.2;netcoreapp3.0</TargetFrameworks>
+    <TargetFrameworks>netcoreapp2.2;</TargetFrameworks>
     <ToolCommandName>salesforce</ToolCommandName>
     <PackageId>salesforce</PackageId>
     <Description>A command-line tool that enables Salesforce Refresh Token Generation.</Description>

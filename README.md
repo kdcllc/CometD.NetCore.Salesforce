@@ -25,6 +25,11 @@ Then to see if it was installed correctly:
 
 > dotnet tool list -g
 
+## Salesforce DotNet Cli usage
+Run this in the project directory that contains appsettings.json with your setttings:
+> salesforce refresh-token
+It will open web browser and log in with your credentials.
+
 ## Saleforce Setup
 [Video](https://www.youtube.com/watch?v=L6OWyCfQD6U)
 1. Sing up for development sandbox with Saleforce: [https://developer.salesforce.com/signup](https://developer.salesforce.com/signup).
