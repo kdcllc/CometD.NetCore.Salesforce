@@ -7,7 +7,6 @@
       $(RestoreSources);
       https://dotnet.myget.org/F/aspnetcore-dev/api/v3/index.json;
       https://api.nuget.org/v3/index.json;
-      D:\Dev\Nuget;
     </RestoreSources>
   </PropertyGroup>
 </Project>
