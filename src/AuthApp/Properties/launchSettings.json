@@ -2,7 +2,7 @@
   "profiles": {
     "AuthApp": {
       "commandName": "Project",
-      "commandLineArgs": "refresh-token --azure https://kdcllc.vault.azure.net/ --config ..\\..\\TestApp\\appsettings.json"
+      "commandLineArgs": "refresh-token --azure https://kdcllc.vault.azure.net/ --configfile D:\\Dev\\GitHub\\kdcllc\\CometD.NetCore.Salesforce\\src\\TestApp\\appsettings.json --verbose"
     }
   }
 }

@@ -1,13 +1,15 @@
 # CometD .NET Core implementation of Salesforce Platform events
 [![Build status](https://ci.appveyor.com/api/projects/status/baalfhs6vvc38icc?svg=true)](https://ci.appveyor.com/project/kdcllc/cometd-netcore-salesforce)
 
-This repo contains the CometD .NET Core implementation for Salesforce Platform events.
+This repo contains the CometD .NET Core implementation for Salesforce Platform events. 
+These events can be subscribed to and listened to by your custom `Event Listener`.
+
 1. `CometD.NetCore2.Salesforce`
-     - Salesforce Platform Events as Event Bus [eShopOnContainers](https://github.com/dotnet-architecture/eShopOnContainers)
-2. `AuthApp`
-   - utility to retrieve `Access Token` and `Refresh Token` to be used by `TestApp`.
-3. `TestApp` 
-   - sample application to test the code.
+     - Salesforce Platform Events as Event Bus [eShopOnContainers](https://github.com/dotnet-architecture/eShopOnContainers).
+     - [Reusable Building Blocks and sample application that listens to Salesforce push events](https://github.com/kdcllc/Bet.BuildingBlocks.SalesforceEventBus).
+2. DotNet Cli tool `AuthApp`
+   - This dotnet cli tool allows for retrieval of `Access Token` and `Refresh Token` to be used by any other application. Please refer to [How Are Apps Authenticated with the Web Server OAuth Authentication Flow](https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/intro_understanding_web_server_oauth_flow.htm)
+
 
 ## Nuget Packages
 ``` 

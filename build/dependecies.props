@@ -17,16 +17,12 @@
   </PropertyGroup>
 
   <ItemGroup Label="NetCore">
-    <PackageReference Update="Microsoft.Extensions.Logging.Abstractions" Version="$(NetCoreCommonVersion)" />
-    <PackageReference Update="Microsoft.Extensions.Logging" Version="$(NetCoreCommonVersion)" />
-    <PackageReference Update="Microsoft.Extensions.Logging.Configuration" Version="$(NetCoreCommonVersion)" />
     <PackageReference Update="Microsoft.Extensions.Logging.Console" Version="$(NetCoreCommonVersion)" />
     <PackageReference Update="Microsoft.Extensions.Logging.Debug" Version="$(NetCoreCommonVersion)" />
-    <PackageReference Update="Microsoft.Extensions.ObjectPool" Version="$(NetCoreCommonVersion)" />
 
     <PackageReference Update="Microsoft.Extensions.Configuration.Binder" Version="$(NetCoreCommonVersion)" />
-    <PackageReference Update="Microsoft.Extensions.Configuration.CommandLine" Version="$(NetCoreCommonVersion)" />
     <PackageReference Update="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="$(NetCoreCommonVersion)" />
+    <PackageReference Update="Microsoft.Extensions.Configuration.CommandLine" Version="$(NetCoreCommonVersion)" />
     <PackageReference Update="Microsoft.Extensions.Configuration.Json" Version="$(NetCoreCommonVersion)" />
     <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="$(NetCoreCommonVersion)" />
 
@@ -37,10 +33,6 @@
     <PackageReference Update="Microsoft.Extensions.Options" Version="$(NetCoreCommonVersion)" />
     <PackageReference Update="Microsoft.AspNetCore.Hosting.Server.Abstractions" Version="$(NetCoreCommonVersion)" />
     <PackageReference Update="Microsoft.AspNetCore.Http" Version="$(NetCoreCommonVersion)" />
-    <PackageReference Update="Microsoft.Extensions.Configuration.CommandLine" Version="$(NetCoreCommonVersion)" />
-    <PackageReference Update="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="$(NetCoreCommonVersion)" />
-    <PackageReference Update="Microsoft.Extensions.Configuration.Json" Version="$(NetCoreCommonVersion)" />
-    <PackageReference Update="Microsoft.Extensions.Hosting" Version="$(NetCoreCommonVersion)" />
   </ItemGroup>
 
   <ItemGroup Label="Shared Libraries">

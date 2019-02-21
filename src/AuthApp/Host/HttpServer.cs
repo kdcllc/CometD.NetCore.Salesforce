@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
@@ -7,6 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
 using NetCoreForce.Client;
+using Console = Colorful.Console;
 
 namespace AuthApp.Host
 {
@@ -14,38 +16,57 @@ namespace AuthApp.Host
     /// Web Server OAuth Authentication Flow
     /// https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/intro_understanding_web_server_oauth_flow.htm
     /// </summary>
-    public class HttpServer : BackgroundService
+    internal class HttpServer : BackgroundService
     {
+        private readonly HostBuilderOptions _hostOptions;
         private readonly SfConfig _config;
+        private readonly IApplicationLifetime _applicationLifetime;
         private bool isCompleted = false;
 
-        public HttpServer(SfConfig config)
+        public HttpServer(
+            HostBuilderOptions hostOptions,
+            SfConfig config,
+            IApplicationLifetime applicationLifetime)
         {
+            _hostOptions = hostOptions;
             _config = config;
+            _applicationLifetime = applicationLifetime;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            Console.WriteLine($"{nameof(HttpServer)} is starting.");
+            if (_hostOptions.Verbose)
+            {
+                Console.WriteLine($"{nameof(HttpServer)} is starting.");
+            }
+
             var http = new HttpListener();
             var redirectURI = string.Format("http://{0}:{1}/", "localhost", GetRandomUnusedPort());
             http.Prefixes.Add(redirectURI);
             http.Start();
 
             var authUrl = GetAuthorizationUrl(redirectURI);
-            Console.WriteLine($"Opening a browser window with Url: {authUrl}");
+
+            if (_hostOptions.Verbose)
+            {
+                Console.WriteLine($"Opening a browser window with Url: {authUrl}", Color.Blue);
+            }
 
             var process = ConsoleHandler.OpenBrowser(authUrl);
             var context = await http.GetContextAsync();
 
-            while (!stoppingToken.IsCancellationRequested || isCompleted )
+            while (!stoppingToken.IsCancellationRequested)
             {
                 if (isCompleted)
                 {
+                    _applicationLifetime.StopApplication();
                     return;
                 }
 
-                Console.WriteLine($"{nameof(HttpServer)} is running");
+                if (_hostOptions.Verbose)
+                {
+                    Console.WriteLine($"{nameof(HttpServer)} is running");
+                }
 
                 if (context != null)
                 {
@@ -55,35 +76,40 @@ namespace AuthApp.Host
 
                     if (context.Request.QueryString.Get("error") != null)
                     {
-                        Console.WriteLine(string.Format("OAuth authorization error: {0}.", context.Request.QueryString.Get("error")));
+                        Console.WriteLine($"OAuth authorization error: {context.Request.QueryString.Get("error")}.", Color.Red);
                     }
                     if (context.Request.QueryString.Get("code") == null)
                     {
-                        Console.WriteLine("Malformed authorization response. " + context.Request.QueryString);
+                        Console.WriteLine($"Malformed authorization response {context.Request.QueryString}", Color.Red);
                     }
 
                     // Authorization code the consumer must use to obtain the access and refresh tokens.
                     // The authorization code expires after 15 minutes.
                     var code = context.Request.QueryString.Get("code");
+                    Console.WriteLine($"The authorization code will expire in 15 minutes: {code}", Color.Blue);
 
                     var auth = new AuthenticationClient();
-                    await auth.WebServerAsync(_config.ClientId,
-                       _config.ClientSecret,
-                       redirectURI,
-                       code,
-                       $"{_config.LoginUrl}/services/oauth2/token");
+                    await auth.WebServerAsync(
+                        _config.ClientId,
+                        _config.ClientSecret,
+                        redirectURI,
+                        code,
+                        $"{_config.LoginUrl}/services/oauth2/token");
 
 
-                    Console.WriteLine($"Your access_token is {auth.AccessInfo.AccessToken}");
-                    Console.WriteLine($"Your refresh_token is {auth.AccessInfo.RefreshToken}");
+                    Console.WriteLineFormatted("Access_token = {0}",Color.Green, Color.Yellow, auth.AccessInfo.AccessToken);
+                    Console.WriteLineFormatted("Refresh_token = {0}", Color.Green, Color.Yellow, auth.AccessInfo.RefreshToken);
 
                     isCompleted = true;
+
+                    http.Stop();
+                    if (_hostOptions.Verbose)
+                    {
+                        Console.WriteLine($"{nameof(HttpServer)} is stopping.");
+                    }
                 }
                 await Task.Delay(TimeSpan.FromSeconds(5), stoppingToken);
             }
-
-            http.Stop();
-            Console.WriteLine($"{nameof(HttpServer)} is stopping.");
         }
 
         private int GetRandomUnusedPort()

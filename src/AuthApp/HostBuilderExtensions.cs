@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using Console = Colorful.Console;
@@ -18,28 +19,29 @@ namespace AuthApp
             var builder = new HostBuilder();
 
             builder.UseEnvironment(options.HostingEnviroment);
+            var fullPath = Directory.GetCurrentDirectory();
 
-            var path = Directory.GetCurrentDirectory();
-            builder.UseContentRoot(path);
-
-            var configPath = Path.Combine(path, "appsettings.json");
-
-            if (!string.IsNullOrWhiteSpace(options.ConfigFile))
+            if (!string.IsNullOrWhiteSpace(Path.GetDirectoryName(options.ConfigFile)))
             {
-                configPath = Path.Combine(path, options.ConfigFile);
+                fullPath = Path.GetDirectoryName(options.ConfigFile);
             }
+
+            builder.UseContentRoot(fullPath);
+
+            var defaultConfigName = !string.IsNullOrWhiteSpace(options.ConfigFile) ? Path.GetFileName(options.ConfigFile) : "appsettings.json";
+
 
             if (options.Verbose)
             {
-                Console.WriteLine(configPath, color: Color.Green);
+                Console.WriteLine($"ContentRoot:{fullPath}", color: Color.Green);
             }
 
             builder
                 .ConfigureAppConfiguration((context, config) =>
                 {
                     // appsettings file or others
-                    config.AddJsonFile($"{Path.GetFileName(configPath).Split(".")[0]}.json", optional: true)
-                          .AddJsonFile($"{Path.GetFileName(configPath).Split(".")[0]}.{options.HostingEnviroment}.json", optional: true);
+                    config.AddJsonFile(Path.Combine(fullPath, $"{(defaultConfigName).Split(".")[0]}.json"), optional: true)
+                          .AddJsonFile(Path.Combine(fullPath, $"{(defaultConfigName).Split(".")[0]}.{options.HostingEnviroment}.json"), optional: true);
 
                     // add secrets if specified
                     if (options.UserSecrets)
@@ -48,21 +50,29 @@ namespace AuthApp
                     }
 
                     // configure Azure Vault from the other settings.
-                    var appAzureVaultUrl = config.Build().Bind<AzureVaultOptions>("AzureVault",enableValidation: false); ;
+                    var appAzureVaultUrl = config.Build().Bind<AzureVaultOptions>("AzureVault",enableValidation: false);
 
-                    try
+                    // build azure key vault from passed in parameter
+                    if (!string.IsNullOrWhiteSpace(options.AzureVault))
                     {
-                        // use appsettings vault information
-                        if (!string.IsNullOrWhiteSpace(appAzureVaultUrl.BaseUrl)
-                            && string.IsNullOrWhiteSpace(options.AzureVault))
-                        {
-                            config.AddAzureKeyVault(hostingEnviromentName:options.HostingEnviroment, options.UseAzureKeyPrefix);
-                        }
+                        var dic = new Dictionary<string, string>
+                            {
+                                {"AzureVault:BaseUrl", options.AzureVault }
+                            };
 
+                        config.AddInMemoryCollection(dic);
                     }
-                    catch (Exception ex)
+
+                    // use appsettings vault information
+                    if (!string.IsNullOrWhiteSpace(appAzureVaultUrl.BaseUrl)
+                        || !string.IsNullOrWhiteSpace(options.AzureVault))
                     {
-                        Console.WriteLine(ex.Message, ConsoleColor.Red);
+                        config.AddAzureKeyVault(hostingEnviromentName:options.HostingEnviroment, options.UseAzureKeyPrefix);
+                    }
+
+                    if (options.Verbose)
+                    {
+                        config.Build().DebugConfigurations();
                     }
                 });
 
@@ -79,6 +89,8 @@ namespace AuthApp
             builder
                 .ConfigureServices((context, services) =>
                 {
+                    services.AddSingleton(options);
+
                     services.AddHostedService<HostStartupService>();
 
                     // disable hosting messages
