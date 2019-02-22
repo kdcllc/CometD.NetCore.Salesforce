@@ -5,7 +5,7 @@
     <TargetFrameworks>netcoreapp2.2;</TargetFrameworks>
     <ToolCommandName>salesforce</ToolCommandName>
     <PackageId>salesforce</PackageId>
-    <Description>A command-line tool that enables Salesforce Refresh Token Generation.</Description>
+    <Description>A command-line tool that enables Salesforce Access and Refresh Tokens Generation.</Description>
     <PackAsTool>True</PackAsTool>
   </PropertyGroup>
 

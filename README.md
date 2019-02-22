@@ -1,34 +1,78 @@
 # CometD .NET Core implementation of Salesforce Platform events
 [![Build status](https://ci.appveyor.com/api/projects/status/baalfhs6vvc38icc?svg=true)](https://ci.appveyor.com/project/kdcllc/cometd-netcore-salesforce)
 
-This repo contains the CometD .NET Core implementation for Salesforce Platform events. 
-These events can be subscribed to and listened to by your custom `Event Listener`.
+This repo contains the CometD .NET Core implementation for Salesforce Platform events.
+ 
+These events can be subscribed to and listened to by your custom `Event Listener`. The sample application of this library can be found [here](https://github.com/kdcllc/Bet.BuildingBlocks.SalesforceEventBus).
 
-1. `CometD.NetCore2.Salesforce`
-     - Salesforce Platform Events as Event Bus [eShopOnContainers](https://github.com/dotnet-architecture/eShopOnContainers).
+The solution contains the following:
+
+1. `CometD.NetCore2.Salesforce` Project
+     - A Salesforce Platform Events implementation based [Even Bus idea of eShopOnContainers](https://github.com/dotnet-architecture/eShopOnContainers).
      - [Reusable Building Blocks and sample application that listens to Salesforce push events](https://github.com/kdcllc/Bet.BuildingBlocks.SalesforceEventBus).
-2. DotNet Cli tool `AuthApp`
-   - This dotnet cli tool allows for retrieval of `Access Token` and `Refresh Token` to be used by any other application. Please refer to [How Are Apps Authenticated with the Web Server OAuth Authentication Flow](https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/intro_understanding_web_server_oauth_flow.htm)
 
+2. DotNet Cli tool `salesforce` Project
+   - This dotnet cli tool allows for retrieval of `Access Token` and `Refresh Token` to be used by any other application. Please refer to [How Are Apps Authenticated with the Web Server OAuth Authentication Flow](https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/intro_understanding_web_server_oauth_flow.htm)
 
 ## Installation
 
 - To include this library inside of your project run nuget package installation
-> Install-Package CometD.NetCore2.Salesforce
+
+```cmd
+    PM> Install-Package CometD.NetCore2.Salesforce
+```
+
 Or
-> dotnet add package CometD.NetCore.Salesforce
-- To Inatall Salesforce Cli tool globally
 
-> dotnet tool install salesforce -g
+```cmd
+ dotnet add package CometD.NetCore.Salesforce
+```
 
-Then to see if it was installed correctly:
+- To Install Salesforce Cli tool globally run the following command:
 
-> dotnet tool list -g
+```cmd
+ dotnet tool install salesforce -g
 
-## Salesforce DotNet Cli usage
-Run this in the project directory that contains appsettings.json with your setttings:
-> salesforce refresh-token
-It will open web browser and log in with your credentials.
+```
+
+To verify the installation run:
+
+```cmd
+ dotnet tool list -g
+```
+
+## Usage of Salesforce dotnet cli tool
+
+The regular usage of this tool is within the Salesforce project that utilizes this library and contains configuration settings with the minimum of:
+
+```json
+  "Salesforce": {
+    "ClientId": "",
+    "ClientSecret": ""
+  }
+````
+
+Or you can specify Azure Key Vault Url:
+
+```json
+    "AzureVault": {
+     "BaseUrl": "https://{name}.vault.azure.net/"
+    },
+```
+
+Then run:
+
+```cmd
+    salesforce get-tokens
+```
+
+Or specify url within the dotnet cli tool like so:
+
+```cmd
+    salesforce get-tokens --azure https://{name}.vault.azure.net/"
+```
+
+This tool will open web browser and will require you to log in with your credentials to Salesforce portal in order to retrieve the tokens.
 
 ## Saleforce Setup
 [Video](https://www.youtube.com/watch?v=L6OWyCfQD6U)

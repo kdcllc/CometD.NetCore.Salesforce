@@ -10,12 +10,12 @@
   </PropertyGroup>
 
   <PropertyGroup Label="Nuget Package Settings">
-	<Description>Event Bus for Salesforce Platform events.</Description>
-	<PackageProjectUrl>https://github.com/kdcllc/CometD.NetCore.Salesforce</PackageProjectUrl>
-	<RepositoryUrl>https://github.com/kdcllc/CometD.NetCore.Salesforce.git</RepositoryUrl>
+    <Description>Event Bus for Salesforce Platform events.</Description>
+    <PackageProjectUrl>https://github.com/kdcllc/CometD.NetCore.Salesforce</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/kdcllc/CometD.NetCore.Salesforce.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-	<PackageLicense>https://github.com/kdcllc/CometD.NetCore.Salesforce/blob/master/LICENSE</PackageLicense>
-	<PackageIconUrl>https://raw.githubusercontent.com/kdcllc/CometD.NetCore.Salesforce/master/img/logo64x64.png</PackageIconUrl>
+    <PackageLicense>https://github.com/kdcllc/CometD.NetCore.Salesforce/blob/master/LICENSE</PackageLicense>
+    <PackageIconUrl>https://raw.githubusercontent.com/kdcllc/CometD.NetCore.Salesforce/master/img/logo64x64.png</PackageIconUrl>
     <PackageTags>aspnetcore,dottet,salesforce, cometd, bayeux</PackageTags>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>

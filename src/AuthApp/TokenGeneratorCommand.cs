@@ -1,12 +1,14 @@
 ﻿using AuthApp.Host;
+using Bet.AspNetCore.Options;
 using McMaster.Extensions.CommandLineUtils;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System;
 using System.Threading.Tasks;
 namespace AuthApp
 {
-    [Command("refresh-token",
-        Description ="Generates Salesforce Refresh Token",
+    [Command("get-tokens",
+        Description = "Generates Salesforce Access and Refresh Tokens",
         ThrowOnUnexpectedArgument = false)]
     internal class TokenGeneratorCommand
     {
@@ -41,15 +43,23 @@ namespace AuthApp
                 HostingEnviroment = !string.IsNullOrWhiteSpace(HostingEnviroment) ? HostingEnviroment : "Development"
             };
 
-            var builder = HostBuilderExtensions.CreateDefaultBuilder(builderConfig)
-                .ConfigureServices((hostingContext,services) =>
-                {
-                    services.ConfigureWithDataAnnotationsValidation<SfConfig>("Salesforce");
-                    services.AddHostedService<HttpServer>();
-                });
+            try
+            {
+                var builder = HostBuilderExtensions.CreateDefaultBuilder(builderConfig)
+                                .ConfigureServices((hostingContext, services) =>
+                                {
+                                    services.ConfigureWithDataAnnotationsValidation<SfConfig>("Salesforce");
+                                    services.AddHostedService<HttpServer>();
+                                });
 
-            await builder.RunConsoleAsync();
-            return 0;
+                await builder.RunConsoleAsync();
+                return 0;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
         }
     }
 }
