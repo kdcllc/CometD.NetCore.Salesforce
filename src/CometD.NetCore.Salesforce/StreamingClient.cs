@@ -171,7 +171,7 @@ namespace CometD.NetCore.Salesforce
             // Salesforce socket timeout during connection(CometD session) = 110 seconds
             IDictionary<string, object> options = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase)
             {
-                { ClientTransport.TIMEOUT_OPTION, ReadTimeOut },
+                {ClientTransport.TIMEOUT_OPTION, _options.ReadTimeOut ?? ReadTimeOut },
                 {ClientTransport.MAX_NETWORK_DELAY_OPTION, 120000 }
             };
 

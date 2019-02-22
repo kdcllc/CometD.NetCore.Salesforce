@@ -65,5 +65,10 @@
         /// Salesforce ReplayId for specific message.
         /// </summary>
         public int ReplayId { get; set; }
+
+        /// <summary>
+        /// Long polling duration. Default  120 * 1000.
+        /// </summary>
+        public long? ReadTimeOut { get; set; }
     }
 }
