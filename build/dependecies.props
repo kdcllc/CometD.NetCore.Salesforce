@@ -47,7 +47,7 @@
   <ItemGroup Label="Shared Libraries">
     <PackageReference Update="Bet.AspNetCore" Version="1.0.3" />
     <PackageReference Update="CometD.NetCore2" Version="2.0.0" />
-    <PackageReference Update="Bet.BuildingBlocks.SalesforceEventBus" Version="2.1.0-pre" />
+    <PackageReference Update="Bet.BuildingBlocks.SalesforceEventBus" Version="2.0.0" />
     <PackageReference Update="McMaster.Extensions.CommandLineUtils" Version="2.3.2"/>
     <PackageReference Update="NetCoreForce.Client" Version="2.5.0" />
     <PackageReference Update="Polly" Version="7.0.2" />
