@@ -1,4 +1,7 @@
-﻿namespace AuthApp
+﻿using AuthApp.Host;
+using Microsoft.Extensions.Logging;
+
+namespace AuthApp
 {
     internal class HostBuilderOptions
     {
@@ -11,6 +14,11 @@
         /// Provides ability to get troubleshooting information.
         /// </summary>
         public bool Verbose { get; set; }
+
+        /// <summary>
+        /// TraceLevel if verbose is present.
+        /// </summary>
+        public LogLevel  Level { get; set; }
 
         /// <summary>
         /// Ability to use Web project secrets.
@@ -31,5 +39,15 @@
         /// Pass Hosting environment for the context of the application.
         /// </summary>
         public string HostingEnviroment { get; set; }
+
+        /// <summary>
+        /// Salesforce options.
+        /// </summary>
+        public SfConfig Settings { get; set; }
+
+        /// <summary>
+        /// The name of the configuration section for the options.
+        /// </summary>
+        public string SectionName { get; set; }
     }
 }

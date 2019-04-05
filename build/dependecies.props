@@ -1,7 +1,8 @@
 <Project>
 
   <PropertyGroup>
-    <NetCoreCommonVersion>2.1.1</NetCoreCommonVersion>
+    <NetCoreCommonVersion>2.2.*</NetCoreCommonVersion>
+    <BetCommonVersion>1.1.18</BetCommonVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TargetFramework)' == 'netcoreapp2.1' Or '$(TargetFramework)' == 'netstandard2.0'">
@@ -13,7 +14,7 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TargetFramework)' == 'netcoreapp3.0'">
-    <NetCoreCommonVersion>3.0.0-preview.19074.2</NetCoreCommonVersion>
+    <NetCoreCommonVersion>3.0.0-preview*</NetCoreCommonVersion>
   </PropertyGroup>
 
   <ItemGroup Label="NetCore">
@@ -39,15 +40,16 @@
     <PackageReference Update="Microsoft.AspNetCore.Http" Version="$(NetCoreCommonVersion)" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.0'">
-    <PackageReference Update="Microsoft.AspNetCore.Hosting.Server.Abstractions" Version="3.0.0-preview-18571-0006" />
-    <PackageReference Update="Microsoft.AspNetCore.Http" Version="3.0.0-preview-18571-0006" />
+  <ItemGroup Label="Bet">
+    <PackageReference Update="Bet.Extensions.Options" Version="$(BetCommonVersion)" />
+    <PackageReference Update="Bet.Extensions.Hosting" Version="$(BetCommonVersion)" />
+    <PackageReference Update="Bet.Extensions.AzureVault" Version="$(BetCommonVersion)"/>
+    <PackageReference Update="Bet.Extensions.Logging"  Version="$(BetCommonVersion)"/>
   </ItemGroup>
 
   <ItemGroup Label="Shared Libraries">
-    <PackageReference Update="Bet.AspNetCore" Version="1.0.3" />
     <PackageReference Update="CometD.NetCore2" Version="2.0.0" />
-    <PackageReference Update="Bet.BuildingBlocks.SalesforceEventBus" Version="2.1.0-pre" />
+    <PackageReference Update="Bet.BuildingBlocks.SalesforceEventBus" Version="2.0.0" />
     <PackageReference Update="McMaster.Extensions.CommandLineUtils" Version="2.3.2"/>
     <PackageReference Update="NetCoreForce.Client" Version="2.5.0" />
     <PackageReference Update="Polly" Version="7.0.2" />
