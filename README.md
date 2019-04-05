@@ -63,7 +63,7 @@ Or you can specify Azure Key Vault Url:
 Then run:
 
 ```cmd
-    salesforce get-tokens
+    salesforce get-tokens --verbose:debug
 ```
 
 Or specify url within the dotnet cli tool like so:

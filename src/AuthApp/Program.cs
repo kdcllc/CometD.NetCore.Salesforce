@@ -1,4 +1,6 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Drawing;
+using System.Reflection;
 using System.Threading.Tasks;
 using McMaster.Extensions.CommandLineUtils;
 using Console = Colorful.Console;
@@ -13,7 +15,8 @@ namespace AuthApp
     {
         private static Task<int> Main(string[] args)
         {
-            return CommandLineApplication.ExecuteAsync<Program>(args);
+
+            return  CommandLineApplication.ExecuteAsync<Program>(args);
         }
 
         private int OnExecute(CommandLineApplication app, IConsole console)

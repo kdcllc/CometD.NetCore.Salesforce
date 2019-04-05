@@ -10,7 +10,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Bet.AspNetCore" />
+
+    <PackageReference Include="Bet.Extensions.Options" />
+    <PackageReference Include="Bet.Extensions.Hosting" />
+    <PackageReference Include="Bet.Extensions.AzureVault" />
+    <PackageReference Include="Bet.Extensions.Logging" />
+
     <PackageReference Include="Colorful.Console" />
     <PackageReference Include="McMaster.Extensions.CommandLineUtils" />
     <PackageReference Include="Microsoft.AspNetCore.Hosting.Server.Abstractions" />

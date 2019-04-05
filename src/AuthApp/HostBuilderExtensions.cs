@@ -4,7 +4,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -30,13 +29,13 @@ namespace AuthApp
 
             var defaultConfigName = !string.IsNullOrWhiteSpace(options.ConfigFile) ? Path.GetFileName(options.ConfigFile) : "appsettings.json";
 
-
             if (options.Verbose)
             {
                 Console.WriteLine($"ContentRoot:{fullPath}", color: Color.Green);
             }
 
             builder
+                .UseStartupFilter()
                 .ConfigureAppConfiguration((context, config) =>
                 {
                     // appsettings file or others
@@ -70,7 +69,8 @@ namespace AuthApp
                         config.AddAzureKeyVault(hostingEnviromentName:options.HostingEnviroment, options.UseAzureKeyPrefix);
                     }
 
-                    if (options.Verbose)
+                    if (options.Verbose && options.Level == LogLevel.Debug
+                    || options.Level == LogLevel.Trace)
                     {
                         config.Build().DebugConfigurations();
                     }
@@ -98,7 +98,10 @@ namespace AuthApp
 
                     if (options.Verbose)
                     {
-                        services.AddLogging(x => x.AddFilter((_) => true));
+                        services.AddLogging(x => x.AddFilter((loglevel) =>
+                        {
+                            return loglevel == options.Level;
+                        }));
                     }
 
                     services.AddSingleton(PhysicalConsole.Singleton);

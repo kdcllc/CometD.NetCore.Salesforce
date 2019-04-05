@@ -1,4 +1,6 @@
-﻿namespace AuthApp
+﻿using Microsoft.Extensions.Logging;
+
+namespace AuthApp
 {
     internal class HostBuilderOptions
     {
@@ -11,6 +13,11 @@
         /// Provides ability to get troubleshooting information.
         /// </summary>
         public bool Verbose { get; set; }
+
+        /// <summary>
+        /// TraceLevel if verbose is present.
+        /// </summary>
+        public LogLevel  Level { get; set; }
 
         /// <summary>
         /// Ability to use Web project secrets.

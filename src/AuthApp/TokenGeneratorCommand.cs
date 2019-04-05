@@ -1,10 +1,13 @@
 ﻿using AuthApp.Host;
-using Bet.AspNetCore.Options;
 using McMaster.Extensions.CommandLineUtils;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using System;
+using System.Drawing;
 using System.Threading.Tasks;
+using Console = Colorful.Console;
+
 namespace AuthApp
 {
     [Command("get-tokens",
@@ -22,14 +25,27 @@ namespace AuthApp
         [Option("--configfile", Description = "Allows to specify a configuration file besides appsettings.json to be specified.")]
         public string ConfigFile { get; set; }
 
-        [Option("--verbose", Description = "Allows Verbose logging for the tool. Enable this to get tracing information. Default is false.")]
-        public bool Verbose { get; set; }
+        /// <summary>
+        /// Property types of ValueTuple{bool,T} translate to CommandOptionType.SingleOrNoValue.
+        /// Input                   | Value
+        /// ------------------------|--------------------------------
+        /// (none)                  | (false, default(TraceLevel))
+        /// --verbose               | (true, LogLevel.Information)
+        /// --verbose:information   | (true, LogLevel.Information)
+        /// --verbose:debug         | (true, LogLevel.Debug)
+        /// --verbose:trace         | (true, LogLevel.Trace)
+        /// </summary>
+        [Option(Description = "Allows Verbose logging for the tool. Enable this to get tracing information. Default is false.")]
+        public (bool HasValue, LogLevel level) Verbose { get; }
 
         [Option("--usesecrets", Description = "Enable UserSecrets.")]
         public bool UserSecrets { get; set; }
 
         [Option("--environment", Description = "Specify Hosting Environment Name for the cli tool execution.")]
         public string HostingEnviroment { get; set; }
+
+        [Option("--section", Description ="Configuration Section Name to retrieve the options. The Default value is Salesforce.")]
+        public string SectionName { get; set; }
 
         private async Task<int> OnExecuteAsync()
         {
@@ -38,7 +54,8 @@ namespace AuthApp
                 AzureVault = AzureVault,
                 UseAzureKeyPrefix = !UseAzureKeyPrefix,
                 ConfigFile = ConfigFile,
-                Verbose = Verbose,
+                Verbose = Verbose.HasValue,
+                Level = Verbose.level,
                 UserSecrets = UserSecrets,
                 HostingEnviroment = !string.IsNullOrWhiteSpace(HostingEnviroment) ? HostingEnviroment : "Development"
             };
@@ -48,18 +65,26 @@ namespace AuthApp
                 var builder = HostBuilderExtensions.CreateDefaultBuilder(builderConfig)
                                 .ConfigureServices((hostingContext, services) =>
                                 {
-                                    services.ConfigureWithDataAnnotationsValidation<SfConfig>("Salesforce");
+                                    var configSection = string.IsNullOrWhiteSpace(SectionName) ? "Salesforce" : SectionName;
+
+                                    services.ConfigureWithDataAnnotationsValidation<SfConfig>(hostingContext.Configuration, configSection);
                                     services.AddHostedService<HttpServer>();
                                 });
 
                 await builder.RunConsoleAsync();
+
                 return 0;
             }
-            catch (Exception)
+            catch(Microsoft.Extensions.Options.OptionsValidationException)
             {
-                throw;
+                Console.WriteLine("Not all of the required configurations has been provided.", Color.Red);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message, Color.Red);
             }
 
+            return 0;
         }
     }
 }
