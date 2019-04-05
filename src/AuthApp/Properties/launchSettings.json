@@ -3,8 +3,9 @@
     "AuthApp": {
       "commandName": "Project",
       //"commandLineArgs": "get-tokens --azure https://{name}.vault.azure.net/"
-      "commandLineArgs": "get-tokens --verbose:information --section:sfconfig"
+      //"commandLineArgs": "get-tokens --verbose:information --section:sfconfig"
 
+      "commandLineArgs": "get-tokens --key: --secret: --verbose:information --section:Salesforce"
     }
   }
 }

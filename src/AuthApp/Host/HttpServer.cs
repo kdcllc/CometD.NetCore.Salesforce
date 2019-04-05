@@ -94,7 +94,7 @@ namespace AuthApp.Host
                         _config.ClientSecret,
                         redirectURI,
                         code,
-                        $"{_config.LoginUrl}{_config.OAuthTokenUri}");
+                        $"{_config.LoginUrl}{_config.OAuthUri}");
 
                     Console.WriteLineFormatted("Access_token = {0}",Color.Green, Color.Yellow, auth.AccessInfo.AccessToken);
                     Console.WriteLineFormatted("Refresh_token = {0}", Color.Green, Color.Yellow, auth.AccessInfo.RefreshToken);
@@ -122,7 +122,7 @@ namespace AuthApp.Host
 
         private string GetAuthorizationUrl(string redirectURI)
         {
-            var authEndpoint = $"{_config.LoginUrl}{_config.OAuthUri}";
+            var authEndpoint = $"{_config.LoginUrl}{_config.OAuthorizeUri}";
             var url = $"{authEndpoint}?response_type=code&access_type=offline&scope=openid%20profile%20api%20refresh_token%20offline_access&redirect_uri={Uri.EscapeDataString(redirectURI)}&client_id={_config.ClientId}";
             return url;
         }

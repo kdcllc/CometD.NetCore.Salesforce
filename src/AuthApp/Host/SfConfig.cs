@@ -26,8 +26,8 @@ namespace AuthApp.Host
         /// <summary>
         /// Default set to /services/oauth2/token.
         /// </summary>
-        public string OAuthTokenUri { get; set; } = "/services/oauth2/token";
+        public string OAuthUri { get; set; } = "/services/oauth2/token";
 
-        public string OAuthUri { get; set; } = "/services/oauth2/authorize";
+        public string OAuthorizeUri { get; set; } = "/services/oauth2/authorize";
     }
 }

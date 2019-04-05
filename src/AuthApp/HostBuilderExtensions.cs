@@ -69,6 +69,21 @@ namespace AuthApp
                         config.AddAzureKeyVault(hostingEnviromentName:options.HostingEnviroment, options.UseAzureKeyPrefix);
                     }
 
+                    if(!string.IsNullOrWhiteSpace(options.Settings.ClientId)
+                        && !string.IsNullOrWhiteSpace(options.Settings.ClientSecret))
+                    {
+                        var inputValues = new Dictionary<string, string>
+                            {
+                                {$"{options.SectionName}:ClientId", options.Settings.ClientId },
+                                {$"{options.SectionName}:ClientSecret", options.Settings.ClientSecret },
+                                {$"{options.SectionName}:LoginUrl", options.Settings.LoginUrl },
+                                {$"{options.SectionName}:OAuthUri", options.Settings.OAuthUri },
+                                {$"{options.SectionName}:OAuthorizeUri", options.Settings.OAuthorizeUri },
+                            };
+
+                        config.AddInMemoryCollection(inputValues);
+                    }
+
                     if (options.Verbose && options.Level == LogLevel.Debug
                     || options.Level == LogLevel.Trace)
                     {

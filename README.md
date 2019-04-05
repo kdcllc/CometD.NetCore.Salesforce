@@ -43,17 +43,32 @@ To verify the installation run:
 
 ## Usage of Salesforce dotnet cli tool
 
-The regular usage of this tool is within the Salesforce project that utilizes this library and contains configuration settings with the minimum of:
+There are several ways to run this cli tool.
+
+1. From any location with Consumer Key and Secret provided
+
+```bash
+    salesforce get-tokens --key:{key} --secret:{secret} --login:https://login.salesforce.com --verbose:information
+```
+
+2. Running the tool in the directory that contains `appsettings.json` file
+
+```bash
+    salesforce get-tokens --section Salesforce
+```
+Note: required configurations are as follows:
 
 ```json
   "Salesforce": {
     "ClientId": "",
-    "ClientSecret": ""
+    "ClientSecret": "",
+    "LoginUrl": ""
   }
 ````
 
-Or you can specify Azure Key Vault Url:
+3. Running with Azure Vault
 
+`appsettings.json
 ```json
     "AzureVault": {
      "BaseUrl": "https://{name}.vault.azure.net/"

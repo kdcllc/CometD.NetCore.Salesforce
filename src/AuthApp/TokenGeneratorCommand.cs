@@ -15,6 +15,15 @@ namespace AuthApp
         ThrowOnUnexpectedArgument = false)]
     internal class TokenGeneratorCommand
     {
+        [Option("--key", Description = "The Salesforce Consumer Key.")]
+        public string ClientId { get; set; }
+
+        [Option("--secret", Description = "The Salesforce Consumer Secret.")]
+        public string ClientSecret { get; set; }
+
+        [Option("--login", Description = "The Salesforce login url. The default value is https://login.salesforce.com.")]
+        public string LoginUrl { get; set; }
+
         [Option("--azure",
             Description = "Allows to specify Azure Vault Url. It overrides url specified in the appsetting.json file or any other configuration provider.")]
         public string AzureVault { get; set; }
@@ -57,7 +66,14 @@ namespace AuthApp
                 Verbose = Verbose.HasValue,
                 Level = Verbose.level,
                 UserSecrets = UserSecrets,
-                HostingEnviroment = !string.IsNullOrWhiteSpace(HostingEnviroment) ? HostingEnviroment : "Development"
+                HostingEnviroment = !string.IsNullOrWhiteSpace(HostingEnviroment) ? HostingEnviroment : "Development",
+                Settings = new SfConfig
+                {
+                    ClientId = ClientId,
+                    ClientSecret = ClientSecret,
+                    LoginUrl = !string.IsNullOrWhiteSpace(LoginUrl) ? LoginUrl :  "https://login.salesforce.com"
+                },
+                SectionName = string.IsNullOrWhiteSpace(SectionName) ? "Salesforce" : SectionName,
             };
 
             try
@@ -65,9 +81,7 @@ namespace AuthApp
                 var builder = HostBuilderExtensions.CreateDefaultBuilder(builderConfig)
                                 .ConfigureServices((hostingContext, services) =>
                                 {
-                                    var configSection = string.IsNullOrWhiteSpace(SectionName) ? "Salesforce" : SectionName;
-
-                                    services.ConfigureWithDataAnnotationsValidation<SfConfig>(hostingContext.Configuration, configSection);
+                                    services.ConfigureWithDataAnnotationsValidation<SfConfig>(hostingContext.Configuration, builderConfig.SectionName);
                                     services.AddHostedService<HttpServer>();
                                 });
 
@@ -75,7 +89,7 @@ namespace AuthApp
 
                 return 0;
             }
-            catch(Microsoft.Extensions.Options.OptionsValidationException)
+            catch(Microsoft.Extensions.Options.OptionsValidationException exv)
             {
                 Console.WriteLine("Not all of the required configurations has been provided.", Color.Red);
             }

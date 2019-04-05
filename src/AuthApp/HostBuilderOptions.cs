@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using AuthApp.Host;
+using Microsoft.Extensions.Logging;
 
 namespace AuthApp
 {
@@ -38,5 +39,15 @@ namespace AuthApp
         /// Pass Hosting environment for the context of the application.
         /// </summary>
         public string HostingEnviroment { get; set; }
+
+        /// <summary>
+        /// Salesforce options.
+        /// </summary>
+        public SfConfig Settings { get; set; }
+
+        /// <summary>
+        /// The name of the configuration section for the options.
+        /// </summary>
+        public string SectionName { get; set; }
     }
 }
