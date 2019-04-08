@@ -15,7 +15,6 @@ namespace AuthApp
     {
         private static Task<int> Main(string[] args)
         {
-
             return  CommandLineApplication.ExecuteAsync<Program>(args);
         }
 

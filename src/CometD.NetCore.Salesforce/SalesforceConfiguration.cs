@@ -17,7 +17,8 @@
 
         /// <summary>
         /// Url to login to Salesforce
-        ///  https://test.salesforce.com/services/oauth2/authorize or https://login.salesforce.com/services/oauth2/authorize
+        ///  https://test.salesforce.com/services/oauth2/authorize
+        ///  or https://login.salesforce.com/services/oauth2/authorize
         /// </summary>
         public string LoginUrl { get; set; }
 
@@ -52,9 +53,19 @@
         public string OAuthUri { get; set; }
 
         /// <summary>
-        /// Retry for the connections and authentications
+        /// Retry for the connections and authentications.
         /// </summary>
         public int Retry { get; set; }
+
+        /// <summary>
+        /// The number to be used for BackoffPower for policy. The default is 2.
+        /// </summary>
+        public int BackoffPower { get; set; } = 2;
+
+        /// <summary>
+        /// The expiration for <see cref="ForceClient"/> token. The default is 1:00 hour.
+        /// </summary>
+        public string TokenExpiration { get; set; } = "01:00:00";
 
         /// <summary>
         /// The event that gets raised when a request for proposal is approved and the Deal is in working status

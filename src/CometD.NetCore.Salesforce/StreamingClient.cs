@@ -39,7 +39,8 @@ namespace CometD.NetCore.Salesforce
         /// <param name="logger"></param>
         /// <param name="authenticationClient"></param>
         /// <param name="options"></param>
-        public StreamingClient(ILogger<StreamingClient> logger,
+        public StreamingClient(
+            ILogger<StreamingClient> logger,
             IAuthenticationClientProxy authenticationClient,
             SalesforceConfiguration options)
         {

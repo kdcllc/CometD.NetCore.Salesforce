@@ -6,12 +6,13 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="CometD.NetCore2"/>
-		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions"/>
-		<PackageReference Include="Microsoft.Extensions.DependencyInjection"/>
+    <PackageReference Include="Bet.Extensions" />
+		<PackageReference Include="CometD.NetCore2" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection" />
 		<PackageReference Include="Microsoft.Extensions.Options" />
-		<PackageReference Include="NetCoreForce.Client"/>
-		<PackageReference Include="Polly"/>
+		<PackageReference Include="NetCoreForce.Client" />
+		<PackageReference Include="Polly" />
 	</ItemGroup>
 
 </Project>

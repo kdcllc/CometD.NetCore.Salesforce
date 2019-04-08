@@ -1,7 +1,12 @@
 ﻿using CometD.NetCore.Salesforce;
 using CometD.NetCore.Salesforce.ForceClient;
+using CometD.NetCore.Salesforce.Resilience;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
+using NetCoreForce.Client;
+using System;
+using System.Threading;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -10,6 +15,49 @@ namespace Microsoft.Extensions.DependencyInjection
     /// </summary>
     public static class StreamingClientExtensions
     {
+        public static IServiceCollection AddResilientForceClient(
+            this IServiceCollection services,
+            IConfiguration configuration,
+            string sectionName = "Salesforce")
+        {
+            services.Configure<SalesforceConfiguration>(configuration.GetSection(sectionName));
+
+            services.AddTransient<IResilientForceClient, ResilientForceClient>();
+
+            services.AddTransient<Func<AsyncExpiringLazy<ForceClient>>>(sp => ()  =>
+            {
+                var options = sp.GetRequiredService<IOptions<SalesforceConfiguration>>().Value;
+
+                TimeSpan.TryParse(options.TokenExpiration, out var tokenExperation);
+
+                return new AsyncExpiringLazy<ForceClient>(async data =>
+                {
+                    if (data.Result == null
+                        || DateTime.UtcNow > data.ValidUntil.Subtract(TimeSpan.FromSeconds(30)))
+                    {
+                       var authClient = new AuthenticationClient();
+
+                        await authClient.TokenRefreshAsync(options.RefreshToken, options.ClientId);
+
+                        var client = new ForceClient(
+                            authClient.AccessInfo.InstanceUrl,
+                            authClient.ApiVersion,
+                            authClient.AccessInfo.AccessToken);
+
+                        return new AsyncExpirationValue<ForceClient>
+                        {
+                            Result = client,
+                            ValidUntil = DateTimeOffset.UtcNow.Add(tokenExperation)
+                        };
+                    }
+
+                    return data;
+                });
+            });
+
+            return services;
+        }
+
         /// <summary>
         /// An Extension method to add <see cref="StreamingClient"/> dependencies.
         /// </summary>

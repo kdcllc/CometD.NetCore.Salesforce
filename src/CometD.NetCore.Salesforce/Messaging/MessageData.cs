@@ -1,7 +1,7 @@
 ﻿namespace CometD.NetCore.Salesforce.Messaging
 {
     /// <summary>
-    /// Data from the salesforce platform event reply.
+    /// Data from the Salesforce platform event reply.
     /// </summary>
     /// <typeparam name="TPayload"></typeparam>
     public class MessageData<TPayload> where TPayload : MessagePayload
