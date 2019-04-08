@@ -91,70 +91,169 @@ namespace CometD.NetCore.Salesforce.Resilience
         }
 
         ///<inheritdoc/>
-        public Task DeleteRecord(
+        public Task DeleteRecordAsync(
             string sObjectTypeName,
             string objectId,
             CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            var mContext = new Context
+            {
+                [PolicyContextMethod] = nameof(DeleteRecordAsync)
+            };
+
+            return _policy.ExecuteAsync(
+                (context, token) =>
+                {
+                    var client = _forceClient.Value().Result;
+                    return client.DeleteRecord(sObjectTypeName, objectId);
+                },
+                mContext,
+                cancellationToken);
         }
 
         ///<inheritdoc/>
-        public Task<DescribeGlobal> DescribeGlobalAsync(CancellationToken cancellationToken = default)
+        public async Task<DescribeGlobal> DescribeGlobalAsync(CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            var mContext = new Context
+            {
+                [PolicyContextMethod] = nameof(DescribeGlobalAsync)
+            };
+
+            return await _policy.ExecuteAsync(
+                async (context, token) =>
+                {
+                    var client = _forceClient.Value().Result;
+                    return await client.DescribeGlobal();
+                },
+                mContext,
+                cancellationToken);
         }
 
         ///<inheritdoc/>
-        public Task<List<SalesforceVersion>> GetAvailableRestApiVersionsAsync(
+        public async Task<List<SalesforceVersion>> GetAvailableRestApiVersionsAsync(
             string currentInstanceUrl = null,
             CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            var mContext = new Context
+            {
+                [PolicyContextMethod] = nameof(GetAvailableRestApiVersionsAsync)
+            };
+
+            return await _policy.ExecuteAsync(
+                async (context, token) =>
+                {
+                    var client = _forceClient.Value().Result;
+                    return await client.GetAvailableRestApiVersions(currentInstanceUrl);
+                },
+                mContext,
+                cancellationToken);
         }
 
         ///<inheritdoc/>
-        public Task<SObjectBasicInfo> GetObjectBasicInfoAsync(
+        public async Task<SObjectBasicInfo> GetObjectBasicInfoAsync(
             string objectTypeName,
             CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            var mContext = new Context
+            {
+                [PolicyContextMethod] = nameof(GetObjectBasicInfoAsync)
+            };
+
+            return await _policy.ExecuteAsync(
+                async (context, token) =>
+                {
+                    var client = _forceClient.Value().Result;
+                    return await client.GetObjectBasicInfo(objectTypeName);
+                },
+                mContext,
+                cancellationToken);
         }
 
         ///<inheritdoc/>
-        public Task<T> GetObjectByIdAsync<T>(
+        public async Task<T> GetObjectByIdAsync<T>(
             string sObjectTypeName,
             string objectId,
             List<string> fields = null,
             CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            var mContext = new Context
+            {
+                [PolicyContextMethod] = nameof(GetObjectByIdAsync)
+            };
+
+            return await _policy.ExecuteAsync(
+                async (context, token) =>
+                {
+                    var client = _forceClient.Value().Result;
+                    return await client.GetObjectById<T>(
+                        sObjectTypeName,
+                        objectId,
+                        fields);
+                },
+                mContext,
+                cancellationToken);
         }
 
         ///<inheritdoc/>
-        public Task<SObjectDescribeFull> GetObjectDescribeAsync(
+        public async Task<SObjectDescribeFull> GetObjectDescribeAsync(
             string objectTypeName,
             CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            var mContext = new Context
+            {
+                [PolicyContextMethod] = nameof(GetObjectDescribeAsync)
+            };
+
+            return await _policy.ExecuteAsync(
+                async (context, token) =>
+                {
+                    var client = _forceClient.Value().Result;
+                    return await client.GetObjectDescribe(objectTypeName);
+                },
+                mContext,
+                cancellationToken);
         }
 
         ///<inheritdoc/>
-        public Task<OrganizationLimits> GetOrganizationLimitsAsync(CancellationToken cancellationToken = default)
+        public async Task<OrganizationLimits> GetOrganizationLimitsAsync(CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            var mContext = new Context
+            {
+                [PolicyContextMethod] = nameof(GetOrganizationLimitsAsync)
+            };
+
+            return await _policy.ExecuteAsync(
+                async (context, token) =>
+                {
+                    var client = _forceClient.Value().Result;
+                    return await client.GetOrganizationLimits();
+                },
+                mContext,
+                cancellationToken);
         }
 
         ///<inheritdoc/>
-        public Task<UserInfo> GetUserInfoAsync(
+        public async Task<UserInfo> GetUserInfoAsync(
             string identityUrl,
             CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            var mContext = new Context
+            {
+                [PolicyContextMethod] = nameof(GetUserInfoAsync)
+            };
+
+            return await _policy.ExecuteAsync(
+                async (context, token) =>
+                {
+                    var client = _forceClient.Value().Result;
+                    return await client.GetUserInfo(identityUrl);
+                },
+                mContext,
+                cancellationToken);
         }
 
         ///<inheritdoc/>
-        public Task<CreateResponse> InsertOrUpdateRecordAsync<T>(
+        public async Task<CreateResponse> InsertOrUpdateRecordAsync<T>(
             string sObjectTypeName,
             string fieldName,
             string fieldValue,
@@ -162,61 +261,110 @@ namespace CometD.NetCore.Salesforce.Resilience
             Dictionary<string, string> customHeaders = null,
             CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            var mContext = new Context
+            {
+                [PolicyContextMethod] = nameof(InsertOrUpdateRecordAsync)
+            };
+
+            return await _policy.ExecuteAsync(
+                async (context, token) =>
+                {
+                    var client = _forceClient.Value().Result;
+                    return await client.InsertOrUpdateRecord<T>(
+                        sObjectTypeName,
+                        fieldName,
+                        fieldValue,
+                        sObject,
+                        customHeaders);
+                },
+                mContext,
+                cancellationToken);
         }
 
         ///<inheritdoc/>
-        public Task<List<T>> QueryAsync<T>(
+        public async Task<List<T>> QueryAsync<T>(
             string queryString,
             bool queryAll = false,
             CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            var mContext = new Context
+            {
+                [PolicyContextMethod] = nameof(QueryAsync)
+            };
+
+            return await _policy.ExecuteAsync(
+                async (context, token) =>
+                {
+                    var client = _forceClient.Value().Result;
+                    return await client.Query<T>(
+                        queryString,
+                        queryAll);
+                },
+                mContext,
+                cancellationToken);
         }
 
         ///<inheritdoc/>
-        public IAsyncEnumerable<T> QueryAsync<T>(
-            string queryString,
-            bool queryAll = false,
-            int? batchSize = null,
-            CancellationToken cancellationToken = default)
-        {
-            throw new NotImplementedException();
-        }
-
-        ///<inheritdoc/>
-        public IAsyncEnumerator<T> QueryAsyncEnumerator<T>(
-            string queryString,
-            bool queryAll = false,
-            int? batchSize = null,
-            CancellationToken cancellationToken = default)
-        {
-            throw new NotImplementedException();
-        }
-
-        ///<inheritdoc/>
-        public Task<T> QuerySingleAsync<T>(
+        public async Task<T> QuerySingleAsync<T>(
             string queryString,
             bool queryAll = false,
             CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            var mContext = new Context
+            {
+                [PolicyContextMethod] = nameof(QuerySingleAsync)
+            };
+
+            return await _policy.ExecuteAsync(
+                async (context, token) =>
+                {
+                    var client = _forceClient.Value().Result;
+                    return await client.QuerySingle<T>(
+                        queryString,
+                        queryAll);
+                },
+                mContext,
+                cancellationToken);
         }
 
         ///<inheritdoc/>
-        public Task<SearchResult<T>> SearchAsync<T>(
+        public async Task<SearchResult<T>> SearchAsync<T>(
             string searchString,
             CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            var mContext = new Context
+            {
+                [PolicyContextMethod] = nameof(SearchAsync)
+            };
+
+            return await _policy.ExecuteAsync(
+                async (context, token) =>
+                {
+                    var client = _forceClient.Value().Result;
+                    return await client.Search<T>(searchString);
+                },
+                mContext,
+                cancellationToken);
         }
 
         ///<inheritdoc/>
-        public bool TestConnection(
+        public async Task<bool> TestConnectionAsync(
             string currentInstanceUrl = null,
             CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            var mContext = new Context
+            {
+                [PolicyContextMethod] = nameof(TestConnectionAsync)
+            };
+
+            return await _policy.ExecuteAsync(
+                async (context, token) =>
+                {
+                    var client = _forceClient.Value().Result;
+                    return await Task.FromResult(client.TestConnection(currentInstanceUrl));
+                },
+                mContext,
+                cancellationToken);
         }
 
         ///<inheritdoc/>
@@ -227,7 +375,23 @@ namespace CometD.NetCore.Salesforce.Resilience
             Dictionary<string, string> customHeaders = null,
             CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            var mContext = new Context
+            {
+                [PolicyContextMethod] = nameof(UpdateRecordAsync)
+            };
+
+            return _policy.ExecuteAsync(
+                (context, token) =>
+                {
+                    var client = _forceClient.Value().Result;
+                    return client.UpdateRecord<T>(
+                        sObjectTypeName,
+                        objectId,
+                        sObject,
+                        customHeaders);
+                },
+                mContext,
+                cancellationToken);
         }
 
         private IAsyncPolicy GetWaitAndRetryPolicy()

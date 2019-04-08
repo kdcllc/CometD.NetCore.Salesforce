@@ -48,7 +48,7 @@ namespace CometD.NetCore.Salesforce.Resilience
         /// <param name="objectId"> Id of Object to update</param>
         /// <param name="cancellationToken"></param>
         /// <returns> void, API returns 204/NoContent</returns>
-        Task DeleteRecord(
+        Task DeleteRecordAsync(
             string sObjectTypeName,
             string objectId,
             CancellationToken cancellationToken = default);
@@ -171,42 +171,6 @@ namespace CometD.NetCore.Salesforce.Resilience
             CancellationToken cancellationToken = default);
 
         /// <summary>
-        ///  Retrieve a System.Collections.Generic.IAsyncEnumerable`1 using a SOQL query.
-        ///  Batches will be retrieved asynchronously.
-        ///  When using the iterator, the initial result batch will be returned as soon as
-        ///  it is received. The additional result batches will be retrieved only as needed.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="queryString">SOQL query string, without any URL escaping/encoding</param>
-        /// <param name="queryAll"> Optional. True if deleted records are to be included.await Defaults to false.</param>
-        /// <param name="batchSize">Optional. Size of result batches between 200 and 2000</param>
-        /// <param name="cancellationToken"></param>
-        /// <returns></returns>
-        IAsyncEnumerable<T> QueryAsync<T>(
-            string queryString,
-            bool queryAll = false,
-            int? batchSize = null,
-            CancellationToken cancellationToken = default);
-
-        /// <summary>
-        ///  Retrieve a System.Collections.Generic.IAsyncEnumerator`1 using a SOQL query.
-        ///  Batches will be retrieved asynchronously.
-        ///  When using the iterator, the initial result batch will be returned as soon as
-        ///  it is received. The additional result batches will be retrieved only as needed.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="queryString">SOQL query string, without any URL escaping/encoding</param>
-        /// <param name="queryAll">Optional. True if deleted records are to be included.await Defaults to false.</param>
-        /// <param name="batchSize">Optional. Size of result batches between 200 and 2000</param>
-        /// <param name="cancellationToken"></param>
-        /// <returns> System.Collections.Generic.IAsyncEnumerator`1 of results</returns>
-        IAsyncEnumerator<T> QueryAsyncEnumerator<T>(
-            string queryString,
-            bool queryAll = false,
-            int? batchSize = null,
-            CancellationToken cancellationToken = default);
-
-        /// <summary>
         ///  Retrieve a single record using a SOQL query.
         ///  Will throw an exception if multiple rows are retrieved by the query - if you
         ///  are note sure of a single result, use Query{T} instead.
@@ -245,7 +209,7 @@ namespace CometD.NetCore.Salesforce.Resilience
         /// <param name="currentInstanceUrl"></param>
         /// <param name="cancellationToken"></param>
         /// <returns> True or false. Does not throw exceptions, only false in case of any errors.</returns>
-        bool TestConnection(
+        bool TestConnectionAsync(
             string currentInstanceUrl = null,
             CancellationToken cancellationToken = default);
 
