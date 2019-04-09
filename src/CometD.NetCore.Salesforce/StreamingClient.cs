@@ -15,6 +15,8 @@ namespace CometD.NetCore.Salesforce
     /// <summary>
     /// CometD implementation of <see cref="IStreamingClient"/>.
     /// </summary>
+    [Obsolete("Use " + nameof(ResilientStreamingClient) + "class instead.")]
+
     public class StreamingClient : IStreamingClient
     {
         private AccessTokenResponse _tokenInfo;
@@ -172,7 +174,7 @@ namespace CometD.NetCore.Salesforce
             _tokenInfo = _authenticationClient.AuthenticationClient.AccessInfo;
 
             // Salesforce socket timeout during connection(CometD session) = 110 seconds
-            IDictionary<string, object> options = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase)
+            var options = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase)
             {
                 {ClientTransport.TIMEOUT_OPTION, _options.ReadTimeOut ?? ReadTimeOut },
                 {ClientTransport.MAX_NETWORK_DELAY_OPTION, _options.ReadTimeOut ?? ReadTimeOut }

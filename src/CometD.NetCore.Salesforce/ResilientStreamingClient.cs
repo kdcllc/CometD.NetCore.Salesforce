@@ -235,7 +235,7 @@ namespace CometD.NetCore.Salesforce
             }
             else
             {
-                _logger.LogError("{name} failed with the following message: {message}", nameof(StreamingClient), e);
+                _logger.LogError("{name} failed with the following message: {message}", nameof(ResilientStreamingClient), e);
             }
         }
 

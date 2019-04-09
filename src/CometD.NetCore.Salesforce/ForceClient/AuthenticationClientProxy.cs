@@ -10,6 +10,8 @@ namespace CometD.NetCore.Salesforce.ForceClient
     /// the functionality of <see cref="NetCoreForce.Client.ForceClient"/>
     /// library <see cref="NetCoreForce.Client.AuthenticationClient"/> class
     /// </summary>
+    [Obsolete("Use " + nameof(ResilientStreamingClient) + "class instead.")]
+
     public class AuthenticationClientProxy : IAuthenticationClientProxy
     {
         private readonly SalesforceConfiguration _options;
