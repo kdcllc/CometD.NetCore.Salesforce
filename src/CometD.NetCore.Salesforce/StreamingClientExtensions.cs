@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using NetCoreForce.Client;
+using NetCoreForce.Client.Models;
 using System;
 using System.Threading;
 
@@ -15,16 +16,42 @@ namespace Microsoft.Extensions.DependencyInjection
     /// </summary>
     public static class StreamingClientExtensions
     {
-        public static IServiceCollection AddResilientForceClient(
+        public static IServiceCollection AddResilientStreamingClient(
             this IServiceCollection services,
             IConfiguration configuration,
             string sectionName = "Salesforce")
         {
             services.Configure<SalesforceConfiguration>(configuration.GetSection(sectionName));
 
-            services.AddTransient<IResilientForceClient, ResilientForceClient>();
+            services.AddSingleton<IResilientForceClient, ResilientForceClient>();
 
-            services.AddTransient<Func<AsyncExpiringLazy<ForceClient>>>(sp => ()  =>
+            services.AddSingleton<Func<AsyncExpiringLazy<AccessTokenResponse>>>(sp => () =>
+            {
+               var options = sp.GetRequiredService<IOptions<SalesforceConfiguration>>().Value;
+
+               TimeSpan.TryParse(options.TokenExpiration, out var tokenExperation);
+
+                return new AsyncExpiringLazy<AccessTokenResponse>(async data =>
+                {
+                    if (data.Result == null
+                        || DateTime.UtcNow > data.ValidUntil.Subtract(TimeSpan.FromSeconds(30)))
+                    {
+                        var authClient = new AuthenticationClient();
+
+                        await authClient.TokenRefreshAsync(options.RefreshToken, options.ClientId);
+
+                        return new AsyncExpirationValue<AccessTokenResponse>
+                        {
+                            Result = authClient.AccessInfo,
+                            ValidUntil = DateTimeOffset.UtcNow.Add(tokenExperation)
+                        };
+                    }
+
+                    return data;
+                });
+            });
+
+            services.AddSingleton<Func<AsyncExpiringLazy<ForceClient>>>(sp => ()  =>
             {
                 var options = sp.GetRequiredService<IOptions<SalesforceConfiguration>>().Value;
 
@@ -55,6 +82,8 @@ namespace Microsoft.Extensions.DependencyInjection
                 });
             });
 
+            services.AddSingleton<IStreamingClient, ResilientStreamingClient>();
+
             return services;
         }
 
@@ -63,6 +92,7 @@ namespace Microsoft.Extensions.DependencyInjection
         /// </summary>
         /// <param name="services"></param>
         /// <returns></returns>
+        [Obsolete("Use "+ nameof(AddResilientStreamingClient) + "extension method instead.")]
         public static IServiceCollection AddStreamingClient(this IServiceCollection services)
         {
             services.AddSingleton(sp =>

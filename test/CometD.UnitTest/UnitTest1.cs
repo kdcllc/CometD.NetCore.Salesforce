@@ -27,9 +27,7 @@ namespace CometD.UnitTest
                 })
                 .ConfigureServices((services)=>
                 {
-
                 });
-
         }
     }
 }

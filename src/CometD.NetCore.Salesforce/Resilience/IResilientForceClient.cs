@@ -209,7 +209,7 @@ namespace CometD.NetCore.Salesforce.Resilience
         /// <param name="currentInstanceUrl"></param>
         /// <param name="cancellationToken"></param>
         /// <returns> True or false. Does not throw exceptions, only false in case of any errors.</returns>
-        bool TestConnectionAsync(
+        Task<bool> TestConnectionAsync(
             string currentInstanceUrl = null,
             CancellationToken cancellationToken = default);
 

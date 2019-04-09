@@ -22,6 +22,8 @@ namespace CometD.NetCore.Salesforce
         private BayeuxClient _bayeuxClient = null;
         private ErrorExtension _errorExtension;
         private LongPollingTransport _clientTransport;
+        private bool _isDisposed = false;
+        private ReplayExtension _replayIdExtension;
 
         private readonly ILogger<StreamingClient> _logger;
         private readonly IAuthenticationClientProxy _authenticationClient;
@@ -79,17 +81,15 @@ namespace CometD.NetCore.Salesforce
         ///<inheritdoc/>
         public void SubscribeTopic(string topicName, IMessageListener listener, long replayId=-1)
         {
-            #region ArgumentNullExeption
-            if (null == topicName || (topicName = topicName.Trim()).Length == 0)
+            if (topicName == null || (topicName = topicName.Trim()).Length == 0)
             {
                 throw new ArgumentNullException(nameof(topicName));
             }
 
-            if (null == listener)
+            if (listener == null)
             {
                 throw new ArgumentNullException(nameof(listener));
             }
-            #endregion
 
             var channel = _bayeuxClient.GetChannel(topicName,replayId);
             channel?.Subscribe(listener);
@@ -98,7 +98,7 @@ namespace CometD.NetCore.Salesforce
         ///<inheritdoc/>
         public bool UnsubscribeTopic(string topicName, IMessageListener listener = null, long replayId=-1)
         {
-            if (null == topicName || (topicName = topicName.Trim()).Length == 0)
+            if (topicName == null || (topicName = topicName.Trim()).Length == 0)
             {
                 throw new ArgumentNullException(nameof(topicName));
             }
@@ -162,6 +162,8 @@ namespace CometD.NetCore.Salesforce
                 throw new ObjectDisposedException("Cannot create connection when disposed");
             }
 
+            _logger.LogDebug("Initializing {name} ...", nameof(BayeuxClient));
+
             if (!_authenticationClient.IsAuthenticated)
             {
                 Reauthenticate();
@@ -173,7 +175,7 @@ namespace CometD.NetCore.Salesforce
             IDictionary<string, object> options = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase)
             {
                 {ClientTransport.TIMEOUT_OPTION, _options.ReadTimeOut ?? ReadTimeOut },
-                {ClientTransport.MAX_NETWORK_DELAY_OPTION, 120000 }
+                {ClientTransport.MAX_NETWORK_DELAY_OPTION, _options.ReadTimeOut ?? ReadTimeOut }
             };
 
             var headers = new NameValueCollection { { HttpRequestHeader.Authorization.ToString(), $"OAuth {_tokenInfo.AccessToken}" } };
@@ -195,6 +197,8 @@ namespace CometD.NetCore.Salesforce
 
             _replayIdExtension = new ReplayExtension();
             _bayeuxClient.AddExtension(_replayIdExtension);
+
+            _logger.LogDebug("{name} initializing completed...", nameof(BayeuxClient));
         }
 
         private void ErrorExtension_ConnectionMessage(object sender, string meaage)
@@ -223,23 +227,24 @@ namespace CometD.NetCore.Salesforce
         private void ErrorExtension_ConnectionError(object sender, string message)
         {
             // authentication failure
-            if (message.ToLower() == "403::Handshake denied" ||
-                message.ToLower() == "403:denied_by_security_policy:create_denied" ||
-                message.ToLower() == "403::unknown client"
+            if (string.Equals(message, "403::Handshake denied", StringComparison.OrdinalIgnoreCase)
+                || string.Equals(message, "403:denied_by_security_policy:create_denied", StringComparison.OrdinalIgnoreCase)
+                || string.Equals(message, "403::unknown client", StringComparison.OrdinalIgnoreCase)
                 )
             {
-                _logger.LogError($"Handled CometD Exception: {message}");
-                _logger.LogDebug($"Re-authenticating BayeuxClient...");
+                _logger.LogWarning("Handled CometD Exception: {message}", message);
+
                 // 1. Disconnect
                 Disconnect();
-                _logger.LogDebug($"Disconnecting {nameof(BayeuxClient)}...");
-                // 2. try (x) times to re-authenticate
+
+                // 2. Try (x) times to re-authenticate
                 Reauthenticate();
-                _logger.LogDebug($"Re-authenticating {nameof(BayeuxClient)}...");
-                // 3. populate a new transport with new security headers.
+                _logger.LogDebug("Re-authenticating {name}...", nameof(BayeuxClient));
+
+                // 3. Recreate BayeuxClient and populate it with a new transport with new security headers.
                 InitBayeuxClient();
-                _logger.LogDebug($"Re-Init {nameof(BayeuxClient)}...");
-                // invoke event
+
+                // 4. Invoke the Reconnect Event
                 Reconnect?.Invoke(this, true);
             }
             else
@@ -247,11 +252,6 @@ namespace CometD.NetCore.Salesforce
                 _logger.LogError($"{nameof(StreamingClient)} failed with the following message: {message}");
             }
         }
-
-        #region IDisposable Members
-
-        private bool _isDisposed = false;
-        private ReplayExtension _replayIdExtension;
 
         /// <summary>
         /// Disposing of the resources
@@ -282,7 +282,5 @@ namespace CometD.NetCore.Salesforce
         {
             Dispose(false);
         }
-
-        #endregion
     }
 }

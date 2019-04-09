@@ -9,7 +9,9 @@ using Microsoft.Extensions.Logging;
 
 namespace TestApp
 {
+#pragma warning disable RCS1102 // Make class static.
     public class Program
+#pragma warning restore RCS1102 // Make class static.
     {
         public static async Task Main(string[] args)
         {
@@ -38,7 +40,7 @@ namespace TestApp
                  {
                      services.AddTransient<IServiceProviderFactory<IServiceCollection>, DefaultServiceProviderFactory>();
 
-                     services.AddResilientForceClient(context.Configuration);
+                     services.AddResilientStreamingClient(context.Configuration);
                  })
                  .ConfigureLogging((hostContext, configLogging) =>
                  {
