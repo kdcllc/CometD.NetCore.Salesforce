@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using NetCoreForce.Client;
 using NetCoreForce.Client.Models;
+using Polly;
 using System;
 using System.Threading;
 
@@ -29,16 +30,30 @@ namespace Microsoft.Extensions.DependencyInjection
             {
                var options = sp.GetRequiredService<IOptions<SalesforceConfiguration>>().Value;
 
-               TimeSpan.TryParse(options.TokenExpiration, out var tokenExperation);
+                if (!TimeSpan.TryParse(options.TokenExpiration, out var tokenExperation))
+                {
+                    tokenExperation = TimeSpan.FromHours(1);
+                }
 
                 return new AsyncExpiringLazy<AccessTokenResponse>(async data =>
                 {
                     if (data.Result == null
                         || DateTime.UtcNow > data.ValidUntil.Subtract(TimeSpan.FromSeconds(30)))
                     {
-                        var authClient = new AuthenticationClient();
+                        var policy = Policy
+                                .Handle<Exception>()
+                                .WaitAndRetryAsync(
+                                    retryCount: options.Retry,
+                                    sleepDurationProvider: (retryAttempt) => TimeSpan.FromSeconds(Math.Pow(options.BackoffPower, retryAttempt)));
 
-                        await authClient.TokenRefreshAsync(options.RefreshToken, options.ClientId);
+                        var authClient = await policy.ExecuteAsync(async () =>
+                        {
+                            var auth = new AuthenticationClient();
+
+                            await auth.TokenRefreshAsync(options.RefreshToken, options.ClientId);
+
+                            return auth;
+                        });
 
                         return new AsyncExpirationValue<AccessTokenResponse>
                         {
@@ -55,21 +70,33 @@ namespace Microsoft.Extensions.DependencyInjection
             {
                 var options = sp.GetRequiredService<IOptions<SalesforceConfiguration>>().Value;
 
-                TimeSpan.TryParse(options.TokenExpiration, out var tokenExperation);
+                if (!TimeSpan.TryParse(options.TokenExpiration, out var tokenExperation))
+                {
+                    tokenExperation = TimeSpan.FromHours(1);
+                }
 
                 return new AsyncExpiringLazy<ForceClient>(async data =>
                 {
                     if (data.Result == null
                         || DateTime.UtcNow > data.ValidUntil.Subtract(TimeSpan.FromSeconds(30)))
                     {
-                       var authClient = new AuthenticationClient();
+                        var policy = Policy
+                                  .Handle<Exception>()
+                                  .WaitAndRetryAsync(
+                                      retryCount: options.Retry,
+                                      sleepDurationProvider: (retryAttempt) => TimeSpan.FromSeconds(Math.Pow(options.BackoffPower, retryAttempt)));
 
-                        await authClient.TokenRefreshAsync(options.RefreshToken, options.ClientId);
+                        var client = await policy.ExecuteAsync(async () =>
+                        {
+                            var authClient = new AuthenticationClient();
 
-                        var client = new ForceClient(
-                            authClient.AccessInfo.InstanceUrl,
-                            authClient.ApiVersion,
-                            authClient.AccessInfo.AccessToken);
+                            await authClient.TokenRefreshAsync(options.RefreshToken, options.ClientId);
+
+                            return new ForceClient(
+                                authClient.AccessInfo.InstanceUrl,
+                                authClient.ApiVersion,
+                                authClient.AccessInfo.AccessToken);
+                        });
 
                         return new AsyncExpirationValue<ForceClient>
                         {
