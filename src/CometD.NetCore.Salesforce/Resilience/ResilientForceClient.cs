@@ -428,7 +428,7 @@ namespace CometD.NetCore.Salesforce.Resilience
                 .Handle<ForceApiException>(x => x.Message.Contains("ErrorCode INVALID_SESSION_ID"))
                 .RetryAsync(
                     retryCount: _options.Retry,
-                    onRetry: (ex, count, context) =>
+                    onRetryAsync: async (ex, count, context) =>
                     {
                         var methodName = context[PolicyContextMethod] ?? "MethodNotSpecified";
 
@@ -439,7 +439,8 @@ namespace CometD.NetCore.Salesforce.Resilience
                             _options.Retry,
                             context.PolicyKey,
                             ex.Message);
-                        _forceClient.Invalidate();
+
+                        await _forceClient.Invalidate();
                     })
                 .WithPolicyKey($"{nameof(ResilientForceClient)}RetryAsync");
         }
