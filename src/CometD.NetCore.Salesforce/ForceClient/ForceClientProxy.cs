@@ -28,18 +28,16 @@ namespace CometD.NetCore.Salesforce.ForceClient
         /// <param name="authenticationClient">Instance of <see cref="AuthenticationClientProxy"/> that creates instance of <see cref="AuthenticationClient"/>.</param>
         /// <param name="logger">Instance of the <see cref="ILogger{IForceClientProxy}"/>.</param>
         /// <param name="options">Options based on <see cref="SalesforceConfiguration"/></param>
-        public ForceClientProxy(IAuthenticationClientProxy authenticationClient,
+        public ForceClientProxy(
+            IAuthenticationClientProxy authenticationClient,
             ILogger<ForceClientProxy> logger,
             SalesforceConfiguration options)
         {
-            #region ArgumentException and ArgumentNullException
-
             _options = options ?? throw new ArgumentNullException(nameof(options));
 
-            _authenticationClient = authenticationClient ??
-                                    throw new ArgumentNullException(nameof(authenticationClient));
+            _authenticationClient = authenticationClient ?? throw new ArgumentNullException(nameof(authenticationClient));
+
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            #endregion
 
             // creates an instance of the forceclient register as singleton
             _forceClient = new NetCoreForce.Client.ForceClient(
@@ -52,9 +50,6 @@ namespace CometD.NetCore.Salesforce.ForceClient
             _policy = CreateAuthenticationWaitAndRetry(_options.Retry,
                                 nameof(ForceClientProxy), OnWaitAndRetry);
         }
-
-       
-        #region Private
 
         private async Task RefreshAuthorization()
         {
@@ -69,24 +64,27 @@ namespace CometD.NetCore.Salesforce.ForceClient
             _logger.LogDebug($"Salesforce Authentication Successful!");
         }
 
-        private async Task OnWaitAndRetry(Exception ex, int count, Context context)
+        private async Task OnWaitAndRetry(
+            Exception ex,
+            int count,
+            Context context)
         {
             _logger.LogWarning($"Trying to {nameof(RefreshAuthorization)}");
             _logger.LogWarning($"Retry {context.Count}:{count} of {context.PolicyKey}, due to {ex.Message}.");
             await RefreshAuthorization();
         }
 
-        private IAsyncPolicy CreateAuthenticationWaitAndRetry(int retryAuthorization,
-           string name,
-           Func<Exception, int, Context, Task> retryHook)
+        private IAsyncPolicy CreateAuthenticationWaitAndRetry(
+            int retryAuthorization,
+            string name,
+            Func<Exception, int, Context, Task> retryHook)
         {
             return Policy
                     .Handle<ForceApiException>(x => x.Message.Contains("ErrorCode INVALID_SESSION_ID"))
-                    .RetryAsync(retryCount: retryAuthorization,
-                    onRetryAsync: retryHook)
-                    .WithPolicyKey($"{name}Retry");
+                    .RetryAsync(
+                        retryCount: retryAuthorization,
+                        onRetryAsync: retryHook).WithPolicyKey($"{name}Retry");
         }
-        #endregion
 
         /// <summary>
         /// Retrieves a Salesforce object by its Id
@@ -96,8 +94,11 @@ namespace CometD.NetCore.Salesforce.ForceClient
         /// <param name="objectId">Id of the object to retrieve</param>
         /// <param name="token">Token to cancel operation</param>
         /// <param name="fields">List of fields to return.</param>
-        /// <returns>The retrieved object from salesforce.</returns>
-        public async Task<T> GetObjectById<T>(string sObjectTypeName, string objectId, CancellationToken token,
+        /// <returns>The retrieved object from Salesforce.</returns>
+        public async Task<T> GetObjectById<T>(
+            string sObjectTypeName,
+            string objectId,
+            CancellationToken token,
             List<string> fields = null)
         {
             return await _policy.ExecuteAsync(ctx => _forceClient.GetObjectById<T>(sObjectTypeName, objectId, fields), token);
@@ -111,7 +112,9 @@ namespace CometD.NetCore.Salesforce.ForceClient
         /// <param name="instance">Object to create</param>
         /// <param name="headers">Optional request headers.</param>
         /// <returns>A <see cref="CreateResponse"/> representing the operation result.</returns>
-        public async Task<CreateResponse> CreateRecord<T>(string sObjectTypeName, T instance,
+        public async Task<CreateResponse> CreateRecord<T>(
+            string sObjectTypeName,
+            T instance,
             Dictionary<string, string> headers = null)
         {
             return await _policy.ExecuteAsync(() => _forceClient.CreateRecord(sObjectTypeName, instance, headers));
@@ -126,8 +129,11 @@ namespace CometD.NetCore.Salesforce.ForceClient
         /// <param name="token">Token to cancel operation</param>
         /// <param name="headers">Optional request headers.</param>
         /// <returns>A <see cref="CreateResponse"/> representing the operation result.</returns>
-        public async Task<CreateResponse> CreateRecord<T>(string sObjectTypeName, T instance,
-            CancellationToken token, Dictionary<string, string> headers = null)
+        public async Task<CreateResponse> CreateRecord<T>(
+            string sObjectTypeName,
+            T instance,
+            CancellationToken token,
+            Dictionary<string, string> headers = null)
         {
             return await _policy.ExecuteAsync(ctx => _forceClient.CreateRecord(sObjectTypeName, instance, headers), token);
         }

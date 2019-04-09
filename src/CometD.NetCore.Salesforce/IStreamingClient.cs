@@ -30,12 +30,12 @@ namespace CometD.NetCore.Salesforce
         void Handshake(int timeout);
 
         /// <summary>
-        /// Disconnect salesforce subscription to the platform events.
+        /// Disconnect Salesforce subscription to the platform events.
         /// </summary>
         void Disconnect();
 
         /// <summary>
-        /// Disconnect salesforce subscription to the platform events.
+        /// Disconnect Salesforce subscription to the platform events.
         /// </summary>
         /// <param name="timeout"></param>
         void Disconnect(int timeout);

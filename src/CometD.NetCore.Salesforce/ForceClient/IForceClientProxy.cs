@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using CometD.NetCore.Salesforce.Resilience;
 using NetCoreForce.Client.Models;
 
 namespace CometD.NetCore.Salesforce.ForceClient
@@ -8,6 +10,7 @@ namespace CometD.NetCore.Salesforce.ForceClient
     /// <summary>
     /// A Proxy interface around <see cref="NetCoreForce.Client.ForceClient"/>.
     /// </summary>
+    [Obsolete("Use " + nameof(IResilientForceClient) + "instead.")]
     public interface IForceClientProxy
     {
         /// <summary>
