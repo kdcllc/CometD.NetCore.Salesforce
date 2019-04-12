@@ -7,7 +7,7 @@
 
       //"commandLineArgs": "get-tokens --key: --secret: --verbose:information --section:Salesforce"
 
-      "commandLineArgs": "get-tokens --key:3MVG9oNqAtcJCF.HPb0R40_6MW8Q4zs13WF6N3vgzLKj.Ku7CiHgtzRfCOrrrukW7.zRl8IUdd0MKECzaRjE8 --secret:7919576542672552253 --verbose:information --section:Salesforce"
+      "commandLineArgs": "get-tokens --key: --secret: --verbose:information --section:Salesforce"
 
     }
   }
