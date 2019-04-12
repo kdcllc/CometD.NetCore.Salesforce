@@ -1,7 +1,8 @@
-﻿using NetCoreForce.Client.Models;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+
+using NetCoreForce.Client.Models;
 
 namespace CometD.NetCore.Salesforce.Resilience
 {

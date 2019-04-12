@@ -2,10 +2,13 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+
 using NetCoreForce.Client;
 using NetCoreForce.Client.Models;
+
 using Polly;
 using Polly.Wrap;
 

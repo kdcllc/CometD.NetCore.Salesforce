@@ -1,4 +1,5 @@
 ﻿using System;
+
 using CometD.NetCore.Bayeux.Client;
 
 namespace CometD.NetCore.Salesforce

@@ -1,11 +1,15 @@
-﻿using AuthApp.Host;
+﻿using System;
+using System.Drawing;
+using System.Threading.Tasks;
+
+using AuthApp.Host;
+
 using McMaster.Extensions.CommandLineUtils;
+
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Drawing;
-using System.Threading.Tasks;
+
 using Console = Colorful.Console;
 
 namespace AuthApp
@@ -38,14 +42,14 @@ namespace AuthApp
         /// Property types of ValueTuple{bool,T} translate to CommandOptionType.SingleOrNoValue.
         /// Input                   | Value
         /// ------------------------|--------------------------------
-        /// (none)                  | (false, default(TraceLevel))
+        /// (none)                  | (false, default(LogLevel))
         /// --verbose               | (true, LogLevel.Information)
         /// --verbose:information   | (true, LogLevel.Information)
         /// --verbose:debug         | (true, LogLevel.Debug)
         /// --verbose:trace         | (true, LogLevel.Trace)
         /// </summary>
-        [Option(Description = "Allows Verbose logging for the tool. Enable this to get tracing information. Default is false.")]
-        public (bool HasValue, LogLevel level) Verbose { get; }
+        [Option(Description = "Allows Verbose logging for the tool. Enable this to get tracing information. Default is false and LogLevel.None.")]
+        public (bool HasValue, LogLevel level) Verbose { get; } = (false, LogLevel.None);
 
         [Option("--usesecrets", Description = "Enable UserSecrets.")]
         public bool UserSecrets { get; set; }

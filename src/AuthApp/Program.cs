@@ -1,8 +1,8 @@
-﻿using System;
-using System.Drawing;
-using System.Reflection;
+﻿using System.Reflection;
 using System.Threading.Tasks;
+
 using McMaster.Extensions.CommandLineUtils;
+
 using Console = Colorful.Console;
 
 namespace AuthApp

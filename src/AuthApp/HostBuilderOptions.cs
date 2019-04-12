@@ -1,4 +1,5 @@
 ﻿using AuthApp.Host;
+
 using Microsoft.Extensions.Logging;
 
 namespace AuthApp

@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+
 using CometD.NetCore.Salesforce.Resilience;
+
 using NetCoreForce.Client.Models;
 
 namespace CometD.NetCore.Salesforce.ForceClient

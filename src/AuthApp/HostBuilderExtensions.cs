@@ -1,12 +1,16 @@
-﻿using Bet.AspNetCore.Options;
+﻿using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
+
+using Bet.AspNetCore.Options;
+
 using McMaster.Extensions.CommandLineUtils;
+
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using System.Collections.Generic;
-using System.Drawing;
-using System.IO;
+
 using Console = Colorful.Console;
 
 namespace AuthApp

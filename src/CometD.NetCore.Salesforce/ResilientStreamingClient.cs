@@ -3,12 +3,15 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Net;
 using System.Threading;
+
 using CometD.NetCore.Bayeux.Client;
 using CometD.NetCore.Client;
 using CometD.NetCore.Client.Extension;
 using CometD.NetCore.Client.Transport;
+
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+
 using NetCoreForce.Client.Models;
 
 namespace CometD.NetCore.Salesforce
@@ -182,7 +185,7 @@ namespace CometD.NetCore.Salesforce
             var serverUri = new Uri(accessToken.InstanceUrl);
             var endpoint = $"{serverUri.Scheme}://{serverUri.Host}{_options.CometDUri}";
 
-            var headers = new NameValueCollection { { HttpRequestHeader.Authorization.ToString(), $"OAuth {accessToken.AccessToken}" } };
+            var headers = new NameValueCollection { { nameof(HttpRequestHeader.Authorization), $"OAuth {accessToken.AccessToken}" } };
 
             // Salesforce socket timeout during connection(CometD session) = 110 seconds
             var options = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase)

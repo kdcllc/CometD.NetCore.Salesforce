@@ -1,14 +1,18 @@
-﻿using CometD.NetCore.Salesforce;
+﻿using System;
+using System.Threading;
+
+using CometD.NetCore.Salesforce;
 using CometD.NetCore.Salesforce.ForceClient;
 using CometD.NetCore.Salesforce.Resilience;
+
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+
 using NetCoreForce.Client;
 using NetCoreForce.Client.Models;
+
 using Polly;
-using System;
-using System.Threading;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -17,6 +21,15 @@ namespace Microsoft.Extensions.DependencyInjection
     /// </summary>
     public static class StreamingClientExtensions
     {
+        /// <summary>
+        /// Adds ForecClient Resilient version of it with Refresh Token Authentication.
+        /// https://help.salesforce.com/articleView?id=remoteaccess_oauth_refresh_token_flow.htm&type=5
+        /// Can be used in the code with <see cref="IResilientForceClient"/>.
+        /// </summary>
+        /// <param name="services"></param>
+        /// <param name="configuration"></param>
+        /// <param name="sectionName"></param>
+        /// <returns></returns>
         public static IServiceCollection AddResilientStreamingClient(
             this IServiceCollection services,
             IConfiguration configuration,
@@ -30,9 +43,9 @@ namespace Microsoft.Extensions.DependencyInjection
             {
                var options = sp.GetRequiredService<IOptions<SalesforceConfiguration>>().Value;
 
-                if (!TimeSpan.TryParse(options.TokenExpiration, out var tokenExperation))
+                if (!TimeSpan.TryParse(options.TokenExpiration, out var tokenExpiration))
                 {
-                    tokenExperation = TimeSpan.FromHours(1);
+                    tokenExpiration = TimeSpan.FromHours(1);
                 }
 
                 return new AsyncExpiringLazy<AccessTokenResponse>(async data =>
@@ -50,7 +63,11 @@ namespace Microsoft.Extensions.DependencyInjection
                         {
                             var auth = new AuthenticationClient();
 
-                            await auth.TokenRefreshAsync(options.RefreshToken, options.ClientId);
+                            await auth.TokenRefreshAsync(
+                                options.RefreshToken,
+                                options.ClientId,
+                                options.ClientSecret,
+                                $"{options.LoginUrl}{options.OAuthUri}");
 
                             return auth;
                         });
@@ -58,7 +75,7 @@ namespace Microsoft.Extensions.DependencyInjection
                         return new AsyncExpirationValue<AccessTokenResponse>
                         {
                             Result = authClient.AccessInfo,
-                            ValidUntil = DateTimeOffset.UtcNow.Add(tokenExperation)
+                            ValidUntil = DateTimeOffset.UtcNow.Add(tokenExpiration)
                         };
                     }
 
@@ -70,9 +87,9 @@ namespace Microsoft.Extensions.DependencyInjection
             {
                 var options = sp.GetRequiredService<IOptions<SalesforceConfiguration>>().Value;
 
-                if (!TimeSpan.TryParse(options.TokenExpiration, out var tokenExperation))
+                if (!TimeSpan.TryParse(options.TokenExpiration, out var tokenExpiration))
                 {
-                    tokenExperation = TimeSpan.FromHours(1);
+                    tokenExpiration = TimeSpan.FromHours(1);
                 }
 
                 return new AsyncExpiringLazy<ForceClient>(async data =>
@@ -90,7 +107,11 @@ namespace Microsoft.Extensions.DependencyInjection
                         {
                             var authClient = new AuthenticationClient();
 
-                            await authClient.TokenRefreshAsync(options.RefreshToken, options.ClientId);
+                            await authClient.TokenRefreshAsync(
+                                options.RefreshToken,
+                                options.ClientId,
+                                options.ClientSecret,
+                                $"{options.LoginUrl}{options.OAuthUri}");
 
                             return new ForceClient(
                                 authClient.AccessInfo.InstanceUrl,
@@ -101,7 +122,7 @@ namespace Microsoft.Extensions.DependencyInjection
                         return new AsyncExpirationValue<ForceClient>
                         {
                             Result = client,
-                            ValidUntil = DateTimeOffset.UtcNow.Add(tokenExperation)
+                            ValidUntil = DateTimeOffset.UtcNow.Add(tokenExpiration)
                         };
                     }
 

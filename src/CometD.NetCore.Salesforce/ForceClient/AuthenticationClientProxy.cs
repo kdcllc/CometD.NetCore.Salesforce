@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
+
 using NetCoreForce.Client;
+
 using Polly;
 
 namespace CometD.NetCore.Salesforce.ForceClient

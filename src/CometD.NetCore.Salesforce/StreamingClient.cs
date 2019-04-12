@@ -2,12 +2,15 @@
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Net;
+
 using CometD.NetCore.Bayeux.Client;
 using CometD.NetCore.Client;
 using CometD.NetCore.Client.Extension;
 using CometD.NetCore.Client.Transport;
 using CometD.NetCore.Salesforce.ForceClient;
+
 using Microsoft.Extensions.Logging;
+
 using NetCoreForce.Client.Models;
 
 namespace CometD.NetCore.Salesforce
@@ -180,7 +183,7 @@ namespace CometD.NetCore.Salesforce
                 {ClientTransport.MAX_NETWORK_DELAY_OPTION, _options.ReadTimeOut ?? ReadTimeOut }
             };
 
-            var headers = new NameValueCollection { { HttpRequestHeader.Authorization.ToString(), $"OAuth {_tokenInfo.AccessToken}" } };
+            var headers = new NameValueCollection { { nameof(HttpRequestHeader.Authorization), $"OAuth {_tokenInfo.AccessToken}" } };
 
             _clientTransport = new LongPollingTransport(options, headers);
 

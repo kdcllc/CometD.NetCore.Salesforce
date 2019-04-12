@@ -6,8 +6,13 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+
 using Microsoft.Extensions.Hosting;
+
 using NetCoreForce.Client;
+
+using TextCopy;
+
 using Console = Colorful.Console;
 
 namespace AuthApp.Host
@@ -21,7 +26,7 @@ namespace AuthApp.Host
         private readonly HostBuilderOptions _hostOptions;
         private readonly SfConfig _config;
         private readonly IApplicationLifetime _applicationLifetime;
-        private bool isCompleted = false;
+        private bool _isCompleted = false;
 
         public HttpServer(
             HostBuilderOptions hostOptions,
@@ -53,11 +58,12 @@ namespace AuthApp.Host
             }
 
             var process = ConsoleHandler.OpenBrowser(authUrl);
+
             var context = await http.GetContextAsync();
 
             while (!stoppingToken.IsCancellationRequested)
             {
-                if (isCompleted)
+                if (_isCompleted)
                 {
                     _applicationLifetime.StopApplication();
                     return;
@@ -97,9 +103,14 @@ namespace AuthApp.Host
                         $"{_config.LoginUrl}{_config.OAuthUri}");
 
                     Console.WriteLineFormatted("Access_token = {0}",Color.Green, Color.Yellow, auth.AccessInfo.AccessToken);
+
                     Console.WriteLineFormatted("Refresh_token = {0}", Color.Green, Color.Yellow, auth.AccessInfo.RefreshToken);
 
-                    isCompleted = true;
+                    Clipboard.SetText(auth.AccessInfo.RefreshToken);
+
+                    Console.WriteLine($"Refresh_token copied to the Clipboard", color: Color.WhiteSmoke);
+
+                    _isCompleted = true;
 
                     http.Stop();
                     if (_hostOptions.Verbose)

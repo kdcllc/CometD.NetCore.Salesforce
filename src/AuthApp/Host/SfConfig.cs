@@ -28,6 +28,9 @@ namespace AuthApp.Host
         /// </summary>
         public string OAuthUri { get; set; } = "/services/oauth2/token";
 
+        /// <summary>
+        /// Authorize Uri for Salesforce end point.
+        /// </summary>
         public string OAuthorizeUri { get; set; } = "/services/oauth2/authorize";
     }
 }

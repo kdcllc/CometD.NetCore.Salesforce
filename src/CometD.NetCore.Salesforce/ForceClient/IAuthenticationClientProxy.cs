@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
+
 using CometD.NetCore.Salesforce.Resilience;
+
 using NetCoreForce.Client;
 
 namespace CometD.NetCore.Salesforce.ForceClient
