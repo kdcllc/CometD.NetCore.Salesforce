@@ -27,9 +27,9 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.AddSingleton<Func<AsyncExpiringLazy<AccessTokenResponse>>>(sp => () =>
             {
-               var options = sp.GetRequiredService<IOptions<SalesforceConfiguration>>().Value;
+                var options = sp.GetRequiredService<IOptions<SalesforceConfiguration>>().Value;
 
-               TimeSpan.TryParse(options.TokenExpiration, out var tokenExperation);
+                TimeSpan.TryParse(options.TokenExpiration, out var tokenExperation);
 
                 return new AsyncExpiringLazy<AccessTokenResponse>(async data =>
                 {
@@ -38,7 +38,10 @@ namespace Microsoft.Extensions.DependencyInjection
                     {
                         var authClient = new AuthenticationClient();
 
-                        await authClient.TokenRefreshAsync(options.RefreshToken, options.ClientId);
+                        await authClient.TokenRefreshAsync(
+                          options.RefreshToken,
+                          options.ClientId,
+                          tokenRequestEndpointUrl: GetTokenRequestEndpointUrl(options));
 
                         return new AsyncExpirationValue<AccessTokenResponse>
                         {
@@ -62,9 +65,12 @@ namespace Microsoft.Extensions.DependencyInjection
                     if (data.Result == null
                         || DateTime.UtcNow > data.ValidUntil.Subtract(TimeSpan.FromSeconds(30)))
                     {
-                       var authClient = new AuthenticationClient();
+                        var authClient = new AuthenticationClient();
 
-                        await authClient.TokenRefreshAsync(options.RefreshToken, options.ClientId);
+                        await authClient.TokenRefreshAsync(
+                          options.RefreshToken,
+                          options.ClientId,
+                          tokenRequestEndpointUrl: GetTokenRequestEndpointUrl(options));
 
                         var client = new ForceClient(
                             authClient.AccessInfo.InstanceUrl,
@@ -110,6 +116,20 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddSingleton<IStreamingClient, StreamingClient>();
 
             return services;
+        }
+
+        /// <summary>
+        /// Gets the endpoint to use for token refresh using configured values.
+        /// </summary>
+        /// <param name="salesforceConfiguration"></param>
+        /// <returns></returns>
+        private static string GetTokenRequestEndpointUrl(SalesforceConfiguration salesforceConfiguration)
+        {
+            var builder = new UriBuilder(salesforceConfiguration.LoginUrl)
+            {
+                Path = salesforceConfiguration.OAuthUri
+            };
+            return builder.ToString();
         }
     }
 }
