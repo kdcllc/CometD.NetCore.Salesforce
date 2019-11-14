@@ -3,10 +3,15 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFrameworks>netcoreapp2.2;</TargetFrameworks>
+    <Nullable>enable</Nullable>
     <ToolCommandName>salesforce</ToolCommandName>
     <PackageId>salesforce</PackageId>
-    <Description>A command-line tool that enables Salesforce Access and Refresh Tokens Generation.</Description>
     <PackAsTool>True</PackAsTool>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <Description>A command-line tool that enables Salesforce Access and Refresh Tokens Generation.</Description>
+    <PackageTags>Salesforce refresh tokens, Salesforce access tokens, DotNetCore, AspNetCore, salesforce, OAuth Authentication Flow</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
@@ -16,12 +21,11 @@
     <PackageReference Include="Bet.Extensions.Options" />
     <PackageReference Include="Colorful.Console" />
     <PackageReference Include="McMaster.Extensions.CommandLineUtils" />
-    <PackageReference Include="Microsoft.AspNetCore.Hosting.Server.Abstractions" />
-    <PackageReference Include="Microsoft.AspNetCore.Http" />
     <PackageReference Include="Microsoft.Extensions.Configuration.CommandLine" />
     <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" />
     <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" />
     <PackageReference Include="Microsoft.Extensions.Hosting" />
+    <PackageReference Include="TextCopy" />
 		<PackageReference Include="NetCoreForce.Client" />
 	</ItemGroup>
 	<ItemGroup>

@@ -8,12 +8,12 @@
     /// </example>
     /// </summary>
     /// <typeparam name="TPayload"></typeparam>
-    public class MessageEnvelope<TPayload> where TPayload : MessagePayload 
+    public class MessageEnvelope<TPayload> where TPayload : MessagePayload
     {
         /// <summary>
         /// <see cref="MessageData{TPayload}"/> where TPayload is a generic message.
         /// </summary>
-        public MessageData<TPayload> Data { get; set; }
+        public MessageData<TPayload>? Data { get; set; }
 
         /// <summary>
         /// Channel or event information.
@@ -21,6 +21,6 @@
         ///     "channel": "/event/Custom_Event__e"
         /// </example>
         /// </summary>
-        public string Channel { get; set; }
+        public string Channel { get; set; } = string.Empty;
     }
 }

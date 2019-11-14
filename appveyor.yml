@@ -1,13 +1,13 @@
-version: 2.1.{build}
+version: 2.2.{build}
 branches:
     only:
       - master
 pull_requests:
   do_not_increment_build_number: true
-image: Visual Studio 2017
-## temporary until 3.0.100-preview-010184 sdk is installed
+image: Visual Studio 2019
+## temporary until 3.0.100 sdk is installed
 install:
-  - ps: $urlCurrent = "https://dotnetcli.blob.core.windows.net/dotnet/Sdk/3.0.100-preview-010184/dotnet-sdk-3.0.100-preview-010184-win-x64.zip"
+  - ps: $urlCurrent = "https://dotnetcli.blob.core.windows.net/dotnet/Sdk/3.0.100/dotnet-sdk-3.0.100-win-x64.zip"
   - ps: $env:DOTNET_INSTALL_DIR = "$pwd\.dotnetsdk"
   - ps: mkdir $env:DOTNET_INSTALL_DIR -Force | Out-Null
   - ps: $tempFileCurrent = [System.IO.Path]::GetTempFileName()
@@ -21,9 +21,9 @@ build_script:
   - ps: dotnet restore CometD.NetCore.Salesforce.sln -v quiet
   - ps: dotnet build CometD.NetCore.Salesforce.sln /p:configuration=Release /p:Version=$($env:appveyor_build_version)
 
-test: off
-# test_script:
-#   - dotnet test tests/XUnitTests.csproj
+#test: off
+test_script:
+   - dotnet test test/CometD.UnitTest/CometD.UnitTest.csproj
 
 artifacts:
 - path: .\src\**\*.nupkg
@@ -33,6 +33,6 @@ deploy:
 - provider: NuGet
   artifact: /NuGet/
   api_key:
-    secure: btoBG0IlGqSMBtVLUjeXmVtFT7B9Lw6CNf85ryr8Urf3982Vlz1LDkmIewZ/1tF7
+    secure: jrexooMHJwdbj5MGacSL9fCj3g2haDXMarPEkiLpdIZmasb/zeMYb0NVofvi5HvJ
   on:
     branch: master

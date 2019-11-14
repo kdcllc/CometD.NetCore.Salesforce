@@ -6,22 +6,27 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+
 using Microsoft.Extensions.Hosting;
+
 using NetCoreForce.Client;
+
+using TextCopy;
+
 using Console = Colorful.Console;
 
-namespace AuthApp.Host
+namespace AuthApp.Internal
 {
     /// <summary>
     /// Web Server OAuth Authentication Flow
-    /// https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/intro_understanding_web_server_oauth_flow.htm
+    /// https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/intro_understanding_web_server_oauth_flow.htm.
     /// </summary>
     internal class HttpServer : BackgroundService
     {
         private readonly HostBuilderOptions _hostOptions;
         private readonly SfConfig _config;
         private readonly IApplicationLifetime _applicationLifetime;
-        private bool isCompleted = false;
+        private bool _isCompleted = false;
 
         public HttpServer(
             HostBuilderOptions hostOptions,
@@ -35,6 +40,10 @@ namespace AuthApp.Host
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
+            Console.WriteLine();
+            Console.WriteAscii("Token Generation Started...", Colorful.FigletFont.Default);
+            Console.WriteLine();
+
             if (_hostOptions.Verbose)
             {
                 Console.WriteLine($"{nameof(HttpServer)} is starting.");
@@ -53,11 +62,12 @@ namespace AuthApp.Host
             }
 
             var process = ConsoleHandler.OpenBrowser(authUrl);
+
             var context = await http.GetContextAsync();
 
             while (!stoppingToken.IsCancellationRequested)
             {
-                if (isCompleted)
+                if (_isCompleted)
                 {
                     _applicationLifetime.StopApplication();
                     return;
@@ -78,6 +88,7 @@ namespace AuthApp.Host
                     {
                         Console.WriteLine($"OAuth authorization error: {context.Request.QueryString.Get("error")}.", Color.Red);
                     }
+
                     if (context.Request.QueryString.Get("code") == null)
                     {
                         Console.WriteLine($"Malformed authorization response {context.Request.QueryString}", Color.Red);
@@ -96,10 +107,15 @@ namespace AuthApp.Host
                         code,
                         $"{_config.LoginUrl}{_config.OAuthUri}");
 
-                    Console.WriteLineFormatted("Access_token = {0}",Color.Green, Color.Yellow, auth.AccessInfo.AccessToken);
+                    Console.WriteLineFormatted("Access_token = {0}", Color.Green, Color.Yellow, auth.AccessInfo.AccessToken);
+
                     Console.WriteLineFormatted("Refresh_token = {0}", Color.Green, Color.Yellow, auth.AccessInfo.RefreshToken);
 
-                    isCompleted = true;
+                    Clipboard.SetText(auth.AccessInfo.RefreshToken);
+
+                    Console.WriteLine($"Refresh_token copied to the Clipboard", color: Color.Yellow);
+
+                    _isCompleted = true;
 
                     http.Stop();
                     if (_hostOptions.Verbose)
@@ -107,8 +123,27 @@ namespace AuthApp.Host
                         Console.WriteLine($"{nameof(HttpServer)} is stopping.");
                     }
                 }
+
                 await Task.Delay(TimeSpan.FromSeconds(5), stoppingToken);
+
+                Console.WriteLine();
+                Console.Write("Thanks for using this cli tool");
             }
+        }
+
+        private static async Task<Stream> ShowBrowserMessage(HttpListenerContext context)
+        {
+            var response = context.Response;
+            var responseString = string.Format(@"
+                <html>
+                    <body>Please return to the console to retrieve access and refresh tokens.</body>
+                </html>");
+
+            var buffer = Encoding.UTF8.GetBytes(responseString);
+            response.ContentLength64 = buffer.Length;
+            var responseOutput = response.OutputStream;
+            await responseOutput.WriteAsync(buffer, 0, buffer.Length);
+            return responseOutput;
         }
 
         private int GetRandomUnusedPort()
@@ -125,21 +160,6 @@ namespace AuthApp.Host
             var authEndpoint = $"{_config.LoginUrl}{_config.OAuthorizeUri}";
             var url = $"{authEndpoint}?response_type=code&access_type=offline&scope=openid%20profile%20api%20refresh_token%20offline_access&redirect_uri={Uri.EscapeDataString(redirectURI)}&client_id={_config.ClientId}";
             return url;
-        }
-
-        private static async Task<Stream> ShowBrowserMessage(HttpListenerContext context)
-        {
-            var response = context.Response;
-            var responseString = string.Format(@"
-                <html>
-                    <body>Please return to the console to retrieve access and refresh tokens.</body>
-                </html>");
-
-            var buffer = Encoding.UTF8.GetBytes(responseString);
-            response.ContentLength64 = buffer.Length;
-            var responseOutput = response.OutputStream;
-            await responseOutput.WriteAsync(buffer, 0, buffer.Length);
-            return responseOutput;
         }
     }
 }

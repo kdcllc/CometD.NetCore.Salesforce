@@ -2,10 +2,13 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+
 using NetCoreForce.Client;
 using NetCoreForce.Client.Models;
+
 using Polly;
 using Polly.Wrap;
 
@@ -18,10 +21,10 @@ namespace CometD.NetCore.Salesforce.Resilience
         private readonly ILogger<ResilientForceClient> _logger;
         private readonly AsyncPolicyWrap _policy;
 
-        private const string PolicyContextMethod = nameof(PolicyContextMethod);
+        private readonly string _policyContextMethod = nameof(_policyContextMethod);
 
         /// <summary>
-        /// Constructor for <see cref="ResilientForceClient"/>
+        /// Initializes a new instance of the <see cref="ResilientForceClient"/> class.
         /// </summary>
         /// <param name="forceClient"></param>
         /// <param name="options"></param>
@@ -44,7 +47,7 @@ namespace CometD.NetCore.Salesforce.Resilience
             _policy = Policy.WrapAsync(GetAuthenticationRetryPolicy(), GetWaitAndRetryPolicy());
         }
 
-        ///<inheritdoc/>
+        /// <inheritdoc/>
         public async Task<int> CountQueryAsync(
             string queryString,
             bool queryAll = false,
@@ -52,7 +55,7 @@ namespace CometD.NetCore.Salesforce.Resilience
         {
             var mContext = new Context
             {
-                [PolicyContextMethod] = nameof(CountQueryAsync)
+                [_policyContextMethod] = nameof(CountQueryAsync)
             };
 
             return await _policy.ExecuteAsync(
@@ -65,16 +68,16 @@ namespace CometD.NetCore.Salesforce.Resilience
                 cancellationToken);
         }
 
-        ///<inheritdoc/>
+        /// <inheritdoc/>
         public async Task<CreateResponse> CreateRecordAsync<T>(
             string sObjectTypeName,
             T sObject,
-            Dictionary<string, string> customHeaders = null,
+            Dictionary<string, string>? customHeaders = null,
             CancellationToken cancellationToken = default)
         {
             var mContext = new Context
             {
-                [PolicyContextMethod] = nameof(CreateRecordAsync)
+                [_policyContextMethod] = nameof(CreateRecordAsync)
             };
 
             return await _policy.ExecuteAsync(
@@ -90,7 +93,7 @@ namespace CometD.NetCore.Salesforce.Resilience
                 cancellationToken);
         }
 
-        ///<inheritdoc/>
+        /// <inheritdoc/>
         public Task DeleteRecordAsync(
             string sObjectTypeName,
             string objectId,
@@ -98,7 +101,7 @@ namespace CometD.NetCore.Salesforce.Resilience
         {
             var mContext = new Context
             {
-                [PolicyContextMethod] = nameof(DeleteRecordAsync)
+                [_policyContextMethod] = nameof(DeleteRecordAsync)
             };
 
             return _policy.ExecuteAsync(
@@ -111,12 +114,12 @@ namespace CometD.NetCore.Salesforce.Resilience
                 cancellationToken);
         }
 
-        ///<inheritdoc/>
+        /// <inheritdoc/>
         public async Task<DescribeGlobal> DescribeGlobalAsync(CancellationToken cancellationToken = default)
         {
             var mContext = new Context
             {
-                [PolicyContextMethod] = nameof(DescribeGlobalAsync)
+                [_policyContextMethod] = nameof(DescribeGlobalAsync)
             };
 
             return await _policy.ExecuteAsync(
@@ -129,14 +132,14 @@ namespace CometD.NetCore.Salesforce.Resilience
                 cancellationToken);
         }
 
-        ///<inheritdoc/>
+        /// <inheritdoc/>
         public async Task<List<SalesforceVersion>> GetAvailableRestApiVersionsAsync(
-            string currentInstanceUrl = null,
+            string? currentInstanceUrl = null,
             CancellationToken cancellationToken = default)
         {
             var mContext = new Context
             {
-                [PolicyContextMethod] = nameof(GetAvailableRestApiVersionsAsync)
+                [_policyContextMethod] = nameof(GetAvailableRestApiVersionsAsync)
             };
 
             return await _policy.ExecuteAsync(
@@ -149,14 +152,14 @@ namespace CometD.NetCore.Salesforce.Resilience
                 cancellationToken);
         }
 
-        ///<inheritdoc/>
+        /// <inheritdoc/>
         public async Task<SObjectBasicInfo> GetObjectBasicInfoAsync(
             string objectTypeName,
             CancellationToken cancellationToken = default)
         {
             var mContext = new Context
             {
-                [PolicyContextMethod] = nameof(GetObjectBasicInfoAsync)
+                [_policyContextMethod] = nameof(GetObjectBasicInfoAsync)
             };
 
             return await _policy.ExecuteAsync(
@@ -169,16 +172,16 @@ namespace CometD.NetCore.Salesforce.Resilience
                 cancellationToken);
         }
 
-        ///<inheritdoc/>
+        /// <inheritdoc/>
         public async Task<T> GetObjectByIdAsync<T>(
             string sObjectTypeName,
             string objectId,
-            List<string> fields = null,
+            List<string>? fields = null,
             CancellationToken cancellationToken = default)
         {
             var mContext = new Context
             {
-                [PolicyContextMethod] = nameof(GetObjectByIdAsync)
+                [_policyContextMethod] = nameof(GetObjectByIdAsync)
             };
 
             return await _policy.ExecuteAsync(
@@ -194,14 +197,14 @@ namespace CometD.NetCore.Salesforce.Resilience
                 cancellationToken);
         }
 
-        ///<inheritdoc/>
+        /// <inheritdoc/>
         public async Task<SObjectDescribeFull> GetObjectDescribeAsync(
             string objectTypeName,
             CancellationToken cancellationToken = default)
         {
             var mContext = new Context
             {
-                [PolicyContextMethod] = nameof(GetObjectDescribeAsync)
+                [_policyContextMethod] = nameof(GetObjectDescribeAsync)
             };
 
             return await _policy.ExecuteAsync(
@@ -214,12 +217,12 @@ namespace CometD.NetCore.Salesforce.Resilience
                 cancellationToken);
         }
 
-        ///<inheritdoc/>
+        /// <inheritdoc/>
         public async Task<OrganizationLimits> GetOrganizationLimitsAsync(CancellationToken cancellationToken = default)
         {
             var mContext = new Context
             {
-                [PolicyContextMethod] = nameof(GetOrganizationLimitsAsync)
+                [_policyContextMethod] = nameof(GetOrganizationLimitsAsync)
             };
 
             return await _policy.ExecuteAsync(
@@ -232,14 +235,14 @@ namespace CometD.NetCore.Salesforce.Resilience
                 cancellationToken);
         }
 
-        ///<inheritdoc/>
+        /// <inheritdoc/>
         public async Task<UserInfo> GetUserInfoAsync(
             string identityUrl,
             CancellationToken cancellationToken = default)
         {
             var mContext = new Context
             {
-                [PolicyContextMethod] = nameof(GetUserInfoAsync)
+                [_policyContextMethod] = nameof(GetUserInfoAsync)
             };
 
             return await _policy.ExecuteAsync(
@@ -252,18 +255,18 @@ namespace CometD.NetCore.Salesforce.Resilience
                 cancellationToken);
         }
 
-        ///<inheritdoc/>
+        /// <inheritdoc/>
         public async Task<CreateResponse> InsertOrUpdateRecordAsync<T>(
             string sObjectTypeName,
             string fieldName,
             string fieldValue,
             T sObject,
-            Dictionary<string, string> customHeaders = null,
+            Dictionary<string, string>? customHeaders = null,
             CancellationToken cancellationToken = default)
         {
             var mContext = new Context
             {
-                [PolicyContextMethod] = nameof(InsertOrUpdateRecordAsync)
+                [_policyContextMethod] = nameof(InsertOrUpdateRecordAsync)
             };
 
             return await _policy.ExecuteAsync(
@@ -281,7 +284,7 @@ namespace CometD.NetCore.Salesforce.Resilience
                 cancellationToken);
         }
 
-        ///<inheritdoc/>
+        /// <inheritdoc/>
         public async Task<List<T>> QueryAsync<T>(
             string queryString,
             bool queryAll = false,
@@ -289,7 +292,7 @@ namespace CometD.NetCore.Salesforce.Resilience
         {
             var mContext = new Context
             {
-                [PolicyContextMethod] = nameof(QueryAsync)
+                [_policyContextMethod] = nameof(QueryAsync)
             };
 
             return await _policy.ExecuteAsync(
@@ -304,7 +307,7 @@ namespace CometD.NetCore.Salesforce.Resilience
                 cancellationToken);
         }
 
-        ///<inheritdoc/>
+        /// <inheritdoc/>
         public async Task<T> QuerySingleAsync<T>(
             string queryString,
             bool queryAll = false,
@@ -312,7 +315,7 @@ namespace CometD.NetCore.Salesforce.Resilience
         {
             var mContext = new Context
             {
-                [PolicyContextMethod] = nameof(QuerySingleAsync)
+                [_policyContextMethod] = nameof(QuerySingleAsync)
             };
 
             return await _policy.ExecuteAsync(
@@ -327,14 +330,14 @@ namespace CometD.NetCore.Salesforce.Resilience
                 cancellationToken);
         }
 
-        ///<inheritdoc/>
+        /// <inheritdoc/>
         public async Task<SearchResult<T>> SearchAsync<T>(
             string searchString,
             CancellationToken cancellationToken = default)
         {
             var mContext = new Context
             {
-                [PolicyContextMethod] = nameof(SearchAsync)
+                [_policyContextMethod] = nameof(SearchAsync)
             };
 
             return await _policy.ExecuteAsync(
@@ -347,14 +350,14 @@ namespace CometD.NetCore.Salesforce.Resilience
                 cancellationToken);
         }
 
-        ///<inheritdoc/>
+        /// <inheritdoc/>
         public async Task<bool> TestConnectionAsync(
-            string currentInstanceUrl = null,
+            string? currentInstanceUrl = null,
             CancellationToken cancellationToken = default)
         {
             var mContext = new Context
             {
-                [PolicyContextMethod] = nameof(TestConnectionAsync)
+                [_policyContextMethod] = nameof(TestConnectionAsync)
             };
 
             return await _policy.ExecuteAsync(
@@ -367,17 +370,17 @@ namespace CometD.NetCore.Salesforce.Resilience
                 cancellationToken);
         }
 
-        ///<inheritdoc/>
+        /// <inheritdoc/>
         public Task UpdateRecordAsync<T>(
             string sObjectTypeName,
             string objectId,
             T sObject,
-            Dictionary<string, string> customHeaders = null,
+            Dictionary<string, string>? customHeaders = null,
             CancellationToken cancellationToken = default)
         {
             var mContext = new Context
             {
-                [PolicyContextMethod] = nameof(UpdateRecordAsync)
+                [_policyContextMethod] = nameof(UpdateRecordAsync)
             };
 
             return _policy.ExecuteAsync(
@@ -409,7 +412,7 @@ namespace CometD.NetCore.Salesforce.Resilience
                       },
                       onRetry: (ex, span, context) =>
                       {
-                          var methodName = context[PolicyContextMethod] ?? "MethodNotSpecified";
+                          var methodName = context[_policyContextMethod] ?? "MethodNotSpecified";
 
                           _logger.LogWarning(
                             "{Method} wait {Seconds} to execute with exception: {Message} for named policy: {Policy}",
@@ -417,8 +420,7 @@ namespace CometD.NetCore.Salesforce.Resilience
                             span.TotalSeconds,
                             ex.Message,
                             context.PolicyKey);
-                      }
-                  )
+                      })
                  .WithPolicyKey($"{nameof(ResilientForceClient)}WaitAndRetryAsync");
         }
 
@@ -428,9 +430,9 @@ namespace CometD.NetCore.Salesforce.Resilience
                 .Handle<ForceApiException>(x => x.Message.Contains("ErrorCode INVALID_SESSION_ID"))
                 .RetryAsync(
                     retryCount: _options.Retry,
-                    onRetry: (ex, count, context) =>
+                    onRetryAsync: async (ex, count, context) =>
                     {
-                        var methodName = context[PolicyContextMethod] ?? "MethodNotSpecified";
+                        var methodName = context[_policyContextMethod] ?? "MethodNotSpecified";
 
                         _logger.LogWarning(
                             "{Method} attempting to re-authenticate Retry {Count} of {Total} for named policy {PolicyKey}, due to {Message}.",
@@ -439,7 +441,8 @@ namespace CometD.NetCore.Salesforce.Resilience
                             _options.Retry,
                             context.PolicyKey,
                             ex.Message);
-                        _forceClient.Invalidate();
+
+                        await _forceClient.Invalidate();
                     })
                 .WithPolicyKey($"{nameof(ResilientForceClient)}RetryAsync");
         }

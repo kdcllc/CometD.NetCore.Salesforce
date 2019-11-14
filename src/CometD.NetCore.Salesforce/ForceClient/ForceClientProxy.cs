@@ -2,32 +2,36 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+
 using Microsoft.Extensions.Logging;
+
 using NetCoreForce.Client;
 using NetCoreForce.Client.Models;
+
 using Polly;
 
 namespace CometD.NetCore.Salesforce.ForceClient
 {
     /// <summary>
     /// The <see cref="IForceClientProxy"/> proxy functionality around <see cref="NetCoreForce.Client.ForceClient"/>.
-    /// <see cref="!:https://github.com/anthonyreilly/NetCoreForce/blob/master/src/NetCoreForce.Client/ForceClient.cs"/>
+    /// <see cref="!:https://github.com/anthonyreilly/NetCoreForce/blob/master/src/NetCoreForce.Client/ForceClient.cs"/>.
     /// </summary>
     public class ForceClientProxy : IForceClientProxy
     {
         private readonly SalesforceConfiguration _options;
         private readonly IAuthenticationClientProxy _authenticationClient;
         private readonly ILogger _logger;
-        private NetCoreForce.Client.ForceClient _forceClient;
         private readonly IAsyncPolicy _policy;
 
+        private NetCoreForce.Client.ForceClient _forceClient;
+
         /// <summary>
-        ///  Constructor for <see cref="AuthenticationClientProxy"/>
+        /// Initializes a new instance of the <see cref="ForceClientProxy"/> class.
         ///  that create an instance of <see cref="NetCoreForce.Client.ForceClient"/>.
         /// </summary>
         /// <param name="authenticationClient">Instance of <see cref="AuthenticationClientProxy"/> that creates instance of <see cref="AuthenticationClient"/>.</param>
         /// <param name="logger">Instance of the <see cref="ILogger{IForceClientProxy}"/>.</param>
-        /// <param name="options">Options based on <see cref="SalesforceConfiguration"/></param>
+        /// <param name="options">Options based on <see cref="SalesforceConfiguration"/>.</param>
         public ForceClientProxy(
             IAuthenticationClientProxy authenticationClient,
             ILogger<ForceClientProxy> logger,
@@ -43,12 +47,65 @@ namespace CometD.NetCore.Salesforce.ForceClient
             _forceClient = new NetCoreForce.Client.ForceClient(
                 _authenticationClient.AuthenticationClient.AccessInfo.InstanceUrl,
                 _authenticationClient.AuthenticationClient.ApiVersion,
-                _authenticationClient.AuthenticationClient.AccessInfo.AccessToken
-            );
+                _authenticationClient.AuthenticationClient.AccessInfo.AccessToken);
 
             // create retry authentication policy
-            _policy = CreateAuthenticationWaitAndRetry(_options.Retry,
-                                nameof(ForceClientProxy), OnWaitAndRetry);
+            _policy = CreateAuthenticationWaitAndRetry(
+                _options.Retry,
+                nameof(ForceClientProxy),
+                OnWaitAndRetry);
+        }
+
+        /// <summary>
+        /// Retrieves a Salesforce object by its Id.
+        /// </summary>
+        /// <typeparam name="T">Type of the object.</typeparam>
+        /// <param name="sObjectTypeName">Salesforce object type name.</param>
+        /// <param name="objectId">Id of the object to retrieve.</param>
+        /// <param name="token">Token to cancel operation.</param>
+        /// <param name="fields">List of fields to return.</param>
+        /// <returns>The retrieved object from Salesforce.</returns>
+        public async Task<T> GetObjectById<T>(
+            string sObjectTypeName,
+            string objectId,
+            CancellationToken token,
+            List<string>? fields = null)
+        {
+            return await _policy.ExecuteAsync(ctx => _forceClient.GetObjectById<T>(sObjectTypeName, objectId, fields), token);
+        }
+
+        /// <summary>
+        /// Creates a record in the Salesforce instance.
+        /// </summary>
+        /// <typeparam name="T">Type of the object.</typeparam>
+        /// <param name="sObjectTypeName">Salesforce object type name.</param>
+        /// <param name="instance">Object to create.</param>
+        /// <param name="headers">Optional request headers.</param>
+        /// <returns>A <see cref="CreateResponse"/> representing the operation result.</returns>
+        public async Task<CreateResponse> CreateRecord<T>(
+            string sObjectTypeName,
+            T instance,
+            Dictionary<string, string>? headers = null)
+        {
+            return await _policy.ExecuteAsync(() => _forceClient.CreateRecord(sObjectTypeName, instance, headers));
+        }
+
+        /// <summary>
+        /// Creates a record in the Salesforce organization.
+        /// </summary>
+        /// <typeparam name="T">Type of the object.</typeparam>
+        /// <param name="sObjectTypeName">Salesforce object type name.</param>
+        /// <param name="instance">Object to create.</param>
+        /// <param name="token">Token to cancel operation.</param>
+        /// <param name="headers">Optional request headers.</param>
+        /// <returns>A <see cref="CreateResponse"/> representing the operation result.</returns>
+        public async Task<CreateResponse> CreateRecord<T>(
+            string sObjectTypeName,
+            T instance,
+            CancellationToken token,
+            Dictionary<string, string>? headers = null)
+        {
+            return await _policy.ExecuteAsync(ctx => _forceClient.CreateRecord(sObjectTypeName, instance, headers), token);
         }
 
         private async Task RefreshAuthorization()
@@ -58,8 +115,7 @@ namespace CometD.NetCore.Salesforce.ForceClient
             _forceClient = new NetCoreForce.Client.ForceClient(
                 _authenticationClient.AuthenticationClient.AccessInfo.InstanceUrl,
                 _authenticationClient.AuthenticationClient.ApiVersion,
-                _authenticationClient.AuthenticationClient.AccessInfo.AccessToken
-            );
+                _authenticationClient.AuthenticationClient.AccessInfo.AccessToken);
 
             _logger.LogDebug($"Salesforce Authentication Successful!");
         }
@@ -84,58 +140,6 @@ namespace CometD.NetCore.Salesforce.ForceClient
                     .RetryAsync(
                         retryCount: retryAuthorization,
                         onRetryAsync: retryHook).WithPolicyKey($"{name}Retry");
-        }
-
-        /// <summary>
-        /// Retrieves a Salesforce object by its Id
-        /// </summary>
-        /// <typeparam name="T">Type of the object</typeparam>
-        /// <param name="sObjectTypeName">Salesforce object type name</param>
-        /// <param name="objectId">Id of the object to retrieve</param>
-        /// <param name="token">Token to cancel operation</param>
-        /// <param name="fields">List of fields to return.</param>
-        /// <returns>The retrieved object from Salesforce.</returns>
-        public async Task<T> GetObjectById<T>(
-            string sObjectTypeName,
-            string objectId,
-            CancellationToken token,
-            List<string> fields = null)
-        {
-            return await _policy.ExecuteAsync(ctx => _forceClient.GetObjectById<T>(sObjectTypeName, objectId, fields), token);
-        }
-
-        /// <summary>
-        /// Creates a record in the Salesforce instance.
-        /// </summary>
-        /// <typeparam name="T">Type of the object</typeparam>
-        /// <param name="sObjectTypeName">Salesforce object type name</param>
-        /// <param name="instance">Object to create</param>
-        /// <param name="headers">Optional request headers.</param>
-        /// <returns>A <see cref="CreateResponse"/> representing the operation result.</returns>
-        public async Task<CreateResponse> CreateRecord<T>(
-            string sObjectTypeName,
-            T instance,
-            Dictionary<string, string> headers = null)
-        {
-            return await _policy.ExecuteAsync(() => _forceClient.CreateRecord(sObjectTypeName, instance, headers));
-        }
-
-        /// <summary>
-        /// Creates a record in the Salesforce organization
-        /// </summary>
-        /// <typeparam name="T">Type of the object</typeparam>
-        /// <param name="sObjectTypeName">Salesforce object type name</param>
-        /// <param name="instance">Object to create</param>
-        /// <param name="token">Token to cancel operation</param>
-        /// <param name="headers">Optional request headers.</param>
-        /// <returns>A <see cref="CreateResponse"/> representing the operation result.</returns>
-        public async Task<CreateResponse> CreateRecord<T>(
-            string sObjectTypeName,
-            T instance,
-            CancellationToken token,
-            Dictionary<string, string> headers = null)
-        {
-            return await _policy.ExecuteAsync(ctx => _forceClient.CreateRecord(sObjectTypeName, instance, headers), token);
         }
     }
 }

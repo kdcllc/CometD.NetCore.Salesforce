@@ -1,8 +1,8 @@
-using Microsoft.AspNetCore;
+using System.Collections.Generic;
+
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
-using System;
-using System.Collections.Generic;
+
 using Xunit;
 
 namespace CometD.UnitTest
@@ -14,18 +14,18 @@ namespace CometD.UnitTest
         {
             var dic = new Dictionary<string, string>
             {
-                {"Salesforce:Id", "-2" },
-                {"Salesforce:Name", "" }
+                { "Salesforce:Id", "-2" },
+                { "Salesforce:Name", string.Empty }
             };
 
-            IConfiguration Configuration = null;
+            IConfiguration configuration = null;
 
             var host = new WebHostBuilder()
                 .ConfigureAppConfiguration((context, builder) =>
                 {
-                    Configuration = builder.AddInMemoryCollection(dic).Build();
+                    configuration = builder.AddInMemoryCollection(dic).Build();
                 })
-                .ConfigureServices((services)=>
+                .ConfigureServices((services) =>
                 {
                 });
         }

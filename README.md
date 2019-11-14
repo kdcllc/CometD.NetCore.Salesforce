@@ -1,101 +1,33 @@
-# CometD .NET Core implementation of Salesforce Platform events
+# CometD.NetCore.Salesforce
+
 [![Build status](https://ci.appveyor.com/api/projects/status/baalfhs6vvc38icc?svg=true)](https://ci.appveyor.com/project/kdcllc/cometd-netcore-salesforce)
+[![NuGet](https://img.shields.io/nuget/v/CometD.NetCore.Salesforce.svg)](https://www.nuget.org/packages?q=Bet.AspNetCore)
+[![MyGet](https://img.shields.io/myget/kdcllc/v/CometD.NetCore.Salesforce.svg?label=myget)](https://www.myget.org/F/kdcllc/api/v2)
 
 This repo contains the CometD .NET Core implementation for Salesforce Platform events.
- 
+
 These events can be subscribed to and listened to by your custom `Event Listener`. The sample application of this library can be found [here](https://github.com/kdcllc/Bet.BuildingBlocks.SalesforceEventBus).
 
 The solution contains the following:
 
-1. `CometD.NetCore2.Salesforce` Project
+1. [`CometD.NetCore2.Salesforce`](./src/CometD.NetCore.Salesforce/README.md)
      - A Salesforce Platform Events implementation based [Even Bus idea of eShopOnContainers](https://github.com/dotnet-architecture/eShopOnContainers).
      - [Reusable Building Blocks and sample application that listens to Salesforce push events](https://github.com/kdcllc/Bet.BuildingBlocks.SalesforceEventBus).
 
-2. DotNet Cli tool `salesforce` Project
-   - This dotnet cli tool allows for retrieval of `Access Token` and `Refresh Token` to be used by any other application. Please refer to [How Are Apps Authenticated with the Web Server OAuth Authentication Flow](https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/intro_understanding_web_server_oauth_flow.htm)
-
-## Installation
-
-- To include this library inside of your project run nuget package installation
-
-```cmd
-    PM> Install-Package CometD.NetCore2.Salesforce
-```
-
-Or
-
-```cmd
- dotnet add package CometD.NetCore.Salesforce
-```
-
-- To Install Salesforce Cli tool globally run the following command:
-
-```cmd
- dotnet tool install salesforce -g
-
-```
-
-To verify the installation run:
-
-```cmd
- dotnet tool list -g
-```
-
-## Usage of Salesforce dotnet cli tool
-
-There are several ways to run this cli tool.
-
-1. From any location with Consumer Key and Secret provided
-
-```bash
-    salesforce get-tokens --key:{key} --secret:{secret} --login:https://login.salesforce.com --verbose:information
-```
-
-2. Running the tool in the directory that contains `appsettings.json` file
-
-```bash
-    salesforce get-tokens --section Salesforce
-```
-Note: required configurations are as follows:
-
-```json
-  "Salesforce": {
-    "ClientId": "",
-    "ClientSecret": "",
-    "LoginUrl": ""
-  }
-````
-
-3. Running with Azure Vault
-
-`appsettings.json
-```json
-    "AzureVault": {
-     "BaseUrl": "https://{name}.vault.azure.net/"
-    },
-```
-
-Then run:
-
-```cmd
-    salesforce get-tokens --verbose:debug
-```
-
-Or specify url within the dotnet cli tool like so:
-
-```cmd
-    salesforce get-tokens --azure https://{name}.vault.azure.net/"
-```
-
-This tool will open web browser and will require you to log in with your credentials to Salesforce portal in order to retrieve the tokens.
+2. [DotNet Cli tool `salesforce`](./src/AuthApp/README.md)
+   - This dotnet cli tool allows for retrieval of `Access` or `Refresh Tokens`  to be used by any other application.
+   Please refer to [How Are Apps Authenticated with the Web Server OAuth Authentication Flow](https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/intro_understanding_web_server_oauth_flow.htm)
 
 ## Saleforce Setup
-[Video](https://www.youtube.com/watch?v=L6OWyCfQD6U)
+
+[Watch Video](https://www.youtube.com/watch?v=L6OWyCfQD6U)
+
 1. Sing up for development sandbox with Saleforce: [https://developer.salesforce.com/signup](https://developer.salesforce.com/signup).
 2. Create Connected App in Salesforce.
 3. Create a Platform Event.
 
 ### Create Connected App in Salesforce
+
 1. Setup -> Quick Find -> manage -> App Manager -> New Connected App.
 2. Basic Info:
 
@@ -119,13 +51,16 @@ This tool will open web browser and will require you to log in with your credent
 
 Use workbench to test the Event [workbench](https://workbench.developerforce.com/login.php?startUrl=%2Finsert.php)
 ## AuthApp
+
 [Use login instead of test](https://github.com/developerforce/Force.com-Toolkit-for-NET/wiki/Web-Server-OAuth-Flow-Sample#am-i-using-the-test-environment)
 Simple application that provides with Web Server OAuth Authentication Flow to retrieve 
 `Access Token` and `Refresh Token` to be used within the application.
 
-## Special thanks to the following projects and contributors:
+## Special thanks to
+
 - [Oyatel/CometD.NET](https://github.com/Oyatel/CometD.NET)
 - [nthachus/CometD.NET](https://github.com/nthachus/CometD.NET)
 - [tdawgy/CometD.NetCore](https://github.com/tdawgy/CometD.NetCore)
 - [eShopOnContainers](https://github.com/dotnet-architecture/eShopOnContainers)
-- [Chris Woolum](https://github.com/cwoolum)
+- [cwoolum](https://github.com/cwoolum)
+- [ts46235](https://github.com/ts46235)

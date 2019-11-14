@@ -1,4 +1,5 @@
 ﻿using System;
+
 using CometD.NetCore.Bayeux.Client;
 
 namespace CometD.NetCore.Salesforce
@@ -46,7 +47,7 @@ namespace CometD.NetCore.Salesforce
         /// <param name="topicName"></param>
         /// <param name="listener"></param>
         /// <param name="replayId"></param>
-        void SubscribeTopic(string topicName, IMessageListener listener, long replayId=-1);
+        void SubscribeTopic(string topicName, IMessageListener listener, long replayId = -1);
 
         /// <summary>
         /// Unsubscribe from Salesforce Platform event.
@@ -55,6 +56,6 @@ namespace CometD.NetCore.Salesforce
         /// <param name="listener"></param>
         /// <param name="replayId"></param>
         /// <returns></returns>
-        bool UnsubscribeTopic(string topicName, IMessageListener listener = null, long replayId=-1);
+        bool UnsubscribeTopic(string topicName, IMessageListener? listener = null, long replayId = -1);
     }
 }

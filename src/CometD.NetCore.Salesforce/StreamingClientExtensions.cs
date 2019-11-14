@@ -1,13 +1,18 @@
-﻿using CometD.NetCore.Salesforce;
+﻿using System;
+using System.Threading;
+
+using CometD.NetCore.Salesforce;
 using CometD.NetCore.Salesforce.ForceClient;
 using CometD.NetCore.Salesforce.Resilience;
+
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+
 using NetCoreForce.Client;
 using NetCoreForce.Client.Models;
-using System;
-using System.Threading;
+
+using Polly;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -16,6 +21,15 @@ namespace Microsoft.Extensions.DependencyInjection
     /// </summary>
     public static class StreamingClientExtensions
     {
+        /// <summary>
+        /// Adds ForecClient Resilient version of it with Refresh Token Authentication.
+        /// <see cref="!:https://help.salesforce.com/articleView?id=remoteaccess_oauth_refresh_token_flow.htm%26type%3D5"/>
+        /// Can be used in the code with <see cref="IResilientForceClient"/>.
+        /// </summary>
+        /// <param name="services"></param>
+        /// <param name="configuration"></param>
+        /// <param name="sectionName"></param>
+        /// <returns></returns>
         public static IServiceCollection AddResilientStreamingClient(
             this IServiceCollection services,
             IConfiguration configuration,
@@ -27,54 +41,88 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.AddSingleton<Func<AsyncExpiringLazy<AccessTokenResponse>>>(sp => () =>
             {
-               var options = sp.GetRequiredService<IOptions<SalesforceConfiguration>>().Value;
+                var options = sp.GetRequiredService<IOptions<SalesforceConfiguration>>().Value;
 
-               TimeSpan.TryParse(options.TokenExpiration, out var tokenExperation);
+                if (!TimeSpan.TryParse(options.TokenExpiration, out var tokenExpiration))
+                {
+                    tokenExpiration = TimeSpan.FromHours(1);
+                }
 
                 return new AsyncExpiringLazy<AccessTokenResponse>(async data =>
-                {
-                    if (data.Result == null
-                        || DateTime.UtcNow > data.ValidUntil.Subtract(TimeSpan.FromSeconds(30)))
-                    {
-                        var authClient = new AuthenticationClient();
+                 {
+                     if (data.Result == null
+                         || DateTime.UtcNow > data.ValidUntil.Subtract(TimeSpan.FromSeconds(30)))
+                     {
+                         var policy = Policy
+                                 .Handle<Exception>()
+                                 .WaitAndRetryAsync(
+                                     retryCount: options.Retry,
+                                     sleepDurationProvider: (retryAttempt) => TimeSpan.FromSeconds(Math.Pow(options.BackoffPower, retryAttempt)));
 
-                        await authClient.TokenRefreshAsync(options.RefreshToken, options.ClientId);
+                         var authClient = await policy.ExecuteAsync(async () =>
+                         {
+                             var auth = new AuthenticationClient();
 
-                        return new AsyncExpirationValue<AccessTokenResponse>
-                        {
-                            Result = authClient.AccessInfo,
-                            ValidUntil = DateTimeOffset.UtcNow.Add(tokenExperation)
-                        };
-                    }
+                             await auth.TokenRefreshAsync(
+                                 options.RefreshToken,
+                                 options.ClientId,
+                                 options.ClientSecret,
+                                 $"{options.LoginUrl}{options.OAuthUri}");
 
-                    return data;
-                });
+                             return auth;
+                         });
+
+                         return new AsyncExpirationValue<AccessTokenResponse>
+                         {
+                             Result = authClient.AccessInfo,
+                             ValidUntil = DateTimeOffset.UtcNow.Add(tokenExpiration)
+                         };
+                     }
+
+                     return data;
+                 });
             });
 
-            services.AddSingleton<Func<AsyncExpiringLazy<ForceClient>>>(sp => ()  =>
+            services.AddSingleton<Func<AsyncExpiringLazy<ForceClient>>>(sp => () =>
             {
                 var options = sp.GetRequiredService<IOptions<SalesforceConfiguration>>().Value;
 
-                TimeSpan.TryParse(options.TokenExpiration, out var tokenExperation);
+                if (!TimeSpan.TryParse(options.TokenExpiration, out var tokenExpiration))
+                {
+                    tokenExpiration = TimeSpan.FromHours(1);
+                }
 
                 return new AsyncExpiringLazy<ForceClient>(async data =>
                 {
                     if (data.Result == null
                         || DateTime.UtcNow > data.ValidUntil.Subtract(TimeSpan.FromSeconds(30)))
                     {
-                       var authClient = new AuthenticationClient();
+                        var policy = Policy
+                                  .Handle<Exception>()
+                                  .WaitAndRetryAsync(
+                                      retryCount: options.Retry,
+                                      sleepDurationProvider: (retryAttempt) => TimeSpan.FromSeconds(Math.Pow(options.BackoffPower, retryAttempt)));
 
-                        await authClient.TokenRefreshAsync(options.RefreshToken, options.ClientId);
+                        var client = await policy.ExecuteAsync(async () =>
+                        {
+                            var authClient = new AuthenticationClient();
 
-                        var client = new ForceClient(
-                            authClient.AccessInfo.InstanceUrl,
-                            authClient.ApiVersion,
-                            authClient.AccessInfo.AccessToken);
+                            await authClient.TokenRefreshAsync(
+                                options.RefreshToken,
+                                options.ClientId,
+                                options.ClientSecret,
+                                $"{options.LoginUrl}{options.OAuthUri}");
+
+                            return new ForceClient(
+                                authClient.AccessInfo.InstanceUrl,
+                                authClient.ApiVersion,
+                                authClient.AccessInfo.AccessToken);
+                        });
 
                         return new AsyncExpirationValue<ForceClient>
                         {
                             Result = client,
-                            ValidUntil = DateTimeOffset.UtcNow.Add(tokenExperation)
+                            ValidUntil = DateTimeOffset.UtcNow.Add(tokenExpiration)
                         };
                     }
 
@@ -92,7 +140,7 @@ namespace Microsoft.Extensions.DependencyInjection
         /// </summary>
         /// <param name="services"></param>
         /// <returns></returns>
-        [Obsolete("Use "+ nameof(AddResilientStreamingClient) + "extension method instead.")]
+        [Obsolete("Use " + nameof(AddResilientStreamingClient) + "extension method instead.")]
         public static IServiceCollection AddStreamingClient(this IServiceCollection services)
         {
             services.AddSingleton(sp =>

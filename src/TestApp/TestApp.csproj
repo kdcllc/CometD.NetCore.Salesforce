@@ -7,15 +7,15 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Bet.AspNetCore" Version="1.1.19" />
-    <PackageReference Include="Bet.Extensions" Version="1.1.19" />
-    <PackageReference Include="Bet.Extensions.Logging" Version="1.1.19" />
-    <PackageReference Include="Bet.Extensions.AzureVault" Version="1.1.19" />
+    <PackageReference Include="Bet.Extensions" />
+    <PackageReference Include="Bet.Extensions.AzureVault" />
+    <PackageReference Include="Bet.Extensions.Logging" />
+		<PackageReference Include="Bet.Extensions.Hosting" />
 
-    <PackageReference Include="Microsoft.Extensions.Configuration.CommandLine" Version="2.2.0" />
-		<PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="2.2.0" />
-		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.2.0" />
-		<PackageReference Include="Microsoft.Extensions.Hosting" Version="2.2.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.CommandLine" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.Json" />
+		<PackageReference Include="Microsoft.Extensions.Hosting" />
 	</ItemGroup>
 
 	<ItemGroup>

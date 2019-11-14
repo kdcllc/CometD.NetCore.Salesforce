@@ -1,4 +1,5 @@
-﻿using AuthApp.Host;
+﻿using AuthApp.Internal;
+
 using Microsoft.Extensions.Logging;
 
 namespace AuthApp
@@ -8,7 +9,7 @@ namespace AuthApp
         /// <summary>
         /// Sets Configuration file besides appsettings.json.
         /// </summary>
-        public string ConfigFile { get; set; }
+        public string? ConfigFile { get; set; }
 
         /// <summary>
         /// Provides ability to get troubleshooting information.
@@ -18,7 +19,7 @@ namespace AuthApp
         /// <summary>
         /// TraceLevel if verbose is present.
         /// </summary>
-        public LogLevel  Level { get; set; }
+        public LogLevel Level { get; set; }
 
         /// <summary>
         /// Ability to use Web project secrets.
@@ -26,9 +27,9 @@ namespace AuthApp
         public bool UserSecrets { get; set; }
 
         /// <summary>
-        /// Url for the azure key vault i.e. https://{vaultname}.vault.azure.net/
+        /// Url for the azure key vault i.e. https://{vaultname}.vault.azure.net/.
         /// </summary>
-        public string AzureVault { get; set; }
+        public string? AzureVault { get; set; }
 
         /// <summary>
         /// Prefix is based on Environment i.e. Development = dev, Production = prod.
@@ -38,16 +39,16 @@ namespace AuthApp
         /// <summary>
         /// Pass Hosting environment for the context of the application.
         /// </summary>
-        public string HostingEnviroment { get; set; }
+        public string HostingEnviroment { get; set; } = "Production";
 
         /// <summary>
         /// Salesforce options.
         /// </summary>
-        public SfConfig Settings { get; set; }
+        public SfConfig? Settings { get; set; }
 
         /// <summary>
         /// The name of the configuration section for the options.
         /// </summary>
-        public string SectionName { get; set; }
+        public string SectionName { get; set; } = "Salesforce";
     }
 }

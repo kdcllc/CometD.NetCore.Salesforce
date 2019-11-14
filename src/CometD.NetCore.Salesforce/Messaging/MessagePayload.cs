@@ -15,6 +15,6 @@ namespace CometD.NetCore.Salesforce.Messaging
         /// <summary>
         /// The <see cref="MessagePayload"/> user id.
         /// </summary>
-        public string CreatedById { get; set; }
+        public string CreatedById { get; set; } = string.Empty;
     }
 }
