@@ -83,3 +83,17 @@ Or specify url within the dotnet cli tool like so:
 - `--usesecrets` or `us` (Usually a Guid Id of the project that contains the secret)
 - `--environment` or `-e` (Production, Development, Stage)
 - `--section` or `-sn` (The root for the tools configuration the default is `Salesforce`)
+
+## Build self contained
+
+[](https://docs.microsoft.com/en-us/dotnet/core/rid-catalog)
+
+```bash
+    # windows
+    dotnet build -r win-x64 -c Release  -p:PackAsTool=false
+    dotnet publish -r win-x64 -c Release  -p:PackAsTool=false -p:PublishSingleFile=true -p:PublishTrimmed=true -p:PublishReadyToRun=true -f netcoreapp3.0 -o ../../packages
+
+    # linux
+    dotnet build -r linux-x64 -c Release  -p:PackAsTool=false
+    dotnet publish -r linux-x64 -c Release  -p:PackAsTool=false -p:PublishSingleFile=true -p:PublishTrimmed=true -p:PublishReadyToRun=false -f netcoreapp3.0 -o ../../packages
+```

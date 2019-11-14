@@ -2,14 +2,13 @@
 
   <PropertyGroup Label="Basic Settings">
     <IsPackable>true</IsPackable>
-    <VersionPrefix>2.2.0-preview</VersionPrefix>
+    <VersionPrefix>2.2.2-preview</VersionPrefix>
     <LangVersion>latest</LangVersion>
     <Nullable>disable</Nullable>
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
     <SuppressNETCoreSdkPreviewMessage>true</SuppressNETCoreSdkPreviewMessage>
     <NoWarn>$(NoWarn);CS1591</NoWarn>
   </PropertyGroup>
-
 
   <PropertyGroup Label="Ownership Settings">
     <Company>King David Consulting LLC</Company>
