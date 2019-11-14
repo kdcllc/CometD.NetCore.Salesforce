@@ -15,7 +15,7 @@ using TextCopy;
 
 using Console = Colorful.Console;
 
-namespace AuthApp.Host
+namespace AuthApp.Internal
 {
     /// <summary>
     /// Web Server OAuth Authentication Flow
@@ -40,6 +40,10 @@ namespace AuthApp.Host
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
+            Console.WriteLine();
+            Console.WriteAscii("Token Generation Started...", Colorful.FigletFont.Default);
+            Console.WriteLine();
+
             if (_hostOptions.Verbose)
             {
                 Console.WriteLine($"{nameof(HttpServer)} is starting.");
@@ -121,6 +125,9 @@ namespace AuthApp.Host
                 }
 
                 await Task.Delay(TimeSpan.FromSeconds(5), stoppingToken);
+
+                Console.WriteLine();
+                Console.Write("Thanks for using this cli tool");
             }
         }
 

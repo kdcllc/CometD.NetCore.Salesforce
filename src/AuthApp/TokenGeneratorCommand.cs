@@ -2,7 +2,7 @@
 using System.Drawing;
 using System.Threading.Tasks;
 
-using AuthApp.Host;
+using AuthApp.Internal;
 
 using McMaster.Extensions.CommandLineUtils;
 
@@ -18,29 +18,30 @@ namespace AuthApp
     [Command(
         "get-tokens",
         Description = "Generates Salesforce Access and Refresh Tokens",
-        ThrowOnUnexpectedArgument = false)]
+        ThrowOnUnexpectedArgument = false,
+        AllowArgumentSeparator = true)]
     [HelpOption("-?")]
     internal class TokenGeneratorCommand
     {
-        [Option("--key", Description = "The Salesforce Consumer Key.")]
-        public string ClientId { get; set; }
+        [Option("-k|--key", Description = "The Salesforce Consumer Key.")]
+        public string? ClientId { get; set; }
 
-        [Option("--secret", Description = "The Salesforce Consumer Secret.")]
-        public string ClientSecret { get; set; }
+        [Option("-s|--secret", Description = "The Salesforce Consumer Secret.")]
+        public string? ClientSecret { get; set; }
 
-        [Option("--login", Description = "The Salesforce login url. The default value is https://login.salesforce.com.")]
-        public string LoginUrl { get; set; }
+        [Option("-l|--login", Description = "The Salesforce login url. The default value is https://login.salesforce.com.")]
+        public string? LoginUrl { get; set; }
 
         [Option(
-            "--azure",
+            "-a|--azure",
             Description = "Allows to specify Azure Vault Url. It overrides url specified in the appsetting.json file or any other configuration provider.")]
-        public string AzureVault { get; set; }
+        public string? AzureVault { get; set; }
 
-        [Option("--azureprefix", Description = "Enables or disables Hosting Environment prefix to be used for Azure Key Vault. Default is true.")]
+        [Option("-ax|--azureprefix", Description = "Enables or disables Hosting Environment prefix to be used for Azure Key Vault. Default is true.")]
         public bool UseAzureKeyPrefix { get; set; }
 
-        [Option("--configfile", Description = "Allows to specify a configuration file besides appsettings.json to be specified.")]
-        public string ConfigFile { get; set; }
+        [Option("-c|--configfile", Description = "Allows to specify a configuration file besides appsettings.json to be specified.")]
+        public string? ConfigFile { get; set; }
 
         /// <summary>
         /// Property types of ValueTuple{bool,T} translate to CommandOptionType.SingleOrNoValue.
@@ -55,14 +56,14 @@ namespace AuthApp
         [Option(Description = "Allows Verbose logging for the tool. Enable this to get tracing information. Default is false and LogLevel.None.")]
         public (bool HasValue, LogLevel level) Verbose { get; } = (false, LogLevel.None);
 
-        [Option("--usesecrets", Description = "Enable UserSecrets.")]
+        [Option("-us|--usesecrets", Description = "Enable UserSecrets.")]
         public bool UserSecrets { get; set; }
 
-        [Option("--environment", Description = "Specify Hosting Environment Name for the cli tool execution.")]
-        public string HostingEnviroment { get; set; }
+        [Option("-e|--environment", Description = "Specify Hosting Environment Name for the cli tool execution.")]
+        public string? HostingEnviroment { get; set; }
 
-        [Option("--section", Description = "Configuration Section Name to retrieve the options. The Default value is Salesforce.")]
-        public string SectionName { get; set; }
+        [Option("-sn|--section", Description = "Configuration Section Name to retrieve the options. The Default value is Salesforce.")]
+        public string? SectionName { get; set; }
 
         private async Task<int> OnExecuteAsync(CommandLineApplication app)
         {
@@ -74,14 +75,14 @@ namespace AuthApp
                 Verbose = Verbose.HasValue,
                 Level = Verbose.level,
                 UserSecrets = UserSecrets,
-                HostingEnviroment = !string.IsNullOrWhiteSpace(HostingEnviroment) ? HostingEnviroment : "Development",
+                HostingEnviroment = !string.IsNullOrWhiteSpace(HostingEnviroment) ? HostingEnviroment ?? "Development" : "Development",
                 Settings = new SfConfig
                 {
                     ClientId = ClientId,
                     ClientSecret = ClientSecret,
                     LoginUrl = !string.IsNullOrWhiteSpace(LoginUrl) ? LoginUrl : "https://login.salesforce.com"
                 },
-                SectionName = string.IsNullOrWhiteSpace(SectionName) ? "Salesforce" : SectionName,
+                SectionName = string.IsNullOrWhiteSpace(SectionName) ? "Salesforce" : SectionName ?? "Salesforce",
             };
 
             try

@@ -55,8 +55,19 @@ namespace AuthApp
                     // configure Azure Vault from the other settings.
                     var appAzureVaultUrl = config.Build().Bind<AzureVaultOptions>("AzureVault", enableValidation: false);
 
+                    var inputValues = new Dictionary<string, string>
+                            {
+                                { $"{options.SectionName}:ClientId", options?.Settings?.ClientId ?? string.Empty },
+                                { $"{options.SectionName}:ClientSecret", options?.Settings?.ClientSecret ?? string.Empty },
+                                { $"{options.SectionName}:LoginUrl", options?.Settings?.LoginUrl ?? string.Empty },
+                                { $"{options.SectionName}:OAuthUri", options?.Settings?.OAuthUri ?? string.Empty },
+                                { $"{options.SectionName}:OAuthorizeUri", options?.Settings?.OAuthorizeUri ?? string.Empty },
+                            };
+
+                    config.AddInMemoryCollection(inputValues);
+
                     // build azure key vault from passed in parameter
-                    if (!string.IsNullOrWhiteSpace(options.AzureVault))
+                    if (!string.IsNullOrWhiteSpace(options?.AzureVault))
                     {
                         var dic = new Dictionary<string, string>
                             {
@@ -68,24 +79,9 @@ namespace AuthApp
 
                     // use appsettings vault information
                     if (!string.IsNullOrWhiteSpace(appAzureVaultUrl.BaseUrl)
-                        || !string.IsNullOrWhiteSpace(options.AzureVault))
+                        || !string.IsNullOrWhiteSpace(options?.AzureVault))
                     {
                         config.AddAzureKeyVault(hostingEnviromentName: options.HostingEnviroment, options.UseAzureKeyPrefix);
-                    }
-
-                    if (!string.IsNullOrWhiteSpace(options.Settings.ClientId)
-                        && !string.IsNullOrWhiteSpace(options.Settings.ClientSecret))
-                    {
-                        var inputValues = new Dictionary<string, string>
-                            {
-                                { $"{options.SectionName}:ClientId", options.Settings.ClientId },
-                                { $"{options.SectionName}:ClientSecret", options.Settings.ClientSecret },
-                                { $"{options.SectionName}:LoginUrl", options.Settings.LoginUrl },
-                                { $"{options.SectionName}:OAuthUri", options.Settings.OAuthUri },
-                                { $"{options.SectionName}:OAuthorizeUri", options.Settings.OAuthorizeUri },
-                            };
-
-                        config.AddInMemoryCollection(inputValues);
                     }
 
                     if ((options.Verbose && options.Level == LogLevel.Debug)
