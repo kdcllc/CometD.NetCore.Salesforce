@@ -5,19 +5,19 @@ namespace AuthApp.Host
     public class SfConfig
     {
         /// <summary>
-        /// Salesforce Client Id
+        /// Salesforce Client Id.
         /// </summary>
         [Required]
         public string ClientId { get; set; }
 
         /// <summary>
-        /// Salesforece Secret Id
+        /// Salesforece Secret Id.
         /// </summary>
         [Required]
         public string ClientSecret { get; set; }
 
         /// <summary>
-        /// i.e. https://login.salesforce.com
+        /// i.e. https://login.salesforce.com.
         /// </summary>
         [Required]
         [Url]

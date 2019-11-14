@@ -2,7 +2,8 @@
 
 	<PropertyGroup>
 		<TargetFrameworks>netstandard2.0;netstandard2.1;</TargetFrameworks>
-		<RootNamespace>CometD.NetCore2.Salesforce</RootNamespace>
+    <Nullable>enable</Nullable>
+    <RootNamespace>CometD.NetCore2.Salesforce</RootNamespace>
 	</PropertyGroup>
 
 	<ItemGroup>

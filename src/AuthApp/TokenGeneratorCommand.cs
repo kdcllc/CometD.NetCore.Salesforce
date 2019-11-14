@@ -9,12 +9,14 @@ using McMaster.Extensions.CommandLineUtils;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 using Console = Colorful.Console;
 
 namespace AuthApp
 {
-    [Command("get-tokens",
+    [Command(
+        "get-tokens",
         Description = "Generates Salesforce Access and Refresh Tokens",
         ThrowOnUnexpectedArgument = false)]
     [HelpOption("-?")]
@@ -29,7 +31,8 @@ namespace AuthApp
         [Option("--login", Description = "The Salesforce login url. The default value is https://login.salesforce.com.")]
         public string LoginUrl { get; set; }
 
-        [Option("--azure",
+        [Option(
+            "--azure",
             Description = "Allows to specify Azure Vault Url. It overrides url specified in the appsetting.json file or any other configuration provider.")]
         public string AzureVault { get; set; }
 
@@ -47,7 +50,7 @@ namespace AuthApp
         /// --verbose               | (true, LogLevel.Information)
         /// --verbose:information   | (true, LogLevel.Information)
         /// --verbose:debug         | (true, LogLevel.Debug)
-        /// --verbose:trace         | (true, LogLevel.Trace)
+        /// --verbose:trace         | (true, LogLevel.Trace).
         /// </summary>
         [Option(Description = "Allows Verbose logging for the tool. Enable this to get tracing information. Default is false and LogLevel.None.")]
         public (bool HasValue, LogLevel level) Verbose { get; } = (false, LogLevel.None);
@@ -58,7 +61,7 @@ namespace AuthApp
         [Option("--environment", Description = "Specify Hosting Environment Name for the cli tool execution.")]
         public string HostingEnviroment { get; set; }
 
-        [Option("--section", Description ="Configuration Section Name to retrieve the options. The Default value is Salesforce.")]
+        [Option("--section", Description = "Configuration Section Name to retrieve the options. The Default value is Salesforce.")]
         public string SectionName { get; set; }
 
         private async Task<int> OnExecuteAsync(CommandLineApplication app)
@@ -76,7 +79,7 @@ namespace AuthApp
                 {
                     ClientId = ClientId,
                     ClientSecret = ClientSecret,
-                    LoginUrl = !string.IsNullOrWhiteSpace(LoginUrl) ? LoginUrl :  "https://login.salesforce.com"
+                    LoginUrl = !string.IsNullOrWhiteSpace(LoginUrl) ? LoginUrl : "https://login.salesforce.com"
                 },
                 SectionName = string.IsNullOrWhiteSpace(SectionName) ? "Salesforce" : SectionName,
             };
@@ -94,7 +97,7 @@ namespace AuthApp
 
                 return 0;
             }
-            catch(Microsoft.Extensions.Options.OptionsValidationException exv)
+            catch (OptionsValidationException exv)
             {
                 Console.WriteLine($"Not all of the required configurations has been provided. {exv.Message}", Color.Red);
 

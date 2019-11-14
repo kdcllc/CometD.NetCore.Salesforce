@@ -19,7 +19,7 @@ namespace AuthApp
         /// <summary>
         /// TraceLevel if verbose is present.
         /// </summary>
-        public LogLevel  Level { get; set; }
+        public LogLevel Level { get; set; }
 
         /// <summary>
         /// Ability to use Web project secrets.
@@ -27,7 +27,7 @@ namespace AuthApp
         public bool UserSecrets { get; set; }
 
         /// <summary>
-        /// Url for the azure key vault i.e. https://{vaultname}.vault.azure.net/
+        /// Url for the azure key vault i.e. https://{vaultname}.vault.azure.net/.
         /// </summary>
         public string AzureVault { get; set; }
 

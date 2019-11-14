@@ -19,7 +19,7 @@ namespace AuthApp.Host
 {
     /// <summary>
     /// Web Server OAuth Authentication Flow
-    /// https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/intro_understanding_web_server_oauth_flow.htm
+    /// https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/intro_understanding_web_server_oauth_flow.htm.
     /// </summary>
     internal class HttpServer : BackgroundService
     {
@@ -84,6 +84,7 @@ namespace AuthApp.Host
                     {
                         Console.WriteLine($"OAuth authorization error: {context.Request.QueryString.Get("error")}.", Color.Red);
                     }
+
                     if (context.Request.QueryString.Get("code") == null)
                     {
                         Console.WriteLine($"Malformed authorization response {context.Request.QueryString}", Color.Red);
@@ -102,7 +103,7 @@ namespace AuthApp.Host
                         code,
                         $"{_config.LoginUrl}{_config.OAuthUri}");
 
-                    Console.WriteLineFormatted("Access_token = {0}",Color.Green, Color.Yellow, auth.AccessInfo.AccessToken);
+                    Console.WriteLineFormatted("Access_token = {0}", Color.Green, Color.Yellow, auth.AccessInfo.AccessToken);
 
                     Console.WriteLineFormatted("Refresh_token = {0}", Color.Green, Color.Yellow, auth.AccessInfo.RefreshToken);
 
@@ -118,8 +119,24 @@ namespace AuthApp.Host
                         Console.WriteLine($"{nameof(HttpServer)} is stopping.");
                     }
                 }
+
                 await Task.Delay(TimeSpan.FromSeconds(5), stoppingToken);
             }
+        }
+
+        private static async Task<Stream> ShowBrowserMessage(HttpListenerContext context)
+        {
+            var response = context.Response;
+            var responseString = string.Format(@"
+                <html>
+                    <body>Please return to the console to retrieve access and refresh tokens.</body>
+                </html>");
+
+            var buffer = Encoding.UTF8.GetBytes(responseString);
+            response.ContentLength64 = buffer.Length;
+            var responseOutput = response.OutputStream;
+            await responseOutput.WriteAsync(buffer, 0, buffer.Length);
+            return responseOutput;
         }
 
         private int GetRandomUnusedPort()
@@ -136,21 +153,6 @@ namespace AuthApp.Host
             var authEndpoint = $"{_config.LoginUrl}{_config.OAuthorizeUri}";
             var url = $"{authEndpoint}?response_type=code&access_type=offline&scope=openid%20profile%20api%20refresh_token%20offline_access&redirect_uri={Uri.EscapeDataString(redirectURI)}&client_id={_config.ClientId}";
             return url;
-        }
-
-        private static async Task<Stream> ShowBrowserMessage(HttpListenerContext context)
-        {
-            var response = context.Response;
-            var responseString = string.Format(@"
-                <html>
-                    <body>Please return to the console to retrieve access and refresh tokens.</body>
-                </html>");
-
-            var buffer = Encoding.UTF8.GetBytes(responseString);
-            response.ContentLength64 = buffer.Length;
-            var responseOutput = response.OutputStream;
-            await responseOutput.WriteAsync(buffer, 0, buffer.Length);
-            return responseOutput;
         }
     }
 }

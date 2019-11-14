@@ -23,7 +23,7 @@ namespace Microsoft.Extensions.DependencyInjection
     {
         /// <summary>
         /// Adds ForecClient Resilient version of it with Refresh Token Authentication.
-        /// https://help.salesforce.com/articleView?id=remoteaccess_oauth_refresh_token_flow.htm&type=5
+        /// <see cref="!:https://help.salesforce.com/articleView?id=remoteaccess_oauth_refresh_token_flow.htm%26type%3D5"/>
         /// Can be used in the code with <see cref="IResilientForceClient"/>.
         /// </summary>
         /// <param name="services"></param>
@@ -41,7 +41,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.AddSingleton<Func<AsyncExpiringLazy<AccessTokenResponse>>>(sp => () =>
             {
-               var options = sp.GetRequiredService<IOptions<SalesforceConfiguration>>().Value;
+                var options = sp.GetRequiredService<IOptions<SalesforceConfiguration>>().Value;
 
                 if (!TimeSpan.TryParse(options.TokenExpiration, out var tokenExpiration))
                 {
@@ -49,41 +49,41 @@ namespace Microsoft.Extensions.DependencyInjection
                 }
 
                 return new AsyncExpiringLazy<AccessTokenResponse>(async data =>
-                {
-                    if (data.Result == null
-                        || DateTime.UtcNow > data.ValidUntil.Subtract(TimeSpan.FromSeconds(30)))
-                    {
-                        var policy = Policy
-                                .Handle<Exception>()
-                                .WaitAndRetryAsync(
-                                    retryCount: options.Retry,
-                                    sleepDurationProvider: (retryAttempt) => TimeSpan.FromSeconds(Math.Pow(options.BackoffPower, retryAttempt)));
+                 {
+                     if (data.Result == null
+                         || DateTime.UtcNow > data.ValidUntil.Subtract(TimeSpan.FromSeconds(30)))
+                     {
+                         var policy = Policy
+                                 .Handle<Exception>()
+                                 .WaitAndRetryAsync(
+                                     retryCount: options.Retry,
+                                     sleepDurationProvider: (retryAttempt) => TimeSpan.FromSeconds(Math.Pow(options.BackoffPower, retryAttempt)));
 
-                        var authClient = await policy.ExecuteAsync(async () =>
-                        {
-                            var auth = new AuthenticationClient();
+                         var authClient = await policy.ExecuteAsync(async () =>
+                         {
+                             var auth = new AuthenticationClient();
 
-                            await auth.TokenRefreshAsync(
-                                options.RefreshToken,
-                                options.ClientId,
-                                options.ClientSecret,
-                                $"{options.LoginUrl}{options.OAuthUri}");
+                             await auth.TokenRefreshAsync(
+                                 options.RefreshToken,
+                                 options.ClientId,
+                                 options.ClientSecret,
+                                 $"{options.LoginUrl}{options.OAuthUri}");
 
-                            return auth;
-                        });
+                             return auth;
+                         });
 
-                        return new AsyncExpirationValue<AccessTokenResponse>
-                        {
-                            Result = authClient.AccessInfo,
-                            ValidUntil = DateTimeOffset.UtcNow.Add(tokenExpiration)
-                        };
-                    }
+                         return new AsyncExpirationValue<AccessTokenResponse>
+                         {
+                             Result = authClient.AccessInfo,
+                             ValidUntil = DateTimeOffset.UtcNow.Add(tokenExpiration)
+                         };
+                     }
 
-                    return data;
-                });
+                     return data;
+                 });
             });
 
-            services.AddSingleton<Func<AsyncExpiringLazy<ForceClient>>>(sp => ()  =>
+            services.AddSingleton<Func<AsyncExpiringLazy<ForceClient>>>(sp => () =>
             {
                 var options = sp.GetRequiredService<IOptions<SalesforceConfiguration>>().Value;
 
@@ -140,7 +140,7 @@ namespace Microsoft.Extensions.DependencyInjection
         /// </summary>
         /// <param name="services"></param>
         /// <returns></returns>
-        [Obsolete("Use "+ nameof(AddResilientStreamingClient) + "extension method instead.")]
+        [Obsolete("Use " + nameof(AddResilientStreamingClient) + "extension method instead.")]
         public static IServiceCollection AddStreamingClient(this IServiceCollection services)
         {
             services.AddSingleton(sp =>

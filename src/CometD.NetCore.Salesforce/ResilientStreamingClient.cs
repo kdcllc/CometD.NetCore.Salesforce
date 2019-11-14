@@ -18,23 +18,25 @@ namespace CometD.NetCore.Salesforce
 {
     public class ResilientStreamingClient : IStreamingClient
     {
-        private BayeuxClient _bayeuxClient = null;
-        private bool _isDisposed = false;
-        private ErrorExtension _errorExtension;
-        private LongPollingTransport _clientTransport;
-        private ReplayExtension _replayIdExtension;
-
         private readonly ILogger<ResilientStreamingClient> _logger;
         private readonly SalesforceConfiguration _options;
         private readonly AsyncExpiringLazy<AccessTokenResponse> _tokenResponse;
 
         // long polling duration
-        private const int ReadTimeOut = 120 * 1000;
+        private readonly int _readTimeOut = 120 * 1000;
 
-        public bool IsConnected => _bayeuxClient.Connected;
+        private BayeuxClient? _bayeuxClient = null;
+        private bool _isDisposed = false;
+        private ErrorExtension? _errorExtension;
+        private LongPollingTransport? _clientTransport;
+        private ReplayExtension? _replayIdExtension;
 
-        public event EventHandler<bool> Reconnect;
-
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ResilientStreamingClient"/> class.
+        /// </summary>
+        /// <param name="tokenResponse"></param>
+        /// <param name="options"></param>
+        /// <param name="logger"></param>
         public ResilientStreamingClient(
             Func<AsyncExpiringLazy<AccessTokenResponse>> tokenResponse,
             IOptions<SalesforceConfiguration> options,
@@ -47,13 +49,36 @@ namespace CometD.NetCore.Salesforce
             CreateBayeuxClient();
         }
 
-        ///<inheritdoc/>
+        /// <summary>
+        /// Finalizes an instance of the <see cref="ResilientStreamingClient"/> class.
+        /// </summary>
+        ~ResilientStreamingClient()
+        {
+            Dispose(false);
+        }
+
+        public event EventHandler<bool>? Reconnect;
+
+        public bool IsConnected
+        {
+            get
+            {
+                if (_bayeuxClient == null)
+                {
+                    return false;
+                }
+
+                return _bayeuxClient.Connected;
+            }
+        }
+
+        /// <inheritdoc/>
         public void Disconnect()
         {
             Disconnect(1000);
         }
 
-        ///<inheritdoc/>
+        /// <inheritdoc/>
         public void Disconnect(int timeout)
         {
             if (_isDisposed)
@@ -67,9 +92,12 @@ namespace CometD.NetCore.Salesforce
             _bayeuxClient?.Disconnect();
             _bayeuxClient?.WaitFor(timeout, new[] { BayeuxClient.State.DISCONNECTED });
 
-            _errorExtension.ConnectionError -= ErrorExtension_ConnectionError;
-            _errorExtension.ConnectionException -= ErrorExtension_ConnectionException;
-            _errorExtension.ConnectionMessage -= ErrorExtension_ConnectionMessage;
+            if (_errorExtension != null)
+            {
+                _errorExtension.ConnectionError -= ErrorExtension_ConnectionError;
+                _errorExtension.ConnectionException -= ErrorExtension_ConnectionException;
+                _errorExtension.ConnectionMessage -= ErrorExtension_ConnectionMessage;
+            }
 
             _logger.LogDebug("Disconnected...");
         }
@@ -82,9 +110,14 @@ namespace CometD.NetCore.Salesforce
             Handshake(1000);
         }
 
-        ///<inheritdoc/>
+        /// <inheritdoc/>
         public void Handshake(int timeout)
         {
+            if (_bayeuxClient == null)
+            {
+                return;
+            }
+
             if (_isDisposed)
             {
                 throw new ObjectDisposedException("Cannot connect when disposed");
@@ -96,7 +129,7 @@ namespace CometD.NetCore.Salesforce
             _logger.LogDebug("Connected");
         }
 
-        ///<inheritdoc/>
+        /// <inheritdoc/>
         public void SubscribeTopic(
             string topicName,
             IMessageListener listener,
@@ -112,14 +145,14 @@ namespace CometD.NetCore.Salesforce
                 throw new ArgumentNullException(nameof(listener));
             }
 
-            var channel = _bayeuxClient.GetChannel(topicName, replayId);
+            var channel = _bayeuxClient?.GetChannel(topicName, replayId);
             channel?.Subscribe(listener);
         }
 
-        ///<inheritdoc/>
+        /// <inheritdoc/>
         public bool UnsubscribeTopic(
             string topicName,
-            IMessageListener listener = null,
+            IMessageListener? listener = null,
             long replayId = -1)
         {
             if (topicName == null || (topicName = topicName.Trim()).Length == 0)
@@ -127,7 +160,7 @@ namespace CometD.NetCore.Salesforce
                 throw new ArgumentNullException(nameof(topicName));
             }
 
-            var channel = _bayeuxClient.GetChannel(topicName, replayId);
+            var channel = _bayeuxClient?.GetChannel(topicName, replayId);
             if (channel != null)
             {
                 if (listener != null)
@@ -138,13 +171,15 @@ namespace CometD.NetCore.Salesforce
                 {
                     channel.Unsubscribe();
                 }
+
                 return true;
             }
+
             return false;
         }
 
         /// <summary>
-        /// Disposing of the resources
+        /// Disposing of the resources.
         /// </summary>
         public void Dispose()
         {
@@ -153,7 +188,7 @@ namespace CometD.NetCore.Salesforce
         }
 
         /// <summary>
-        /// Disposing of the resources
+        /// Disposing of the resources.
         /// </summary>
         /// <param name="disposing"></param>
         protected virtual void Dispose(bool disposing)
@@ -163,11 +198,6 @@ namespace CometD.NetCore.Salesforce
                 Disconnect();
                 _isDisposed = true;
             }
-        }
-
-        ~ResilientStreamingClient()
-        {
-            Dispose(false);
         }
 
         private void CreateBayeuxClient()
@@ -190,8 +220,8 @@ namespace CometD.NetCore.Salesforce
             // Salesforce socket timeout during connection(CometD session) = 110 seconds
             var options = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase)
             {
-                {ClientTransport.TIMEOUT_OPTION, _options.ReadTimeOut ?? ReadTimeOut },
-                {ClientTransport.MAX_NETWORK_DELAY_OPTION, _options.ReadTimeOut ?? ReadTimeOut }
+                { ClientTransport.TIMEOUT_OPTION, _options.ReadTimeOut ?? _readTimeOut },
+                { ClientTransport.MAX_NETWORK_DELAY_OPTION, _options.ReadTimeOut ?? _readTimeOut }
             };
 
             _clientTransport = new LongPollingTransport(options, headers);
@@ -217,8 +247,7 @@ namespace CometD.NetCore.Salesforce
             // authentication failure
             if (string.Equals(e, "403::Handshake denied", StringComparison.OrdinalIgnoreCase)
                 || string.Equals(e, "403:denied_by_security_policy:create_denied", StringComparison.OrdinalIgnoreCase)
-                || string.Equals(e, "403::unknown client", StringComparison.OrdinalIgnoreCase)
-                )
+                || string.Equals(e, "403::unknown client", StringComparison.OrdinalIgnoreCase))
             {
                 _logger.LogWarning("Handled CometD Exception: {message}", e);
 
@@ -251,7 +280,7 @@ namespace CometD.NetCore.Salesforce
             {
                 _logger.LogDebug(ex.Message);
             }
-            else
+            else if (ex != null)
             {
                 _logger.LogError(ex.ToString());
             }

@@ -26,7 +26,7 @@ The solution contains the following:
 Or
 
 ```cmd
- dotnet add package CometD.NetCore.Salesforce
+     dotnet add package CometD.NetCore.Salesforce
 ```
 
 - To Install Salesforce Cli tool globally run the following command:

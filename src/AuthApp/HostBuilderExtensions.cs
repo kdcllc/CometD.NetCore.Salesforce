@@ -39,12 +39,12 @@ namespace AuthApp
             }
 
             builder
-                .UseStartupFilters()
+                .UseOptionValidation()
                 .ConfigureAppConfiguration((context, config) =>
                 {
                     // appsettings file or others
-                    config.AddJsonFile(Path.Combine(fullPath, $"{(defaultConfigName).Split(".")[0]}.json"), optional: true)
-                          .AddJsonFile(Path.Combine(fullPath, $"{(defaultConfigName).Split(".")[0]}.{options.HostingEnviroment}.json"), optional: true);
+                    config.AddJsonFile(Path.Combine(fullPath, $"{defaultConfigName.Split(".")[0]}.json"), optional: true)
+                          .AddJsonFile(Path.Combine(fullPath, $"{defaultConfigName.Split(".")[0]}.{options.HostingEnviroment}.json"), optional: true);
 
                     // add secrets if specified
                     if (options.UserSecrets)
@@ -53,14 +53,14 @@ namespace AuthApp
                     }
 
                     // configure Azure Vault from the other settings.
-                    var appAzureVaultUrl = config.Build().Bind<AzureVaultOptions>("AzureVault",enableValidation: false);
+                    var appAzureVaultUrl = config.Build().Bind<AzureVaultOptions>("AzureVault", enableValidation: false);
 
                     // build azure key vault from passed in parameter
                     if (!string.IsNullOrWhiteSpace(options.AzureVault))
                     {
                         var dic = new Dictionary<string, string>
                             {
-                                {"AzureVault:BaseUrl", options.AzureVault }
+                                { "AzureVault:BaseUrl", options.AzureVault }
                             };
 
                         config.AddInMemoryCollection(dic);
@@ -70,26 +70,26 @@ namespace AuthApp
                     if (!string.IsNullOrWhiteSpace(appAzureVaultUrl.BaseUrl)
                         || !string.IsNullOrWhiteSpace(options.AzureVault))
                     {
-                        config.AddAzureKeyVault(hostingEnviromentName:options.HostingEnviroment, options.UseAzureKeyPrefix);
+                        config.AddAzureKeyVault(hostingEnviromentName: options.HostingEnviroment, options.UseAzureKeyPrefix);
                     }
 
-                    if(!string.IsNullOrWhiteSpace(options.Settings.ClientId)
+                    if (!string.IsNullOrWhiteSpace(options.Settings.ClientId)
                         && !string.IsNullOrWhiteSpace(options.Settings.ClientSecret))
                     {
                         var inputValues = new Dictionary<string, string>
                             {
-                                {$"{options.SectionName}:ClientId", options.Settings.ClientId },
-                                {$"{options.SectionName}:ClientSecret", options.Settings.ClientSecret },
-                                {$"{options.SectionName}:LoginUrl", options.Settings.LoginUrl },
-                                {$"{options.SectionName}:OAuthUri", options.Settings.OAuthUri },
-                                {$"{options.SectionName}:OAuthorizeUri", options.Settings.OAuthorizeUri },
+                                { $"{options.SectionName}:ClientId", options.Settings.ClientId },
+                                { $"{options.SectionName}:ClientSecret", options.Settings.ClientSecret },
+                                { $"{options.SectionName}:LoginUrl", options.Settings.LoginUrl },
+                                { $"{options.SectionName}:OAuthUri", options.Settings.OAuthUri },
+                                { $"{options.SectionName}:OAuthorizeUri", options.Settings.OAuthorizeUri },
                             };
 
                         config.AddInMemoryCollection(inputValues);
                     }
 
-                    if (options.Verbose && options.Level == LogLevel.Debug
-                    || options.Level == LogLevel.Trace)
+                    if ((options.Verbose && options.Level == LogLevel.Debug)
+                        || options.Level == LogLevel.Trace)
                     {
                         config.Build().DebugConfigurations();
                     }

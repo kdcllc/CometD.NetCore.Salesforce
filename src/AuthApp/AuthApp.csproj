@@ -16,14 +16,12 @@
     <PackageReference Include="Bet.Extensions.Options" />
     <PackageReference Include="Colorful.Console" />
     <PackageReference Include="McMaster.Extensions.CommandLineUtils" />
-    <PackageReference Include="Microsoft.AspNetCore.Hosting.Server.Abstractions" />
-    <PackageReference Include="Microsoft.AspNetCore.Http" />
     <PackageReference Include="Microsoft.Extensions.Configuration.CommandLine" />
     <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" />
     <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" />
     <PackageReference Include="Microsoft.Extensions.Hosting" />
-		<PackageReference Include="NetCoreForce.Client" />
     <PackageReference Include="TextCopy" />
+		<PackageReference Include="NetCoreForce.Client" />
 	</ItemGroup>
 	<ItemGroup>
 		<Content Include="appsettings*.json" CopyToOutputDirectory="PreserveNewest" />

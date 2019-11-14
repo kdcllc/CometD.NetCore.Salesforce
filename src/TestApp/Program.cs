@@ -12,7 +12,7 @@ using Microsoft.Extensions.Logging;
 namespace TestApp
 {
 #pragma warning disable RCS1102 // Make class static.
-    public class Program
+    internal sealed class Program
 #pragma warning restore RCS1102 // Make class static.
     {
         public static async Task Main(string[] args)
@@ -31,14 +31,14 @@ namespace TestApp
                          $"appsettings.{hostContext.HostingEnvironment.EnvironmentName}.json",
                          optional: true);
 
-                     configBuilder.AddAzureKeyVault(hostingEnviromentName:hostContext.HostingEnvironment.EnvironmentName);
+                     configBuilder.AddAzureKeyVault(hostingEnviromentName: hostContext.HostingEnvironment.EnvironmentName);
                      configBuilder.AddCommandLine(args);
 
                      // print out the environment
                      var config = configBuilder.Build();
                      config.DebugConfigurations();
                  })
-                 .ConfigureServices((context,services) =>
+                 .ConfigureServices((context, services) =>
                  {
                      services.AddTransient<IServiceProviderFactory<IServiceCollection>, DefaultServiceProviderFactory>();
 

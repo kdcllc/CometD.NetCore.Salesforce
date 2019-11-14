@@ -10,13 +10,13 @@
         /// Unique id of the data.
         /// <example>"schema": "1qUPELmVz7qUv3ntwyN1eA"</example>
         /// </summary>
-        public string Schema { get; set; }
+        public string Schema { get; set; } = string.Empty;
 
         /// <summary>
         /// Generic type of the payload.
         /// <example>"payload": {}</example>
         /// </summary>
-        public TPayload Payload { get; set; }
+        public TPayload? Payload { get; set; }
 
         /// <summary>
         /// Contains Message event.
@@ -26,6 +26,6 @@
         ///  }
         ///  </example>
         /// </summary>
-        public MessageEvent Event { get; set; }
+        public MessageEvent? Event { get; set; }
     }
 }

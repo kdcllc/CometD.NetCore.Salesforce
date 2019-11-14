@@ -15,7 +15,12 @@ namespace AuthApp
     {
         private static Task<int> Main(string[] args)
         {
-            return  CommandLineApplication.ExecuteAsync<Program>(args);
+            return CommandLineApplication.ExecuteAsync<Program>(args);
+        }
+
+        private static string GetVersion()
+        {
+            return typeof(Program).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion;
         }
 
         private int OnExecute(CommandLineApplication app, IConsole console)
@@ -25,11 +30,6 @@ namespace AuthApp
             console.WriteLine("You must specify at a subcommand.");
             app.ShowHelp();
             return 1;
-        }
-
-        private static string GetVersion()
-        {
-            return typeof(Program).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion;
         }
     }
 }

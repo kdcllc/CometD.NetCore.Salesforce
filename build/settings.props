@@ -4,6 +4,7 @@
     <IsPackable>true</IsPackable>
     <VersionPrefix>2.2.0-preview</VersionPrefix>
     <LangVersion>latest</LangVersion>
+    <Nullable>disable</Nullable>
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
     <SuppressNETCoreSdkPreviewMessage>true</SuppressNETCoreSdkPreviewMessage>
     <NoWarn>$(NoWarn);CS1591</NoWarn>

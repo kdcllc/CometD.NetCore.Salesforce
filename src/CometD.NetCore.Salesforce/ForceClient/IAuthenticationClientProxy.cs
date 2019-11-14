@@ -8,10 +8,10 @@ using NetCoreForce.Client;
 namespace CometD.NetCore.Salesforce.ForceClient
 {
     /// <summary>
-    /// A wrapper interface around <see cref="NetCoreForce.Client.AuthenticationClient"/>
+    /// A wrapper interface around <see cref="NetCoreForce.Client.AuthenticationClient"/>.
     /// </summary>
     [Obsolete("Use " + nameof(IResilientForceClient) + "extension method instead.")]
-    public interface IAuthenticationClientProxy
+    public interface IAuthenticationClientProxy : IDisposable
     {
         /// <summary>
         /// Returns <see cref="NetCoreForce.Client.AuthenticationClient"/>
