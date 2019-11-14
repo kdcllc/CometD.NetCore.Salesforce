@@ -108,7 +108,7 @@ namespace AuthApp.Host
 
                     Clipboard.SetText(auth.AccessInfo.RefreshToken);
 
-                    Console.WriteLine($"Refresh_token copied to the Clipboard", color: Color.WhiteSmoke);
+                    Console.WriteLine($"Refresh_token copied to the Clipboard", color: Color.Yellow);
 
                     _isCompleted = true;
 

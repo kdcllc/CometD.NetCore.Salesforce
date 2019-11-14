@@ -39,7 +39,7 @@ namespace AuthApp
             }
 
             builder
-                .UseStartupFilter()
+                .UseStartupFilters()
                 .ConfigureAppConfiguration((context, config) =>
                 {
                     // appsettings file or others

@@ -23,7 +23,7 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" />
     <PackageReference Include="Microsoft.Extensions.Hosting" />
 		<PackageReference Include="NetCoreForce.Client" />
-    <PackageReference Include="TextCopy" Version="1.5.1" />
+    <PackageReference Include="TextCopy" />
 	</ItemGroup>
 	<ItemGroup>
 		<Content Include="appsettings*.json" CopyToOutputDirectory="PreserveNewest" />

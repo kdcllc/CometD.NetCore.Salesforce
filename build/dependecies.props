@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <NetCoreCommonVersion>2.2.*</NetCoreCommonVersion>
-    <BetCommonVersion>1.1.19</BetCommonVersion>
+    <BetCommonVersion>2.0</BetCommonVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TargetFramework)' == 'netcoreapp2.1' Or '$(TargetFramework)' == 'netstandard2.0'">
@@ -13,8 +13,8 @@
     <NetCoreCommonVersion>2.2.0</NetCoreCommonVersion>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(TargetFramework)' == 'netcoreapp3.0'">
-    <NetCoreCommonVersion>3.0.0-preview*</NetCoreCommonVersion>
+  <PropertyGroup Condition="'$(TargetFramework)' == 'netcoreapp3.0' Or '$(TargetFramework)' == 'netstandard2.1'">
+    <NetCoreCommonVersion>3.0.0</NetCoreCommonVersion>
   </PropertyGroup>
 
   <ItemGroup Label="NetCore">
@@ -37,6 +37,7 @@
   </ItemGroup>
 
   <ItemGroup Label="Bet">
+    <PackageReference Update="Bet.Extensions" Version="$(BetCommonVersion)" />
     <PackageReference Update="Bet.Extensions.Options" Version="$(BetCommonVersion)" />
     <PackageReference Update="Bet.Extensions.Hosting" Version="$(BetCommonVersion)" />
     <PackageReference Update="Bet.Extensions.AzureVault" Version="$(BetCommonVersion)"/>
@@ -44,13 +45,19 @@
   </ItemGroup>
 
   <ItemGroup Label="Shared Libraries">
-    <PackageReference Update="Bet.Extensions" Version="1.1.19" />
-    <PackageReference Update="CometD.NetCore2" Version="2.0.1" />
+    <PackageReference Update="CometD.NetCore2" Version="2.0.3" />
     <PackageReference Update="Bet.BuildingBlocks.SalesforceEventBus" Version="2.0.0" />
-    <PackageReference Update="McMaster.Extensions.CommandLineUtils" Version="2.3.2"/>
+    <PackageReference Update="McMaster.Extensions.CommandLineUtils" Version="2.4.4"/>
     <PackageReference Update="NetCoreForce.Client" Version="2.5.0" />
-    <PackageReference Update="Polly" Version="7.0.2" />
+    <PackageReference Update="Polly" Version="7.1.1" />
     <PackageReference Update="Colorful.Console" Version="1.2.9" />
+    <PackageReference Update="TextCopy" Version="1.7.1" />
+  </ItemGroup>
+
+  <ItemGroup Label="Testing">
+    <PackageReference Update="Microsoft.NET.Test.Sdk" Version="16.4.0" />
+    <PackageReference Update="xunit" Version="2.4.1" />
+    <PackageReference Update="xunit.runner.visualstudio" Version="2.4.1" />
   </ItemGroup>
 
   <ItemGroup Label="SourceLink">

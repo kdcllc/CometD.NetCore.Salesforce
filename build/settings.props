@@ -2,11 +2,18 @@
 
   <PropertyGroup Label="Basic Settings">
     <IsPackable>true</IsPackable>
-    <VersionPrefix>2.2.0-pre</VersionPrefix>
+    <VersionPrefix>2.2.0-preview</VersionPrefix>
     <LangVersion>latest</LangVersion>
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
     <SuppressNETCoreSdkPreviewMessage>true</SuppressNETCoreSdkPreviewMessage>
     <NoWarn>$(NoWarn);CS1591</NoWarn>
+  </PropertyGroup>
+
+
+  <PropertyGroup Label="Ownership Settings">
+    <Company>King David Consulting LLC</Company>
+    <Authors>kdcllc</Authors>
+    <Copyright>King David Consulting LLC</Copyright>
   </PropertyGroup>
 
   <PropertyGroup Label="Nuget Package Settings">

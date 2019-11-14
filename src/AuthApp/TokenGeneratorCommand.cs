@@ -17,6 +17,7 @@ namespace AuthApp
     [Command("get-tokens",
         Description = "Generates Salesforce Access and Refresh Tokens",
         ThrowOnUnexpectedArgument = false)]
+    [HelpOption("-?")]
     internal class TokenGeneratorCommand
     {
         [Option("--key", Description = "The Salesforce Consumer Key.")]
@@ -60,7 +61,7 @@ namespace AuthApp
         [Option("--section", Description ="Configuration Section Name to retrieve the options. The Default value is Salesforce.")]
         public string SectionName { get; set; }
 
-        private async Task<int> OnExecuteAsync()
+        private async Task<int> OnExecuteAsync(CommandLineApplication app)
         {
             var builderConfig = new HostBuilderOptions
             {
@@ -95,7 +96,9 @@ namespace AuthApp
             }
             catch(Microsoft.Extensions.Options.OptionsValidationException exv)
             {
-                Console.WriteLine("Not all of the required configurations has been provided.", Color.Red);
+                Console.WriteLine($"Not all of the required configurations has been provided. {exv.Message}", Color.Red);
+
+                app.ShowHelp();
             }
             catch (Exception ex)
             {

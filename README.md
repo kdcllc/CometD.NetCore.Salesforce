@@ -1,4 +1,5 @@
 # CometD .NET Core implementation of Salesforce Platform events
+
 [![Build status](https://ci.appveyor.com/api/projects/status/baalfhs6vvc38icc?svg=true)](https://ci.appveyor.com/project/kdcllc/cometd-netcore-salesforce)
 
 This repo contains the CometD .NET Core implementation for Salesforce Platform events.
