@@ -233,6 +233,7 @@ namespace CometD.NetCore.Salesforce
             _errorExtension.ConnectionError += ErrorExtension_ConnectionError;
             _errorExtension.ConnectionException += ErrorExtension_ConnectionException;
             _errorExtension.ConnectionMessage += ErrorExtension_ConnectionMessage;
+            _bayeuxClient.AddExtension(_errorExtension);
 
             _replayIdExtension = new ReplayExtension();
             _bayeuxClient.AddExtension(_replayIdExtension);
