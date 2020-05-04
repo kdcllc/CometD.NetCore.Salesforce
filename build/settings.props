@@ -2,7 +2,7 @@
 
   <PropertyGroup Label="Basic Settings">
     <IsPackable>true</IsPackable>
-    <VersionPrefix>2.2.2-preview</VersionPrefix>
+    <VersionPrefix>3.0.0-preview1</VersionPrefix>
     <LangVersion>latest</LangVersion>
     <Nullable>disable</Nullable>
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
@@ -23,7 +23,7 @@
     <RepositoryType>git</RepositoryType>
     <PackageLicense>https://github.com/kdcllc/CometD.NetCore.Salesforce/blob/master/LICENSE</PackageLicense>
     <PackageIconUrl>https://raw.githubusercontent.com/kdcllc/CometD.NetCore.Salesforce/master/img/logo64x64.png</PackageIconUrl>
-    <PackageTags>aspnetcore,dottet,salesforce, cometd, bayeux</PackageTags>
+    <PackageTags>aspnetcore,dotnet,salesforce, cometd, bayeux</PackageTags>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
