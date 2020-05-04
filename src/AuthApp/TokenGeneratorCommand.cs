@@ -18,7 +18,7 @@ namespace AuthApp
     [Command(
         "get-tokens",
         Description = "Generates Salesforce Access and Refresh Tokens",
-        ThrowOnUnexpectedArgument = false,
+        UnrecognizedArgumentHandling = UnrecognizedArgumentHandling.Throw,
         AllowArgumentSeparator = true)]
     [HelpOption("-?")]
     internal class TokenGeneratorCommand

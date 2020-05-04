@@ -2,14 +2,13 @@
 
   <PropertyGroup Label="Basic Settings">
     <IsPackable>true</IsPackable>
-    <VersionPrefix>2.2.0-preview</VersionPrefix>
+    <VersionPrefix>3.0.0-preview1</VersionPrefix>
     <LangVersion>latest</LangVersion>
     <Nullable>disable</Nullable>
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
     <SuppressNETCoreSdkPreviewMessage>true</SuppressNETCoreSdkPreviewMessage>
     <NoWarn>$(NoWarn);CS1591</NoWarn>
   </PropertyGroup>
-
 
   <PropertyGroup Label="Ownership Settings">
     <Company>King David Consulting LLC</Company>
@@ -23,8 +22,11 @@
     <RepositoryUrl>https://github.com/kdcllc/CometD.NetCore.Salesforce.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageLicense>https://github.com/kdcllc/CometD.NetCore.Salesforce/blob/master/LICENSE</PackageLicense>
-    <PackageIconUrl>https://raw.githubusercontent.com/kdcllc/CometD.NetCore.Salesforce/master/img/logo64x64.png</PackageIconUrl>
-    <PackageTags>aspnetcore,dottet,salesforce, cometd, bayeux</PackageTags>
+    
+    <!-- https://docs.microsoft.com/en-us/nuget/reference/errors-and-warnings/nu5048 -->
+    <PackageIcon>icon.png</PackageIcon>
+
+    <PackageTags>aspnetcore,dotnet,salesforce, cometd, bayeux</PackageTags>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
@@ -33,5 +35,9 @@
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
     <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
+
+    <!-- https://github.com/kdcllc/Bet.AspNetCore/issues/103 -->
+    <DebugType>Embedded</DebugType>
+    <EmbedAllSources>True</EmbedAllSources>
   </PropertyGroup>
 </Project>

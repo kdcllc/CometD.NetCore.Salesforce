@@ -6,6 +6,7 @@
     <RestoreSources Condition="'$(DotNetBuildOffline)' != 'false'">
       $(RestoreSources);
       https://dotnet.myget.org/F/aspnetcore-dev/api/v3/index.json;
+      https://f.feedz.io/kdcllc/kdcllc/nuget/index.json;
       https://api.nuget.org/v3/index.json;
     </RestoreSources>
   </PropertyGroup>

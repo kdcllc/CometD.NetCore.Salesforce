@@ -2,11 +2,9 @@
 using System.Threading;
 
 using CometD.NetCore.Salesforce;
-using CometD.NetCore.Salesforce.ForceClient;
 using CometD.NetCore.Salesforce.Resilience;
 
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
 
 using NetCoreForce.Client;
@@ -26,22 +24,27 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <see cref="!:https://help.salesforce.com/articleView?id=remoteaccess_oauth_refresh_token_flow.htm%26type%3D5"/>
         /// Can be used in the code with <see cref="IResilientForceClient"/>.
         /// </summary>
-        /// <param name="services"></param>
-        /// <param name="configuration"></param>
-        /// <param name="sectionName"></param>
+        /// <param name="services">The DI services.</param>
+        /// <param name="sectionName">The section name for the root options configuration. The default value is Salesfoce.</param>
+        /// <param name="optionName"></param>
+        /// <param name="configureOptions">The option configuration that can be override the configuration provides.</param>
         /// <returns></returns>
         public static IServiceCollection AddResilientStreamingClient(
             this IServiceCollection services,
-            IConfiguration configuration,
-            string sectionName = "Salesforce")
+            string sectionName = "Salesforce",
+            string optionName = "",
+            Action<SalesforceConfiguration>? configureOptions = default)
         {
-            services.Configure<SalesforceConfiguration>(configuration.GetSection(sectionName));
+            services.AddChangeTokenOptions<SalesforceConfiguration>(
+                sectionName,
+                optionName: optionName,
+                configureAction: x => configureOptions?.Invoke(x));
 
-            services.AddSingleton<IResilientForceClient, ResilientForceClient>();
+            services.TryAddSingleton<IResilientForceClient, ResilientForceClient>();
 
-            services.AddSingleton<Func<AsyncExpiringLazy<AccessTokenResponse>>>(sp => () =>
+            services.TryAddSingleton<Func<AsyncExpiringLazy<AccessTokenResponse>>>(sp => () =>
             {
-                var options = sp.GetRequiredService<IOptions<SalesforceConfiguration>>().Value;
+                var options = sp.GetRequiredService<IOptionsMonitor<SalesforceConfiguration>>().Get(optionName);
 
                 if (!TimeSpan.TryParse(options.TokenExpiration, out var tokenExpiration))
                 {
@@ -49,43 +52,43 @@ namespace Microsoft.Extensions.DependencyInjection
                 }
 
                 return new AsyncExpiringLazy<AccessTokenResponse>(async data =>
-                 {
-                     if (data.Result == null
-                         || DateTime.UtcNow > data.ValidUntil.Subtract(TimeSpan.FromSeconds(30)))
-                     {
-                         var policy = Policy
-                                 .Handle<Exception>()
-                                 .WaitAndRetryAsync(
-                                     retryCount: options.Retry,
-                                     sleepDurationProvider: (retryAttempt) => TimeSpan.FromSeconds(Math.Pow(options.BackoffPower, retryAttempt)));
+                {
+                    if (data.Result == null
+                        || DateTime.UtcNow > data.ValidUntil.Subtract(TimeSpan.FromSeconds(30)))
+                    {
+                        var policy = Policy
+                                .Handle<Exception>()
+                                .WaitAndRetryAsync(
+                                    retryCount: options.Retry,
+                                    sleepDurationProvider: (retryAttempt) => TimeSpan.FromSeconds(Math.Pow(options.BackoffPower, retryAttempt)));
 
-                         var authClient = await policy.ExecuteAsync(async () =>
-                         {
-                             var auth = new AuthenticationClient();
+                        var authClient = await policy.ExecuteAsync(async () =>
+                        {
+                            var auth = new AuthenticationClient();
 
-                             await auth.TokenRefreshAsync(
-                                 options.RefreshToken,
-                                 options.ClientId,
-                                 options.ClientSecret,
-                                 $"{options.LoginUrl}{options.OAuthUri}");
+                            await auth.TokenRefreshAsync(
+                                options.RefreshToken,
+                                options.ClientId,
+                                options.ClientSecret,
+                                $"{options.LoginUrl}{options.OAuthUri}");
 
-                             return auth;
-                         });
+                            return auth;
+                        });
 
-                         return new AsyncExpirationValue<AccessTokenResponse>
-                         {
-                             Result = authClient.AccessInfo,
-                             ValidUntil = DateTimeOffset.UtcNow.Add(tokenExpiration)
-                         };
-                     }
+                        return new AsyncExpirationValue<AccessTokenResponse>
+                        {
+                            Result = authClient.AccessInfo,
+                            ValidUntil = DateTimeOffset.UtcNow.Add(tokenExpiration)
+                        };
+                    }
 
-                     return data;
-                 });
+                    return data;
+                });
             });
 
             services.AddSingleton<Func<AsyncExpiringLazy<ForceClient>>>(sp => () =>
             {
-                var options = sp.GetRequiredService<IOptions<SalesforceConfiguration>>().Value;
+                var options = sp.GetRequiredService<IOptionsMonitor<SalesforceConfiguration>>().Get(optionName);
 
                 if (!TimeSpan.TryParse(options.TokenExpiration, out var tokenExpiration))
                 {
@@ -130,32 +133,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 });
             });
 
-            services.AddSingleton<IStreamingClient, ResilientStreamingClient>();
-
-            return services;
-        }
-
-        /// <summary>
-        /// An Extension method to add <see cref="StreamingClient"/> dependencies.
-        /// </summary>
-        /// <param name="services"></param>
-        /// <returns></returns>
-        [Obsolete("Use " + nameof(AddResilientStreamingClient) + "extension method instead.")]
-        public static IServiceCollection AddStreamingClient(this IServiceCollection services)
-        {
-            services.AddSingleton(sp =>
-            {
-                var salesforceConfig = new SalesforceConfiguration();
-                var config = sp.GetRequiredService<IConfiguration>();
-
-                config.Bind("Salesforce", salesforceConfig);
-
-                return salesforceConfig;
-            });
-
-            services.AddSingleton<IAuthenticationClientProxy, AuthenticationClientProxy>();
-            services.AddSingleton<IForceClientProxy, ForceClientProxy>();
-            services.AddSingleton<IStreamingClient, StreamingClient>();
+            services.TryAddSingleton<IStreamingClient, ResilientStreamingClient>();
 
             return services;
         }

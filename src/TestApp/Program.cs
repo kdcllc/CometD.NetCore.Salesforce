@@ -42,7 +42,7 @@ namespace TestApp
                  {
                      services.AddTransient<IServiceProviderFactory<IServiceCollection>, DefaultServiceProviderFactory>();
 
-                     services.AddResilientStreamingClient(context.Configuration);
+                     services.AddResilientStreamingClient();
                  })
                  .ConfigureLogging((hostContext, configLogging) =>
                  {

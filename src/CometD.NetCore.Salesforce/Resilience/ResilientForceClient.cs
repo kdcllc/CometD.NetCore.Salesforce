@@ -16,7 +16,7 @@ namespace CometD.NetCore.Salesforce.Resilience
 {
     public class ResilientForceClient : IResilientForceClient
     {
-        private readonly AsyncExpiringLazy<NetCoreForce.Client.ForceClient> _forceClient;
+        private readonly AsyncExpiringLazy<ForceClient> _forceClient;
         private readonly SalesforceConfiguration _options;
         private readonly ILogger<ResilientForceClient> _logger;
         private readonly AsyncPolicyWrap _policy;
@@ -30,7 +30,7 @@ namespace CometD.NetCore.Salesforce.Resilience
         /// <param name="options"></param>
         /// <param name="logger"></param>
         public ResilientForceClient(
-            Func<AsyncExpiringLazy<NetCoreForce.Client.ForceClient>> forceClient,
+            Func<AsyncExpiringLazy<ForceClient>> forceClient,
             IOptions<SalesforceConfiguration> options,
             ILogger<ResilientForceClient> logger)
         {
@@ -84,7 +84,7 @@ namespace CometD.NetCore.Salesforce.Resilience
                 async (context, token) =>
                 {
                     var client = _forceClient.Value().Result;
-                    return await client.CreateRecord<T>(
+                    return await client.CreateRecord(
                         sObjectTypeName,
                         sObject,
                         customHeaders);
@@ -273,7 +273,7 @@ namespace CometD.NetCore.Salesforce.Resilience
                 async (context, token) =>
                 {
                     var client = _forceClient.Value().Result;
-                    return await client.InsertOrUpdateRecord<T>(
+                    return await client.InsertOrUpdateRecord(
                         sObjectTypeName,
                         fieldName,
                         fieldValue,
@@ -387,7 +387,7 @@ namespace CometD.NetCore.Salesforce.Resilience
                 (context, token) =>
                 {
                     var client = _forceClient.Value().Result;
-                    return client.UpdateRecord<T>(
+                    return client.UpdateRecord(
                         sObjectTypeName,
                         objectId,
                         sObject,

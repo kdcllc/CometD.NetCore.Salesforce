@@ -2,7 +2,8 @@
 
 [![Build status](https://ci.appveyor.com/api/projects/status/baalfhs6vvc38icc?svg=true)](https://ci.appveyor.com/project/kdcllc/cometd-netcore-salesforce)
 [![NuGet](https://img.shields.io/nuget/v/CometD.NetCore.Salesforce.svg)](https://www.nuget.org/packages?q=Bet.AspNetCore)
-[![MyGet](https://img.shields.io/myget/kdcllc/v/CometD.NetCore.Salesforce.svg?label=myget)](https://www.myget.org/F/kdcllc/api/v2)
+![Nuget](https://img.shields.io/nuget/dt/CometD.NetCore.Salesforce)
+[![feedz.io](https://img.shields.io/badge/endpoint.svg?url=https://f.feedz.io/kdcllc/kdcllc/shield/CometD.NetCore.Salesforce/latest)](https://f.feedz.io/kdcllc/kdcllc/packages/CometD.NetCore.Salesforce/latest/download)
 
 This repo contains the CometD .NET Core implementation for Salesforce Platform events.
 
@@ -50,6 +51,7 @@ The solution contains the following:
 (note: use sandbox custom domain for the login to workbench in order to install this app within your production)
 
 Use workbench to test the Event [workbench](https://workbench.developerforce.com/login.php?startUrl=%2Finsert.php)
+
 ## AuthApp
 
 [Use login instead of test](https://github.com/developerforce/Force.com-Toolkit-for-NET/wiki/Web-Server-OAuth-Flow-Sample#am-i-using-the-test-environment)

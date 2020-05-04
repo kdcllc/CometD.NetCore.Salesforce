@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 
+using NetCoreForce.Client;
 using NetCoreForce.Client.Models;
 
 namespace CometD.NetCore.Salesforce.Resilience
