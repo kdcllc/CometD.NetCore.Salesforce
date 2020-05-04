@@ -25,13 +25,13 @@ namespace AuthApp.Internal
     {
         private readonly HostBuilderOptions _hostOptions;
         private readonly SfConfig _config;
-        private readonly IApplicationLifetime _applicationLifetime;
+        private readonly IHostApplicationLifetime _applicationLifetime;
         private bool _isCompleted = false;
 
         public HttpServer(
             HostBuilderOptions hostOptions,
             SfConfig config,
-            IApplicationLifetime applicationLifetime)
+            IHostApplicationLifetime applicationLifetime)
         {
             _hostOptions = hostOptions;
             _config = config;

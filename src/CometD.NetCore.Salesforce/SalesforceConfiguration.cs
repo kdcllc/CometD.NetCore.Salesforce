@@ -1,7 +1,9 @@
-﻿namespace CometD.NetCore.Salesforce
+﻿using NetCoreForce.Client;
+
+namespace CometD.NetCore.Salesforce
 {
     /// <summary>
-    /// Represents the config settings in appsettings.json.
+    /// Represents the configugration settings in appsettings.json.
     /// </summary>
     public sealed class SalesforceConfiguration
     {
@@ -33,7 +35,7 @@
         public string PublishEndpoint { get; set; } = string.Empty;
 
         /// <summary>
-        /// Oauth refresh token of the Salesforce Connected App.
+        /// OAuth refresh token of the Salesforce Connected App.
         /// </summary>
         public string RefreshToken { get; set; } = string.Empty;
 
@@ -48,7 +50,7 @@
         public string EventOrTopicUri { get; set; } = string.Empty;
 
         /// <summary>
-        /// Salesforce uri for oauth authentication.
+        /// Salesforce uri for OAuth authentication.
         /// </summary>
         public string OAuthUri { get; set; } = string.Empty;
 

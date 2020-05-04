@@ -22,7 +22,10 @@
     <RepositoryUrl>https://github.com/kdcllc/CometD.NetCore.Salesforce.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageLicense>https://github.com/kdcllc/CometD.NetCore.Salesforce/blob/master/LICENSE</PackageLicense>
-    <PackageIconUrl>https://raw.githubusercontent.com/kdcllc/CometD.NetCore.Salesforce/master/img/logo64x64.png</PackageIconUrl>
+    
+    <!-- https://docs.microsoft.com/en-us/nuget/reference/errors-and-warnings/nu5048 -->
+    <PackageIcon>icon.png</PackageIcon>
+
     <PackageTags>aspnetcore,dotnet,salesforce, cometd, bayeux</PackageTags>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
@@ -32,5 +35,9 @@
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
     <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
+
+    <!-- https://github.com/kdcllc/Bet.AspNetCore/issues/103 -->
+    <DebugType>Embedded</DebugType>
+    <EmbedAllSources>True</EmbedAllSources>
   </PropertyGroup>
 </Project>

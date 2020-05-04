@@ -2,12 +2,12 @@
   "profiles": {
     "AuthApp": {
       "commandName": "Project",
-      //"commandLineArgs": "get-tokens --azure https://{name}.vault.azure.net/"
+      "commandLineArgs": "get-tokens --azure https://kdcllc.vault.azure.net/",
       //"commandLineArgs": "get-tokens --verbose:information --section:sfconfig"
 
       //"commandLineArgs": "get-tokens --key: --secret: --verbose:information --section:Salesforce"
 
-      "commandLineArgs": "get-tokens --key: --secret: --verbose:debug --section:Salesforce"
+      //"commandLineArgs": "get-tokens --key: --secret: --verbose:debug --section:Salesforce"
 
     }
   }

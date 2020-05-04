@@ -2,7 +2,8 @@
 
 [![Build status](https://ci.appveyor.com/api/projects/status/baalfhs6vvc38icc?svg=true)](https://ci.appveyor.com/project/kdcllc/cometd-netcore-salesforce)
 [![NuGet](https://img.shields.io/nuget/v/CometD.NetCore.Salesforce.svg)](https://www.nuget.org/packages?q=Bet.AspNetCore)
-[![MyGet](https://img.shields.io/myget/kdcllc/v/CometD.NetCore.Salesforce.svg?label=myget)](https://www.myget.org/F/kdcllc/api/v2)
+![Nuget](https://img.shields.io/nuget/dt/CometD.NetCore.Salesforce)
+[![feedz.io](https://img.shields.io/badge/endpoint.svg?url=https://f.feedz.io/kdcllc/kdcllc/shield/CometD.NetCore.Salesforce/latest)](https://f.feedz.io/kdcllc/kdcllc/packages/CometD.NetCore.Salesforce/latest/download)
 
 This repo contains the CometD .NET Core implementation for Salesforce Platform events.
 
