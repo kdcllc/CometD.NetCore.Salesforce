@@ -3,7 +3,7 @@
 namespace CometD.NetCore.Salesforce
 {
     /// <summary>
-    /// Represents the configugration settings in appsettings.json.
+    /// Represents the configuration settings in appsettings.json.
     /// </summary>
     public sealed class SalesforceConfiguration
     {
