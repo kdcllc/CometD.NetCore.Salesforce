@@ -26,16 +26,19 @@ namespace AuthApp.Internal
         private readonly HostBuilderOptions _hostOptions;
         private readonly SfConfig _config;
         private readonly IHostApplicationLifetime _applicationLifetime;
+        private readonly IClipboard _clipboard;
         private bool _isCompleted = false;
 
         public HttpServer(
             HostBuilderOptions hostOptions,
             SfConfig config,
-            IHostApplicationLifetime applicationLifetime)
+            IHostApplicationLifetime applicationLifetime,
+            IClipboard clipboard)
         {
             _hostOptions = hostOptions;
             _config = config;
             _applicationLifetime = applicationLifetime;
+            _clipboard = clipboard;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -111,7 +114,7 @@ namespace AuthApp.Internal
 
                     Console.WriteLineFormatted("Refresh_token = {0}", Color.Green, Color.Yellow, auth.AccessInfo.RefreshToken);
 
-                    Clipboard.SetText(auth.AccessInfo.RefreshToken);
+                    await _clipboard.SetTextAsync(auth.AccessInfo.RefreshToken);
 
                     Console.WriteLine($"Refresh_token copied to the Clipboard", color: Color.Yellow);
 

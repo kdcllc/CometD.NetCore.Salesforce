@@ -1,5 +1,6 @@
 # CometD.NetCore.Salesforce
 
+[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](https://raw.githubusercontent.com/kdcllc/cometd-netcore-salesforce/master/LICENSE)
 [![Build status](https://ci.appveyor.com/api/projects/status/baalfhs6vvc38icc?svg=true)](https://ci.appveyor.com/project/kdcllc/cometd-netcore-salesforce)
 [![NuGet](https://img.shields.io/nuget/v/CometD.NetCore.Salesforce.svg)](https://www.nuget.org/packages?q=Bet.AspNetCore)
 ![Nuget](https://img.shields.io/nuget/dt/CometD.NetCore.Salesforce)
