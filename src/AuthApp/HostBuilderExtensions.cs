@@ -11,6 +11,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
+using TextCopy;
+
 using Console = Colorful.Console;
 
 namespace AuthApp
@@ -118,6 +120,8 @@ namespace AuthApp
                             return loglevel == options.Level;
                         }));
                     }
+
+                    services.AddSingleton<IClipboard, Clipboard>();
 
                     services.AddSingleton(PhysicalConsole.Singleton);
                 });

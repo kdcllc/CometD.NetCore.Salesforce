@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>netstandard2.0;netstandard2.1;</TargetFrameworks>
+		<TargetFrameworks>netstandard2.0</TargetFrameworks>
     <Nullable>enable</Nullable>
     <RootNamespace>CometD.NetCore2.Salesforce</RootNamespace>
 	</PropertyGroup>
@@ -10,8 +10,8 @@
     <PackageReference Include="Bet.Extensions" />
     <PackageReference Include="Bet.Extensions.Options" />
     <PackageReference Include="CometD.NetCore2" />
-		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
 		<PackageReference Include="NetCoreForce.Client" />
 		<PackageReference Include="Polly" />
 	</ItemGroup>

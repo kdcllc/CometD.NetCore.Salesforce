@@ -1,38 +1,19 @@
 <Project>
 
   <PropertyGroup>
-    <NetCoreCommonVersion>2.2.*</NetCoreCommonVersion>
-    <BetCommonVersion>3.1.3</BetCommonVersion>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(TargetFramework)' == 'netcoreapp2.1' Or '$(TargetFramework)' == 'netstandard2.0'">
-    <NetCoreCommonVersion>2.1.1</NetCoreCommonVersion>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(TargetFramework)' == 'netcoreapp2.2'">
-    <NetCoreCommonVersion>2.2.0</NetCoreCommonVersion>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(TargetFramework)' == 'netcoreapp3.0' Or '$(TargetFramework)' == 'netcoreapp3.1' Or '$(TargetFramework)' == 'netstandard2.1'">
-    <NetCoreCommonVersion>3.1.3</NetCoreCommonVersion>
+    <NetCoreCommonVersion>3.1.10</NetCoreCommonVersion>
+    <BetCommonVersion>3.1.10</BetCommonVersion>
   </PropertyGroup>
 
   <ItemGroup Label="NetCore">
-    <PackageReference Update="Microsoft.AspNetCore.Hosting.Server.Abstractions" Version="$(NetCoreCommonVersion)" />
-    <PackageReference Update="Microsoft.AspNetCore.Http" Version="$(NetCoreCommonVersion)" />
-    <PackageReference Update="Microsoft.Extensions.Configuration.Binder" Version="$(NetCoreCommonVersion)" />
     <PackageReference Update="Microsoft.Extensions.Configuration.CommandLine" Version="$(NetCoreCommonVersion)" />
     <PackageReference Update="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="$(NetCoreCommonVersion)" />
     <PackageReference Update="Microsoft.Extensions.Configuration.Json" Version="$(NetCoreCommonVersion)" />
     <PackageReference Update="Microsoft.Extensions.Configuration.UserSecrets" Version="$(NetCoreCommonVersion)" />
     <PackageReference Update="Microsoft.Extensions.DependencyInjection" Version="$(NetCoreCommonVersion)" />
     <PackageReference Update="Microsoft.Extensions.Hosting" Version="$(NetCoreCommonVersion)" />
-    <PackageReference Update="Microsoft.Extensions.Hosting.Abstractions" Version="$(NetCoreCommonVersion)" />
     <PackageReference Update="Microsoft.Extensions.Logging" Version="$(NetCoreCommonVersion)" />
     <PackageReference Update="Microsoft.Extensions.Logging.Abstractions" Version="$(NetCoreCommonVersion)" />
-    <PackageReference Update="Microsoft.Extensions.Logging.Configuration" Version="$(NetCoreCommonVersion)" />
-    <PackageReference Update="Microsoft.Extensions.Logging.Console" Version="$(NetCoreCommonVersion)" />
-    <PackageReference Update="Microsoft.Extensions.Logging.Debug" Version="$(NetCoreCommonVersion)" />
     <PackageReference Update="Microsoft.Extensions.Options" Version="$(NetCoreCommonVersion)" />
   </ItemGroup>
 
@@ -45,23 +26,23 @@
   </ItemGroup>
 
   <ItemGroup Label="Shared Libraries">
-    <PackageReference Update="CometD.NetCore2" Version="2.0.5" />
+    <PackageReference Update="CometD.NetCore2" Version="2.0.6" />
     <PackageReference Update="McMaster.Extensions.CommandLineUtils" Version="3.0.0"/>
     <PackageReference Update="NetCoreForce.Client" Version="2.6.0" />
     <PackageReference Update="Polly" Version="7.2.1" />
-    <PackageReference Update="Colorful.Console" Version="1.2.10" />
-    <PackageReference Update="TextCopy" Version="3.1.0" />
+    <PackageReference Update="Colorful.Console" Version="1.2.11" />
+    <PackageReference Update="TextCopy" Version="4.2.0" />
   </ItemGroup>
 
   <ItemGroup Label="Testing">
-    <PackageReference Update="Microsoft.NET.Test.Sdk" Version="16.4.0" />
+    <PackageReference Update="Microsoft.NET.Test.Sdk" Version="16.8.0" />
     <PackageReference Update="xunit" Version="2.4.1" />
-    <PackageReference Update="xunit.runner.visualstudio" Version="2.4.1" />
+    <PackageReference Update="xunit.runner.visualstudio" Version="2.4.3" />
   </ItemGroup>
 
   <ItemGroup Label="Analyzers">
-    <PackageReference Include="Bet.CodeAnalyzers" Version="1.0.9" PrivateAssets="All" />
-    <PackageReference Include="Bet.EditorConfig" Version="1.0.9" PrivateAssets="All" />
+    <PackageReference Include="Bet.CodeAnalyzers" Version="1.0.10" PrivateAssets="All" />
+    <PackageReference Include="Bet.EditorConfig" Version="1.0.10" PrivateAssets="All" />
   </ItemGroup>
 
   <ItemGroup Label="SourceLink">
