@@ -83,5 +83,10 @@ namespace CometD.NetCore.Salesforce
         /// Long polling duration. Default  120 * 1000.
         /// </summary>
         public long? ReadTimeOut { get; set; }
+
+        /// <summary>
+        /// The type of the Salesforce authentication token. Default "OAuth".
+        /// </summary>
+        public string TokenType { get; set; } = "OAuth";
     }
 }

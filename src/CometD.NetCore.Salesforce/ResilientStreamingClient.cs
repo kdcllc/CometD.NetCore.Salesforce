@@ -215,7 +215,7 @@ namespace CometD.NetCore.Salesforce
             var serverUri = new Uri(accessToken.InstanceUrl);
             var endpoint = $"{serverUri.Scheme}://{serverUri.Host}{_options.CometDUri}";
 
-            var headers = new NameValueCollection { { nameof(HttpRequestHeader.Authorization), $"OAuth {accessToken.AccessToken}" } };
+            var headers = new NameValueCollection { { nameof(HttpRequestHeader.Authorization), $"{_options.TokenType} {accessToken.AccessToken}" } };
 
             // Salesforce socket timeout during connection(CometD session) = 110 seconds
             var options = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase)
