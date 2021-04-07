@@ -76,10 +76,11 @@ Use workbench to test the Event [workbench](https://workbench.developerforce.com
 Simple application that provides with Web Server OAuth Authentication Flow to retrieve
 `Access Token` and `Refresh Token` to be used within the application.
 
-##
+## Special thanks to our contributors
 
 [cternes](https://github.com/cternes)
-## Special thanks to
+
+## Related projects
 
 - [Oyatel/CometD.NET](https://github.com/Oyatel/CometD.NET)
 - [nthachus/CometD.NET](https://github.com/nthachus/CometD.NET)
