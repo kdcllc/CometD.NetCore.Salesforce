@@ -20,6 +20,35 @@ namespace Microsoft.Extensions.DependencyInjection
     public static class StreamingClientExtensions
     {
         /// <summary>
+        /// Add custom implementation for <see cref="IStreamingClient"/>.
+        /// There can be only one implementation registered with DI at any time.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="services"></param>
+        /// <param name="sectionName"></param>
+        /// <param name="optionName"></param>
+        /// <param name="configureOptions"></param>
+        /// <returns></returns>
+        public static IServiceCollection AddResilientStreamingClient<T>(
+            this IServiceCollection services,
+            string sectionName = "Salesforce",
+            string optionName = "",
+            Action<SalesforceConfiguration, IServiceProvider>? configureOptions = default)
+            where T : IStreamingClient
+        {
+            services.AddChangeTokenOptions<SalesforceConfiguration>(
+                sectionName,
+                optionName: optionName,
+                configureAction: (o, s) => configureOptions?.Invoke(o, s));
+
+            services.AddResilentForceClient(optionName);
+
+            services.TryAdd(new ServiceDescriptor(typeof(IStreamingClient), typeof(T), ServiceLifetime.Singleton));
+
+            return services;
+        }
+
+        /// <summary>
         /// Adds ForecClient Resilient version of it with Refresh Token Authentication.
         /// <see cref="!:https://help.salesforce.com/articleView?id=remoteaccess_oauth_refresh_token_flow.htm%26type%3D5"/>
         /// Can be used in the code with <see cref="IResilientForceClient"/>.
@@ -40,6 +69,15 @@ namespace Microsoft.Extensions.DependencyInjection
                 optionName: optionName,
                 configureAction: x => configureOptions?.Invoke(x));
 
+            services.AddResilentForceClient(optionName);
+
+            services.TryAddSingleton<IStreamingClient, ResilientStreamingClient>();
+
+            return services;
+        }
+
+        private static IServiceCollection AddResilentForceClient(this IServiceCollection services, string optionName)
+        {
             services.TryAddSingleton<IResilientForceClient, ResilientForceClient>();
 
             services.TryAddSingleton<Func<AsyncExpiringLazy<AccessTokenResponse>>>(sp => () =>
@@ -132,8 +170,6 @@ namespace Microsoft.Extensions.DependencyInjection
                     return data;
                 });
             });
-
-            services.TryAddSingleton<IStreamingClient, ResilientStreamingClient>();
 
             return services;
         }

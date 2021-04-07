@@ -1,8 +1,13 @@
 <Project>
 
   <PropertyGroup>
-    <NetCoreCommonVersion>3.1.10</NetCoreCommonVersion>
-    <BetCommonVersion>3.1.10</BetCommonVersion>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
+    <NetCoreCommonVersion>3.1.*</NetCoreCommonVersion>
+    <BetCommonVersion>3.1.*</BetCommonVersion>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net5.0' Or '$(TargetFramework)' == 'netstandard2.1'">
+    <NetCoreCommonVersion>5.0.*</NetCoreCommonVersion>
   </PropertyGroup>
 
   <ItemGroup Label="NetCore">
@@ -26,16 +31,16 @@
   </ItemGroup>
 
   <ItemGroup Label="Shared Libraries">
-    <PackageReference Update="CometD.NetCore2" Version="2.0.6" />
-    <PackageReference Update="McMaster.Extensions.CommandLineUtils" Version="3.0.0"/>
-    <PackageReference Update="NetCoreForce.Client" Version="2.6.0" />
+    <PackageReference Update="CometD.NetCore2" Version="2.0.7" />
+    <PackageReference Update="McMaster.Extensions.CommandLineUtils" Version="3.1.0"/>
+    <PackageReference Update="NetCoreForce.Client" Version="3.0.0" />
     <PackageReference Update="Polly" Version="7.2.1" />
-    <PackageReference Update="Colorful.Console" Version="1.2.11" />
-    <PackageReference Update="TextCopy" Version="4.2.0" />
+    <PackageReference Update="Colorful.Console" Version="1.2.15" />
+    <PackageReference Update="TextCopy" Version="4.3.0" />
   </ItemGroup>
 
   <ItemGroup Label="Testing">
-    <PackageReference Update="Microsoft.NET.Test.Sdk" Version="16.8.0" />
+    <PackageReference Update="Microsoft.NET.Test.Sdk" Version="16.9.4" />
     <PackageReference Update="xunit" Version="2.4.1" />
     <PackageReference Update="xunit.runner.visualstudio" Version="2.4.3" />
   </ItemGroup>

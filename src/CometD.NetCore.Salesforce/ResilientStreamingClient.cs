@@ -31,6 +31,8 @@ namespace CometD.NetCore.Salesforce
         private LongPollingTransport? _clientTransport;
         private ReplayExtension? _replayIdExtension;
 
+        public Action<int> InvalidReplayIdStrategy { get; set; }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ResilientStreamingClient"/> class.
         /// </summary>
@@ -200,48 +202,7 @@ namespace CometD.NetCore.Salesforce
             }
         }
 
-        private void CreateBayeuxClient()
-        {
-            if (_isDisposed)
-            {
-                throw new ObjectDisposedException("Cannot create connection when disposed");
-            }
-
-            _logger.LogDebug("Creating {name} ...", nameof(BayeuxClient));
-
-            var accessToken = _tokenResponse.Value().Result;
-
-            // only need the scheme and host, strip out the rest
-            var serverUri = new Uri(accessToken.InstanceUrl);
-            var endpoint = $"{serverUri.Scheme}://{serverUri.Host}{_options.CometDUri}";
-
-            var headers = new NameValueCollection { { nameof(HttpRequestHeader.Authorization), $"OAuth {accessToken.AccessToken}" } };
-
-            // Salesforce socket timeout during connection(CometD session) = 110 seconds
-            var options = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase)
-            {
-                { ClientTransport.TIMEOUT_OPTION, _options.ReadTimeOut ?? _readTimeOut },
-                { ClientTransport.MAX_NETWORK_DELAY_OPTION, _options.ReadTimeOut ?? _readTimeOut }
-            };
-
-            _clientTransport = new LongPollingTransport(options, headers);
-
-            _bayeuxClient = new BayeuxClient(endpoint, _clientTransport);
-
-            // adds logging and also raises an event to process reconnection to the server.
-            _errorExtension = new ErrorExtension();
-            _errorExtension.ConnectionError += ErrorExtension_ConnectionError;
-            _errorExtension.ConnectionException += ErrorExtension_ConnectionException;
-            _errorExtension.ConnectionMessage += ErrorExtension_ConnectionMessage;
-            _bayeuxClient.AddExtension(_errorExtension);
-
-            _replayIdExtension = new ReplayExtension();
-            _bayeuxClient.AddExtension(_replayIdExtension);
-
-            _logger.LogDebug("{name} was created...", nameof(BayeuxClient));
-        }
-
-        private void ErrorExtension_ConnectionError(
+        protected virtual void ErrorExtension_ConnectionError(
             object sender,
             string e)
         {
@@ -266,13 +227,24 @@ namespace CometD.NetCore.Salesforce
                 // 4. Invoke the Reconnect Event
                 Reconnect?.Invoke(this, true);
             }
+            else if (e.Contains("you provided was invalid"))
+            {
+                var start = e.IndexOf('{');
+                var end = e.IndexOf('}');
+                var replayIdString = e.Substring(start + 1, end - (start + 1));
+
+                if (int.TryParse(replayIdString, out var replayId))
+                {
+                    InvalidReplayIdStrategy(replayId);
+                }
+            }
             else
             {
                 _logger.LogError("{name} failed with the following message: {message}", nameof(ResilientStreamingClient), e);
             }
         }
 
-        private void ErrorExtension_ConnectionException(
+        protected virtual void ErrorExtension_ConnectionException(
             object sender,
             Exception ex)
         {
@@ -287,11 +259,52 @@ namespace CometD.NetCore.Salesforce
             }
         }
 
-        private void ErrorExtension_ConnectionMessage(
+        protected virtual void ErrorExtension_ConnectionMessage(
             object sender,
             string meaage)
         {
             _logger.LogDebug(meaage);
+        }
+
+        private void CreateBayeuxClient()
+        {
+            if (_isDisposed)
+            {
+                throw new ObjectDisposedException("Cannot create connection when disposed");
+            }
+
+            _logger.LogDebug("Creating {name} ...", nameof(BayeuxClient));
+
+            var accessToken = _tokenResponse.Value().Result;
+
+            // only need the scheme and host, strip out the rest
+            var serverUri = new Uri(accessToken.InstanceUrl);
+            var endpoint = $"{serverUri.Scheme}://{serverUri.Host}{_options.CometDUri}";
+
+            var headers = new NameValueCollection { { nameof(HttpRequestHeader.Authorization), $"{_options.TokenType} {accessToken.AccessToken}" } };
+
+            // Salesforce socket timeout during connection(CometD session) = 110 seconds
+            var options = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase)
+            {
+                { ClientTransport.TIMEOUT_OPTION, _options.ReadTimeOut ?? _readTimeOut },
+                { ClientTransport.MAX_NETWORK_DELAY_OPTION, _options.ReadTimeOut ?? _readTimeOut }
+            };
+
+            _clientTransport = new LongPollingTransport(options, headers);
+
+            _bayeuxClient = new BayeuxClient(endpoint, _clientTransport);
+
+            // adds logging and also raises an event to process reconnection to the server.
+            _errorExtension = new ErrorExtension();
+            _errorExtension.ConnectionError += ErrorExtension_ConnectionError;
+            _errorExtension.ConnectionException += ErrorExtension_ConnectionException;
+            _errorExtension.ConnectionMessage += ErrorExtension_ConnectionMessage;
+            _bayeuxClient.AddExtension(_errorExtension);
+
+            _replayIdExtension = new ReplayExtension();
+            _bayeuxClient.AddExtension(_replayIdExtension);
+
+            _logger.LogDebug("{name} was created...", nameof(BayeuxClient));
         }
     }
 }

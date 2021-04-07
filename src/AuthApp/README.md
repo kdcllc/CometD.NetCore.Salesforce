@@ -1,10 +1,21 @@
-# `salesforce` CLI
+# `salesforce` CLI authentication tool
 
+[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](https://raw.githubusercontent.com/kdcllc/cometd-netcore-salesforce/master/LICENSE)
 [![Build status](https://ci.appveyor.com/api/projects/status/baalfhs6vvc38icc?svg=true)](https://ci.appveyor.com/project/kdcllc/cometd-netcore-salesforce)
 [![NuGet](https://img.shields.io/nuget/v/salesforce.svg)](https://www.nuget.org/packages?q=Bet.AspNetCore)
-[![MyGet](https://img.shields.io/myget/kdcllc/v/salesforce.svg?label=myget)](https://www.myget.org/F/kdcllc/api/v2)
+[![feedz.io](https://img.shields.io/badge/endpoint.svg?url=https://f.feedz.io/kdcllc/kdcllc/shield/salesforce/latest)](https://f.feedz.io/kdcllc/kdcllc/packages/salesforce/latest/download)
+
+_Note: Pre-release packages are distributed via [feedz.io](https://f.feedz.io/kdcllc/kcllc/nuget/index.json)._
+
+## Summary
 
 This is a dotnet cli Saleforce Refresh and Access Tokens Generation tool.
+
+[![buymeacoffee](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/vyve0og)
+
+## Give a Star! :star:
+
+If you like or are using this project to learn or start your solution, please give it a star. Thanks!
 
 ## Install DotNetCore Cli `salesforce` tool
 
@@ -86,7 +97,7 @@ Or specify url within the dotnet cli tool like so:
 
 ## Build self contained
 
-[](https://docs.microsoft.com/en-us/dotnet/core/rid-catalog)
+[rid-catalog](https://docs.microsoft.com/en-us/dotnet/core/rid-catalog)
 
 ```bash
     # windows
