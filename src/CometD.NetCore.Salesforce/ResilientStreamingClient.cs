@@ -233,9 +233,7 @@ namespace CometD.NetCore.Salesforce
                 var end = e.IndexOf('}');
                 var replayIdString = e.Substring(start + 1, end - (start + 1));
 
-                var success = int.TryParse(replayIdString, out var replayId);
-
-                if (success)
+                if (int.TryParse(replayIdString, out var replayId))
                 {
                     InvalidReplayIdStrategy(replayId);
                 }

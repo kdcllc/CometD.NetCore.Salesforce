@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>netstandard2.0</TargetFrameworks>
+		<TargetFrameworks>netstandard2.0;netstandard2.1;net5.0</TargetFrameworks>
     <Nullable>enable</Nullable>
     <RootNamespace>CometD.NetCore2.Salesforce</RootNamespace>
 	</PropertyGroup>
@@ -15,5 +15,9 @@
 		<PackageReference Include="NetCoreForce.Client" />
 		<PackageReference Include="Polly" />
 	</ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\LICENSE" Pack="true" PackagePath="" />
+  </ItemGroup>
 
 </Project>

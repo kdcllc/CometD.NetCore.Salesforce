@@ -15,7 +15,7 @@ namespace CometD.NetCore.Salesforce
         event EventHandler<bool> Reconnect;
 
         /// <summary>
-        /// Inject a strategy for handling invalid replay ids. 
+        /// Inject a strategy for handling invalid replay ids.
         /// </summary>
         Action<int> InvalidReplayIdStrategy { get; set; }
 

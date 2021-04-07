@@ -2,7 +2,7 @@
 
   <PropertyGroup Label="Basic Settings">
     <IsPackable>true</IsPackable>
-    <VersionPrefix>3.0.1-preview1</VersionPrefix>
+    <VersionPrefix>3.0.2-preview1</VersionPrefix>
     <LangVersion>latest</LangVersion>
     <Nullable>disable</Nullable>
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
@@ -22,11 +22,8 @@
     <RepositoryUrl>https://github.com/kdcllc/CometD.NetCore.Salesforce.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageLicense>https://github.com/kdcllc/CometD.NetCore.Salesforce/blob/master/LICENSE</PackageLicense>
-    
-    <!-- https://docs.microsoft.com/en-us/nuget/reference/errors-and-warnings/nu5048 -->
     <PackageIcon>icon.png</PackageIcon>
-
-    <PackageTags>aspnetcore,dotnet,salesforce, cometd, bayeux</PackageTags>
+    <PackageTags>aspnetcore, dotnet, salesforce, cometd, bayeux, platform events, eventbus</PackageTags>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 

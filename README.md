@@ -6,19 +6,36 @@
 ![Nuget](https://img.shields.io/nuget/dt/CometD.NetCore.Salesforce)
 [![feedz.io](https://img.shields.io/badge/endpoint.svg?url=https://f.feedz.io/kdcllc/kdcllc/shield/CometD.NetCore.Salesforce/latest)](https://f.feedz.io/kdcllc/kdcllc/packages/CometD.NetCore.Salesforce/latest/download)
 
+_Note: Pre-release packages are distributed via [feedz.io](https://f.feedz.io/kdcllc/kcllc/nuget/index.json)._
+
+## Summary
+
 This repo contains the CometD .NET Core implementation for Salesforce Platform events.
 
 These events can be subscribed to and listened to by your custom `Event Listener`. The sample application of this library can be found [here](https://github.com/kdcllc/Bet.BuildingBlocks.SalesforceEventBus).
 
+
 The solution contains the following:
 
-1. [`CometD.NetCore2.Salesforce`](./src/CometD.NetCore.Salesforce/README.md)
+1. [`CometD.NetCore2.Salesforce`](./src/CometD.NetCore.Salesforce/)
      - A Salesforce Platform Events implementation based [Even Bus idea of eShopOnContainers](https://github.com/dotnet-architecture/eShopOnContainers).
      - [Reusable Building Blocks and sample application that listens to Salesforce push events](https://github.com/kdcllc/Bet.BuildingBlocks.SalesforceEventBus).
 
-2. [DotNet Cli tool `salesforce`](./src/AuthApp/README.md)
+2. [DotNet Cli tool `salesforce`](./src/AuthApp/)
    - This dotnet cli tool allows for retrieval of `Access` or `Refresh Tokens`  to be used by any other application.
    Please refer to [How Are Apps Authenticated with the Web Server OAuth Authentication Flow](https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/intro_understanding_web_server_oauth_flow.htm)
+
+[![buymeacoffee](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/vyve0og)
+
+## Give a Star! :star:
+
+If you like or are using this project to learn or start your solution, please give it a star. Thanks!
+
+## Install
+
+```csharp
+    dotnet add package CometD.NetCore.Salesforce
+```
 
 ## Saleforce Setup
 
@@ -56,9 +73,12 @@ Use workbench to test the Event [workbench](https://workbench.developerforce.com
 ## AuthApp
 
 [Use login instead of test](https://github.com/developerforce/Force.com-Toolkit-for-NET/wiki/Web-Server-OAuth-Flow-Sample#am-i-using-the-test-environment)
-Simple application that provides with Web Server OAuth Authentication Flow to retrieve 
+Simple application that provides with Web Server OAuth Authentication Flow to retrieve
 `Access Token` and `Refresh Token` to be used within the application.
 
+##
+
+[cternes](https://github.com/cternes)
 ## Special thanks to
 
 - [Oyatel/CometD.NET](https://github.com/Oyatel/CometD.NET)

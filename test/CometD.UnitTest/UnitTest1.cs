@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
 
 using Xunit;
 
@@ -20,7 +20,7 @@ namespace CometD.UnitTest
 
             IConfiguration configuration = null;
 
-            var host = new WebHostBuilder()
+            var host = new HostBuilder()
                 .ConfigureAppConfiguration((context, builder) =>
                 {
                     configuration = builder.AddInMemoryCollection(dic).Build();
