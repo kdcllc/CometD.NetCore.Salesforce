@@ -31,6 +31,8 @@ namespace CometD.NetCore.Salesforce
         private LongPollingTransport? _clientTransport;
         private ReplayExtension? _replayIdExtension;
 
+        public Action<int> InvalidReplayIdStrategy { get; set; }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ResilientStreamingClient"/> class.
         /// </summary>
@@ -265,6 +267,19 @@ namespace CometD.NetCore.Salesforce
 
                 // 4. Invoke the Reconnect Event
                 Reconnect?.Invoke(this, true);
+            }
+            else if (e.Contains("you provided was invalid"))
+            {
+                var start = e.IndexOf('{');
+                var end = e.IndexOf('}');
+                var replayIdString = e.Substring(start + 1, end - (start + 1));
+
+                var success = int.TryParse(replayIdString, out var replayId);
+
+                if (success)
+                {
+                    InvalidReplayIdStrategy(replayId);
+                }
             }
             else
             {

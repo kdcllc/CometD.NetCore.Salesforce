@@ -15,6 +15,11 @@ namespace CometD.NetCore.Salesforce
         event EventHandler<bool> Reconnect;
 
         /// <summary>
+        /// Inject a strategy for handling invalid replay ids. 
+        /// </summary>
+        Action<int> InvalidReplayIdStrategy { get; set; }
+
+        /// <summary>
         /// True/False if the <see cref="IStreamingClient"/> is connected.
         /// </summary>
         bool IsConnected { get; }
