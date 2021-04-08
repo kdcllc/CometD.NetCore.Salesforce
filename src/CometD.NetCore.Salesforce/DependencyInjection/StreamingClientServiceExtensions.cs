@@ -24,7 +24,7 @@ namespace Microsoft.Extensions.DependencyInjection
         /// There can be only one implementation registered with DI at any time.
         /// </summary>
         /// <param name="services">The DI services.</param>
-        /// <param name="sectionName">The section name for the root options configuration. The default value is Salesfoce.</param>
+        /// <param name="sectionName">The section name for the root options configuration. The default value is Salesforce.</param>
         /// <param name="optionName"></param>
         /// <param name="configureOptions">The option configuration that can be override the configuration provides.</param>
         /// <returns></returns>
@@ -47,31 +47,6 @@ namespace Microsoft.Extensions.DependencyInjection
             return services;
         }
 
-        /// <summary>
-        /// Add <see cref="IStreamingClient"/> to DI.
-        /// </summary>
-        /// <param name="services">The DI services.</param>
-        /// <param name="sectionName">The section name for the root options configuration. The default value is Salesfoce.</param>
-        /// <param name="optionName"></param>
-        /// <param name="configureOptions">The option configuration that can be override the configuration provides.</param>
-        /// <returns></returns>
-        public static IServiceCollection AddResilientStreamingClient(
-            this IServiceCollection services,
-            string sectionName = "Salesforce",
-            string optionName = "",
-            Action<SalesforceConfiguration, IServiceProvider>? configureOptions = default)
-        {
-            services.AddChangeTokenOptions<SalesforceConfiguration>(
-                sectionName,
-                optionName: optionName,
-                configureAction: (o, sp) => configureOptions?.Invoke(o, sp));
-
-            services.AddResilentForceClient(optionName);
-
-            services.TryAddSingleton<IStreamingClient, ResilientStreamingClient>();
-
-            return services;
-        }
 
         /// <summary>
         /// Adds ForecClient Resilient version of it with Refresh Token Authentication.
@@ -79,7 +54,7 @@ namespace Microsoft.Extensions.DependencyInjection
         /// Can be used in the code with <see cref="IResilientForceClient"/>.
         /// </summary>
         /// <param name="services">The DI services.</param>
-        /// <param name="sectionName">The section name for the root options configuration. The default value is Salesfoce.</param>
+        /// <param name="sectionName">The section name for the root options configuration. The default value is Salesforce.</param>
         /// <param name="optionName"></param>
         /// <param name="configureOptions">The option configuration that can be override the configuration provides.</param>
         /// <returns></returns>
