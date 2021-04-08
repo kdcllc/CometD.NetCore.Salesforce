@@ -17,17 +17,16 @@ namespace Microsoft.Extensions.DependencyInjection
     /// <summary>
     /// An extension method for <see cref="CometD.NetCore.Salesforce"/>.
     /// </summary>
-    public static class StreamingClientExtensions
+    public static class StreamingClientServiceExtensions
     {
         /// <summary>
         /// Add custom implementation for <see cref="IStreamingClient"/>.
         /// There can be only one implementation registered with DI at any time.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="services"></param>
-        /// <param name="sectionName"></param>
+        /// <param name="services">The DI services.</param>
+        /// <param name="sectionName">The section name for the root options configuration. The default value is Salesforce.</param>
         /// <param name="optionName"></param>
-        /// <param name="configureOptions"></param>
+        /// <param name="configureOptions">The option configuration that can be override the configuration provides.</param>
         /// <returns></returns>
         public static IServiceCollection AddResilientStreamingClient<T>(
             this IServiceCollection services,
@@ -39,7 +38,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddChangeTokenOptions<SalesforceConfiguration>(
                 sectionName,
                 optionName: optionName,
-                configureAction: (o, s) => configureOptions?.Invoke(o, s));
+                configureAction: (o, sp) => configureOptions?.Invoke(o, sp));
 
             services.AddResilentForceClient(optionName);
 
@@ -48,13 +47,14 @@ namespace Microsoft.Extensions.DependencyInjection
             return services;
         }
 
+
         /// <summary>
         /// Adds ForecClient Resilient version of it with Refresh Token Authentication.
         /// <see cref="!:https://help.salesforce.com/articleView?id=remoteaccess_oauth_refresh_token_flow.htm%26type%3D5"/>
         /// Can be used in the code with <see cref="IResilientForceClient"/>.
         /// </summary>
         /// <param name="services">The DI services.</param>
-        /// <param name="sectionName">The section name for the root options configuration. The default value is Salesfoce.</param>
+        /// <param name="sectionName">The section name for the root options configuration. The default value is Salesforce.</param>
         /// <param name="optionName"></param>
         /// <param name="configureOptions">The option configuration that can be override the configuration provides.</param>
         /// <returns></returns>

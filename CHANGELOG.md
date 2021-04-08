@@ -1,5 +1,8 @@
 # Changelog
 
+### 2021-04-06 v3.0.3
+
+* [Add support for handling 401 Authentication Errors from Salesforce](https://github.com/kdcllc/CometD.NetCore.Salesforce/issues/23) thanks @[apaulro](https://github.com/apaulro)
 ### 2021-04-06 v3.0.2
 
 * Updated dependencies

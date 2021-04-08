@@ -209,7 +209,8 @@ namespace CometD.NetCore.Salesforce
             // authentication failure
             if (string.Equals(e, "403::Handshake denied", StringComparison.OrdinalIgnoreCase)
                 || string.Equals(e, "403:denied_by_security_policy:create_denied", StringComparison.OrdinalIgnoreCase)
-                || string.Equals(e, "403::unknown client", StringComparison.OrdinalIgnoreCase))
+                || string.Equals(e, "403::unknown client", StringComparison.OrdinalIgnoreCase)
+                || string.Equals(e, "401::Authentication invalid", StringComparison.OrdinalIgnoreCase))
             {
                 _logger.LogWarning("Handled CometD Exception: {message}", e);
 

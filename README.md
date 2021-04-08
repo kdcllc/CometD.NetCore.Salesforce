@@ -78,7 +78,10 @@ Simple application that provides with Web Server OAuth Authentication Flow to re
 
 ## Special thanks to our contributors
 
-[cternes](https://github.com/cternes)
+* [cwoolum](https://github.com/cwoolum)
+* [ts46235](https://github.com/ts46235)
+* [cternes](https://github.com/cternes)
+* [apaulro](https://github.com/apaulro)
 
 ## Related projects
 
@@ -86,5 +89,4 @@ Simple application that provides with Web Server OAuth Authentication Flow to re
 - [nthachus/CometD.NET](https://github.com/nthachus/CometD.NET)
 - [tdawgy/CometD.NetCore](https://github.com/tdawgy/CometD.NetCore)
 - [eShopOnContainers](https://github.com/dotnet-architecture/eShopOnContainers)
-- [cwoolum](https://github.com/cwoolum)
-- [ts46235](https://github.com/ts46235)
+
