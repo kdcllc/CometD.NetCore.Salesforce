@@ -17,17 +17,16 @@ namespace Microsoft.Extensions.DependencyInjection
     /// <summary>
     /// An extension method for <see cref="CometD.NetCore.Salesforce"/>.
     /// </summary>
-    public static class StreamingClientExtensions
+    public static class StreamingClientServiceExtensions
     {
         /// <summary>
         /// Add custom implementation for <see cref="IStreamingClient"/>.
         /// There can be only one implementation registered with DI at any time.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="services"></param>
-        /// <param name="sectionName"></param>
+        /// <param name="services">The DI services.</param>
+        /// <param name="sectionName">The section name for the root options configuration. The default value is Salesfoce.</param>
         /// <param name="optionName"></param>
-        /// <param name="configureOptions"></param>
+        /// <param name="configureOptions">The option configuration that can be override the configuration provides.</param>
         /// <returns></returns>
         public static IServiceCollection AddResilientStreamingClient<T>(
             this IServiceCollection services,
@@ -39,11 +38,37 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddChangeTokenOptions<SalesforceConfiguration>(
                 sectionName,
                 optionName: optionName,
-                configureAction: (o, s) => configureOptions?.Invoke(o, s));
+                configureAction: (o, sp) => configureOptions?.Invoke(o, sp));
 
             services.AddResilentForceClient(optionName);
 
             services.TryAdd(new ServiceDescriptor(typeof(IStreamingClient), typeof(T), ServiceLifetime.Singleton));
+
+            return services;
+        }
+
+        /// <summary>
+        /// Add <see cref="IStreamingClient"/> to DI.
+        /// </summary>
+        /// <param name="services">The DI services.</param>
+        /// <param name="sectionName">The section name for the root options configuration. The default value is Salesfoce.</param>
+        /// <param name="optionName"></param>
+        /// <param name="configureOptions">The option configuration that can be override the configuration provides.</param>
+        /// <returns></returns>
+        public static IServiceCollection AddResilientStreamingClient(
+            this IServiceCollection services,
+            string sectionName = "Salesforce",
+            string optionName = "",
+            Action<SalesforceConfiguration, IServiceProvider>? configureOptions = default)
+        {
+            services.AddChangeTokenOptions<SalesforceConfiguration>(
+                sectionName,
+                optionName: optionName,
+                configureAction: (o, sp) => configureOptions?.Invoke(o, sp));
+
+            services.AddResilentForceClient(optionName);
+
+            services.TryAddSingleton<IStreamingClient, ResilientStreamingClient>();
 
             return services;
         }
