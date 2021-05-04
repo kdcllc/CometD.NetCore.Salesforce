@@ -104,11 +104,24 @@ namespace Microsoft.Extensions.DependencyInjection
                         {
                             var auth = new AuthenticationClient();
 
-                            await auth.TokenRefreshAsync(
-                                options.RefreshToken,
-                                options.ClientId,
-                                options.ClientSecret,
-                                $"{options.LoginUrl}{options.OAuthUri}");
+                            if (string.IsNullOrWhiteSpace(options.RefreshToken) &&
+                                !string.IsNullOrWhiteSpace(options.Username))
+                            {
+                                await auth.UsernamePasswordAsync(
+                                    options.ClientId,
+                                    options.ClientSecret,
+                                    options.Username,
+                                    options.Password + options.UserPasswordToken,
+                                    $"{options.LoginUrl}{options.OAuthUri}");
+                            }
+                            else
+                            {
+                                await auth.TokenRefreshAsync(
+                                    options.RefreshToken,
+                                    options.ClientId,
+                                    options.ClientSecret,
+                                    $"{options.LoginUrl}{options.OAuthUri}");
+                            }
 
                             return auth;
                         });
@@ -148,11 +161,24 @@ namespace Microsoft.Extensions.DependencyInjection
                         {
                             var authClient = new AuthenticationClient();
 
-                            await authClient.TokenRefreshAsync(
-                                options.RefreshToken,
-                                options.ClientId,
-                                options.ClientSecret,
-                                $"{options.LoginUrl}{options.OAuthUri}");
+                            if (string.IsNullOrWhiteSpace(options.RefreshToken) &&
+                                !string.IsNullOrWhiteSpace(options.Username))
+                            {
+                                await authClient.UsernamePasswordAsync(
+                                    options.ClientId,
+                                    options.ClientSecret,
+                                    options.Username,
+                                    options.Password + options.UserPasswordToken,
+                                    $"{options.LoginUrl}{options.OAuthUri}");
+                            }
+                            else
+                            {
+                                await authClient.TokenRefreshAsync(
+                                    options.RefreshToken,
+                                    options.ClientId,
+                                    options.ClientSecret,
+                                    $"{options.LoginUrl}{options.OAuthUri}");
+                            }
 
                             return new ForceClient(
                                 authClient.AccessInfo.InstanceUrl,
