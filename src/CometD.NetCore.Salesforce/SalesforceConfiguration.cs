@@ -18,6 +18,21 @@ namespace CometD.NetCore.Salesforce
         public string ClientSecret { get; set; } = string.Empty;
 
         /// <summary>
+        /// Username to login to Salesforce
+        /// </summary>
+        public string Username { get; set; } = string.Empty;
+
+        /// <summary>
+        /// Password to login to Salesforce
+        /// </summary>
+        public string Password { get; set; } = string.Empty;
+
+        /// <summary>
+        /// API Token for user identification to Salesforce API
+        /// </summary>
+        public string UserPasswordToken { get; set; } = string.Empty;
+
+        /// <summary>
         /// Url to login to Salesforce
         ///  https://test.salesforce.com/services/oauth2/authorize
         ///  or https://login.salesforce.com/services/oauth2/authorize.
