@@ -262,9 +262,9 @@ namespace CometD.NetCore.Salesforce
 
         protected virtual void ErrorExtension_ConnectionMessage(
             object sender,
-            string meaage)
+            string message)
         {
-            _logger.LogDebug(meaage);
+            _logger.LogDebug(message);
         }
 
         private void CreateBayeuxClient()

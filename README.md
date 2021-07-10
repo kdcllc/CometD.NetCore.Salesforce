@@ -72,9 +72,15 @@ Use workbench to test the Event [workbench](https://workbench.developerforce.com
 
 ## AuthApp
 
+### OAuth Refresh Token Flow
+
 [Use login instead of test](https://github.com/developerforce/Force.com-Toolkit-for-NET/wiki/Web-Server-OAuth-Flow-Sample#am-i-using-the-test-environment)
 Simple application that provides with Web Server OAuth Authentication Flow to retrieve
 `Access Token` and `Refresh Token` to be used within the application.
+
+### Username/Password Flow
+
+To enable Username/Password flow and grant type, simply omit the auth token and refresh token while providing the username, password and user api token.
 
 ## Special thanks to our contributors
 
