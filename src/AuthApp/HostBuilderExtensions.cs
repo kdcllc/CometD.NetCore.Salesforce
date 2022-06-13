@@ -2,7 +2,7 @@
 using System.Drawing;
 using System.IO;
 
-using Bet.AspNetCore.Options;
+using Bet.Extensions.Options;
 
 using McMaster.Extensions.CommandLineUtils;
 
